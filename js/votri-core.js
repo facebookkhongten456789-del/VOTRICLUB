@@ -1,13 +1,72 @@
 /** Core: API, auth helpers, toast */
 (function () {
     const API_SERVER_PORT = '3000';
-    const API_BASE = (() => {
+    const DEBUG_LOG_ENDPOINT = 'http://127.0.0.1:7429/ingest/bab48c62-adab-4008-aac1-13c63b94fd88';
+
+    function debugLog(location, message, data, hypothesisId) {
+        // #region agent log
+        fetch(DEBUG_LOG_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '99cc47' },
+            body: JSON.stringify({
+                sessionId: '99cc47',
+                location,
+                message,
+                data,
+                hypothesisId,
+                timestamp: Date.now(),
+                runId: data?.runId || 'pre-fix',
+            }),
+        }).catch(() => {});
+        // #endregion
+    }
+
+    /** Production (Vercel): same origin. Local: :3000 or proxy from Live Server. */
+    function resolveApiBase() {
         const { protocol, hostname, port } = window.location;
-        if (protocol === 'file:') return `http://localhost:${API_SERVER_PORT}`;
-        if (port === API_SERVER_PORT) return window.location.origin;
-        const host = hostname === '0.0.0.0' ? 'localhost' : hostname;
-        return `${protocol}//${host}:${API_SERVER_PORT}`;
-    })();
+        const ctx = { protocol, hostname, port };
+
+        if (protocol === 'file:') {
+            ctx.branch = 'file';
+            const base = `http://localhost:${API_SERVER_PORT}`;
+            debugLog('votri-core.js:resolveApiBase', 'API_BASE resolved', { ...ctx, apiBase: base }, 'A');
+            return base;
+        }
+
+        const isLoopback = ['localhost', '127.0.0.1', '0.0.0.0'].includes(hostname);
+        if (isLoopback) {
+            if (port === API_SERVER_PORT) {
+                ctx.branch = 'loopback-same-port';
+                const base = window.location.origin;
+                debugLog('votri-core.js:resolveApiBase', 'API_BASE resolved', { ...ctx, apiBase: base }, 'A');
+                return base;
+            }
+            ctx.branch = 'loopback-proxy';
+            const host = hostname === '0.0.0.0' ? 'localhost' : hostname;
+            const base = `http://${host}:${API_SERVER_PORT}`;
+            debugLog('votri-core.js:resolveApiBase', 'API_BASE resolved', { ...ctx, apiBase: base }, 'A');
+            return base;
+        }
+
+        if (!port || port === '80' || port === '443' || port === API_SERVER_PORT) {
+            ctx.branch = 'production-origin';
+            const base = window.location.origin;
+            debugLog('votri-core.js:resolveApiBase', 'API_BASE resolved', { ...ctx, apiBase: base }, 'A');
+            return base;
+        }
+
+        ctx.branch = 'remote-dev-port';
+        const base = `${protocol}//${hostname}:${API_SERVER_PORT}`;
+        debugLog('votri-core.js:resolveApiBase', 'API_BASE resolved', { ...ctx, apiBase: base }, 'A');
+        return base;
+    }
+
+    const API_BASE = resolveApiBase();
+
+    function isLocalDevHost() {
+        const { protocol, hostname } = window.location;
+        return protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/i.test(hostname);
+    }
 
     function getSessionToken() {
         return sessionStorage.getItem('votri_sys_token');
@@ -228,6 +287,7 @@
 
     window.VotriApp = {
         get API_BASE() { return API_BASE; },
+        isLocalDevHost,
         authHeaders,
         parseJsonResponse,
         escapeHTML,

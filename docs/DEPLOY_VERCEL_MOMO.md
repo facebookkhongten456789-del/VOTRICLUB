@@ -91,6 +91,8 @@ Trân trọng,
 
 ## 6. Lưu ý kỹ thuật (Vercel)
 
+- **CSS/JS 404:** Cần `includeFiles` trong `vercel.json` (xem file trong repo). Kiểm tra `/style.css` trả CSS, không 404.
+- **Đăng nhập gọi `:3000`:** `js/votri-core.js` phải dùng `window.location.origin` trên Vercel (không port). Sau sửa, redeploy và hard-refresh (Ctrl+F5).
 - Session lưu **RAM** — serverless có thể reset; demo MoMo vẫn xem được UI + API path.
 - **IPN** cần URL public HTTPS — Vercel đáp ứng.
 - MySQL cloud: bật kết nối từ IP bên ngoài (allow `%` hoặc Vercel IP nếu host yêu cầu).

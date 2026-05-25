@@ -106,7 +106,7 @@ function deletePage(id) { return window.VotriFanpages?.deletePage(id); }
 function saveDatabase() { return window.VotriFanpages?.saveDatabase(); }
 function runPageCheck(id, btn) { return window.VotriFanpages?.runPageCheck(id, btn); }
 
-const API_BASE = window.VotriApp?.API_BASE || '';
+const apiBase = () => (window.VotriApp && window.VotriApp.API_BASE) || '';
 const getSessionToken = () => window.VotriApp.getSessionToken();
 const authHeaders = (e) => window.VotriApp.authHeaders(e);
 const parseJsonResponse = (r) => window.VotriApp.parseJsonResponse(r);
@@ -307,7 +307,7 @@ async function syncDatabaseData() {
         const syncBody = window.VotriApp?.withPublicIp
             ? await window.VotriApp.withPublicIp({})
             : {};
-        const response = await fetch(`${API_BASE}/api/sync/data`, {
+        const response = await fetch(`${apiBase()}/api/sync/data`, {
             method: 'POST',
             headers: authHeaders(),
             body: JSON.stringify(syncBody)
@@ -503,7 +503,7 @@ function setupAuthListeners() {
             const loginBody = window.VotriApp?.withPublicIp
                 ? await window.VotriApp.withPublicIp({ email, password })
                 : { email, password };
-            const response = await fetch(`${API_BASE}/api/auth/login`, {
+            const response = await fetch(`${apiBase()}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginBody)
@@ -526,9 +526,35 @@ function setupAuthListeners() {
             finishLoginFromServer(data);
         } catch (err) {
             console.error('Login error:', err);
+            // #region agent log
+            fetch('http://127.0.0.1:7429/ingest/bab48c62-adab-4008-aac1-13c63b94fd88', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '99cc47' },
+                body: JSON.stringify({
+                    sessionId: '99cc47',
+                    location: 'app.js:login-catch',
+                    message: 'Login fetch failed',
+                    data: {
+                        apiBase: apiBase(),
+                        origin: window.location.origin,
+                        port: window.location.port,
+                        err: err?.message,
+                        isLocalDev: window.VotriApp?.isLocalDevHost?.(),
+                    },
+                    hypothesisId: 'B',
+                    timestamp: Date.now(),
+                    runId: 'pre-fix',
+                }),
+            }).catch(() => {});
+            // #endregion
+            const isLocal = window.VotriApp?.isLocalDevHost?.() ?? false;
             const hint = err.message && err.message.includes('HTML')
-                ? 'Chạy start.bat (hoặc node server.js) rồi mở http://localhost:3000 — không dùng Live Server.'
-                : `Không kết nối API (${API_BASE}). Bật XAMPP MySQL và chạy: node server.js`;
+                ? (isLocal
+                    ? 'Chạy start.bat (hoặc node server.js) rồi mở http://localhost:3000 — không dùng Live Server.'
+                    : 'Server trả HTML — kiểm tra deploy Vercel (vercel.json includeFiles).')
+                : (isLocal
+                    ? `Không kết nối API (${apiBase()}). Bật MySQL và chạy: node server.js`
+                    : `Không kết nối API (${apiBase()}). Tải lại trang hoặc thử lại sau.`);
             showToast(hint, 'info');
         }
     });
@@ -542,7 +568,7 @@ function setupAuthListeners() {
             return;
         }
         try {
-            const response = await fetch(`${API_BASE}/api/auth/verify-2fa`, {
+            const response = await fetch(`${apiBase()}/api/auth/verify-2fa`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tempToken, code }),
@@ -620,7 +646,7 @@ function setupAuthListeners() {
             const regBody = window.VotriApp?.withPublicIp
                 ? await window.VotriApp.withPublicIp(regPayload)
                 : regPayload;
-            const response = await fetch(`${API_BASE}/api/auth/register`, {
+            const response = await fetch(`${apiBase()}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(regBody)
@@ -656,7 +682,7 @@ function setupAuthListeners() {
         if (!email) { showToast('Vui lòng nhập email.', 'info'); return; }
 
         try {
-            const response = await fetch(`${API_BASE}/api/forgot-password`, {
+            const response = await fetch(`${apiBase()}/api/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
@@ -705,7 +731,7 @@ function setupAuthListeners() {
         }
 
         try {
-            const response = await fetch(`${API_BASE}/api/auth/reset-password`, {
+            const response = await fetch(`${apiBase()}/api/auth/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: currentResetToken, password: newPassword })
@@ -799,7 +825,7 @@ async function triggerOtp(email, name) {
     currentOtpEmail = email;
 
     try {
-        const response = await fetch(`${API_BASE}/api/send-otp`, {
+        const response = await fetch(`${apiBase()}/api/send-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, type: 'register', name })
@@ -873,7 +899,7 @@ async function checkResetTokenFromUrl() {
     currentResetToken = token;
 
     try {
-        const response = await fetch(`${API_BASE}/api/verify-reset-token?token=${encodeURIComponent(token)}`);
+        const response = await fetch(`${apiBase()}/api/verify-reset-token?token=${encodeURIComponent(token)}`);
         const data = await response.json();
 
         if (!response.ok || !data.success) {

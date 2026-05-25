@@ -588,7 +588,27 @@
     </div>
 
     <!-- App Script (thứ tự: core → api → feature → app) -->
-    <script src="js/votri-core.js?v=1.0.2"></script>
+    <script src="js/votri-core.js?v=1.0.4"></script>
+    <script>
+    /* Production (Vercel): API cùng origin — chạy trước app.js nếu votri-core cache cũ */
+    (function () {
+        var loc = window.location;
+        if (loc.protocol === 'file:') return;
+        if (/^(localhost|127\.0\.0\.1)$/i.test(loc.hostname)) return;
+        if (!loc.port || loc.port === '443' || loc.port === '80') {
+            var origin = loc.origin;
+            if (window.VotriApp) {
+                Object.defineProperty(window.VotriApp, 'API_BASE', {
+                    get: function () { return origin; },
+                    configurable: true,
+                });
+            }
+            // #region agent log
+            fetch('http://127.0.0.1:7429/ingest/bab48c62-adab-4008-aac1-13c63b94fd88',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'99cc47'},body:JSON.stringify({sessionId:'99cc47',location:'index.html:api-patch',message:'API_BASE patched for production',data:{origin:origin,hostname:loc.hostname,port:loc.port||'(empty)'},hypothesisId:'E',timestamp:Date.now(),runId:'post-fix'})}).catch(function(){});
+            // #endregion
+        }
+    })();
+    </script>
     <script src="js/user-roles.js?v=1.0.0"></script>
     <script src="js/rank-progress.js?v=1.0.0"></script>
     <script src="js/page-status.js?v=1.0.0"></script>
@@ -603,6 +623,6 @@
     <script src="js/votri-smm.js?v=1.0.2"></script>
     <script src="js/votri-accounts-admin.js?v=1.0.1"></script>
     <script src="js/votri-profile.js?v=1.0.2"></script>
-    <script src="app.js?v=3.6.2"></script>
+    <script src="app.js?v=3.6.3"></script>
 </body>
 </html>

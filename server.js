@@ -116,10 +116,10 @@ function compileIndexHtml() {
             includeRegex.lastIndex = 0;
         }
     }
-    if (process.env.DEV === '1') {
-        const t = Date.now();
-        html = html.replace(/(\.(?:js|css))\?v=[^"']+/g, `$1?t=${t}`);
-    }
+    const cacheTag = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 8)
+        || process.env.VERCEL_DEPLOYMENT_ID
+        || (process.env.DEV === '1' ? String(Date.now()) : '1.0.4');
+    html = html.replace(/(\.(?:js|css))\?v=[^"']+/g, `$1?v=${cacheTag}`);
     return html;
 }
 
