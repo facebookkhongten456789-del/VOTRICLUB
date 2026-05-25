@@ -12,8 +12,12 @@ const {
     fetchUserLogs,
     mapUserRow,
 } = require('../lib/user-security');
-
-const pending2faSetup = new Map(); // token -> { userId, secret, expiresAt }
+const {
+    savePendingToken,
+    getPendingToken,
+    deletePendingToken,
+    PENDING_2FA_SETUP,
+} = require('../lib/auth-store');
 
 function createProfileRouter({ dbQuery, requireAuth, profileUpdateLimiter }) {
     const router = express.Router();
@@ -196,7 +200,9 @@ function createProfileRouter({ dbQuery, requireAuth, profileUpdateLimiter }) {
 
             const secret = generateSecret();
             const setupToken = crypto.randomBytes(24).toString('hex');
-            pending2faSetup.set(setupToken, {
+            await savePendingToken(dbQuery, {
+                token: setupToken,
+                kind: PENDING_2FA_SETUP,
                 userId: req.user.id,
                 secret,
                 expiresAt: Date.now() + 10 * 60 * 1000,
@@ -222,9 +228,9 @@ function createProfileRouter({ dbQuery, requireAuth, profileUpdateLimiter }) {
     router.post('/2fa/enable', requireAuth, limit, async (req, res) => {
         try {
             const { setupToken, code } = req.body;
-            const pending = pending2faSetup.get(setupToken);
-            if (!pending || pending.userId !== req.user.id || Date.now() > pending.expiresAt) {
-                pending2faSetup.delete(setupToken);
+            const pending = await getPendingToken(dbQuery, setupToken, PENDING_2FA_SETUP);
+            if (!pending || pending.userId !== req.user.id) {
+                await deletePendingToken(dbQuery, setupToken);
                 return res.status(400).json({ success: false, message: 'Phiên thiết lập 2FA hết hạn. Thử lại.' });
             }
             if (!verifyToken(pending.secret, code)) {
@@ -235,7 +241,7 @@ function createProfileRouter({ dbQuery, requireAuth, profileUpdateLimiter }) {
                 'UPDATE users SET two_factor_enabled = 1, two_factor_secret = ? WHERE id = ?',
                 [pending.secret, req.user.id],
             );
-            pending2faSetup.delete(setupToken);
+            await deletePendingToken(dbQuery, setupToken);
             await logUserActivity(dbQuery, req.user.id, 'Bật xác thực 2 lớp (2FA)', 'Thành công', req);
 
             const user = await loadUser(req.user.id);

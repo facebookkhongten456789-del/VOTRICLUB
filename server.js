@@ -62,6 +62,17 @@ const {
     sanitizeIncludePath,
     isProduction,
 } = require('./lib/security-middleware');
+const {
+    purgeExpired,
+    saveSession,
+    getSession,
+    deleteSession,
+    updateSessionsRoleForUser,
+    savePendingToken,
+    getPendingToken,
+    deletePendingToken,
+    PENDING_2FA_LOGIN,
+} = require('./lib/auth-store');
 
 // --- MySQL Connection Pool ---
 const db = mysql.createPool({
@@ -136,7 +147,7 @@ app.use(buildCorsMiddleware(cors));
 app.use(express.json({ limit: '512kb' }));
 
 // --- Auth Middleware ---
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
     const auth = req.headers.authorization;
     if (!auth?.startsWith('Bearer ')) {
         return res.status(401).json({ 
@@ -146,9 +157,15 @@ function requireAuth(req, res, next) {
     }
     
     const token = auth.split(' ')[1];
-    const session = activeSessions.get(token);
-    if (!session || Date.now() > session.expiresAt) {
-        activeSessions.delete(token);
+    let session;
+    try {
+        session = await getSession(dbQuery, token);
+    } catch (err) {
+        console.error('[AUTH SESSION]', err.message);
+        return res.status(500).json({ success: false, message: 'Lỗi xác thực phiên.' });
+    }
+    if (!session) {
+        await deleteSession(dbQuery, token).catch(() => {});
         return res.status(401).json({ 
             success: false, 
             message: 'Token hết hạn hoặc không hợp lệ.' 
@@ -156,7 +173,7 @@ function requireAuth(req, res, next) {
     }
     
     if (session.status === 'Blocked') {
-        activeSessions.delete(token);
+        await deleteSession(dbQuery, token).catch(() => {});
         return res.status(403).json({
             success: false,
             message: 'Tài khoản đã bị khóa. Liên hệ hỗ trợ.',
@@ -238,11 +255,7 @@ const otpStore = new Map();
 // Map<token, { email, expiresAt }>
 const resetTokenStore = new Map();
 
-// Map<token, { id, email, role, expiresAt }>
-const activeSessions = new Map();
-
-// Map<tempToken, { userId, expiresAt }> — bước 2 sau mật khẩu khi bật 2FA
-const pending2faLogin = new Map();
+// Phiên đăng nhập & 2FA tạm: lưu MySQL (lib/auth-store) — Vercel serverless không giữ RAM
 
 const OTP_VALIDITY_MS = 10 * 60 * 1000; // 10 minutes (matches email template)
 const RESET_VALIDITY_MS = 30 * 60 * 1000; // 30 minutes
@@ -275,17 +288,12 @@ setInterval(() => {
     for (const [token, data] of resetTokenStore.entries()) {
         if (now > data.expiresAt) resetTokenStore.delete(token);
     }
-    for (const [token, session] of activeSessions.entries()) {
-        if (now > session.expiresAt) activeSessions.delete(token);
-    }
-    for (const [token, data] of pending2faLogin.entries()) {
-        if (now > data.expiresAt) pending2faLogin.delete(token);
-    }
+    purgeExpired(dbQuery).catch((err) => console.error('[AUTH PURGE]', err.message));
 }, 5 * 60 * 1000);
 
-function createSessionToken(userRow) {
+async function createSessionToken(userRow) {
     const token = crypto.randomBytes(32).toString('hex');
-    activeSessions.set(token, {
+    await saveSession(dbQuery, token, {
         id: userRow.id,
         email: userRow.email,
         role: normalizeUserRole(userRow.role),
@@ -1080,7 +1088,9 @@ app.post('/api/auth/login', loginLimiter, async (req, res) => {
 
         if (user.two_factor_enabled && user.two_factor_secret) {
             const tempToken = crypto.randomBytes(32).toString('hex');
-            pending2faLogin.set(tempToken, {
+            await savePendingToken(dbQuery, {
+                token: tempToken,
+                kind: PENDING_2FA_LOGIN,
                 userId: user.id,
                 expiresAt: Date.now() + 5 * 60 * 1000,
             });
@@ -1095,7 +1105,7 @@ app.post('/api/auth/login', loginLimiter, async (req, res) => {
         await recordLoginDevice(dbQuery, user, req);
         await logUserActivity(dbQuery, user.id, 'đăng nhập hệ thống (MySQL)', 'Thành công', req);
 
-        const token = createSessionToken(user);
+        const token = await createSessionToken(user);
         return res.json({
             success: true,
             token,
@@ -1123,12 +1133,12 @@ app.post('/api/auth/login', loginLimiter, async (req, res) => {
             // Generate session token
             const token = crypto.randomBytes(32).toString('hex');
             const expiresAt = Date.now() + SESSION_VALIDITY_MS;
-            activeSessions.set(token, {
+            await saveSession(dbQuery, token, {
                 id: 0,
                 email: fallbackAdmin.email,
                 role: 'admin',
                 status: 'Verified',
-                expiresAt
+                expiresAt,
             });
             
             return res.json({
@@ -1163,15 +1173,15 @@ app.post('/api/auth/verify-2fa', loginLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Thiếu mã 2FA hoặc phiên đăng nhập.' });
         }
 
-        const pending = pending2faLogin.get(tempToken);
-        if (!pending || Date.now() > pending.expiresAt) {
-            pending2faLogin.delete(tempToken);
+        const pending = await getPendingToken(dbQuery, tempToken, PENDING_2FA_LOGIN);
+        if (!pending) {
+            await deletePendingToken(dbQuery, tempToken);
             return res.status(400).json({ success: false, message: 'Phiên 2FA hết hạn. Đăng nhập lại.' });
         }
 
         const rows = await dbQuery('SELECT * FROM users WHERE id = ?', [pending.userId]);
         if (!rows.length) {
-            pending2faLogin.delete(tempToken);
+            await deletePendingToken(dbQuery, tempToken);
             return res.status(404).json({ success: false, message: 'Không tìm thấy tài khoản.' });
         }
 
@@ -1180,11 +1190,11 @@ app.post('/api/auth/verify-2fa', loginLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Mã 2FA không đúng.' });
         }
 
-        pending2faLogin.delete(tempToken);
+        await deletePendingToken(dbQuery, tempToken);
         await recordLoginDevice(dbQuery, user, req);
         await logUserActivity(dbQuery, user.id, 'đăng nhập hệ thống (2FA)', 'Thành công', req);
 
-        const token = createSessionToken(user);
+        const token = await createSessionToken(user);
         return res.json({ success: true, token, user: publicUserPayload(user) });
     } catch (err) {
         console.error('[VERIFY 2FA]', err);
@@ -1482,10 +1492,8 @@ app.post('/api/admin/users/delete', requireAuth, requireAdmin, async (req, res) 
     }
 });
 
-function refreshSessionsRole(userId, newRole) {
-    for (const [, session] of activeSessions) {
-        if (session.id === userId) session.role = newRole;
-    }
+async function refreshSessionsRole(userId, newRole) {
+    await updateSessionsRoleForUser(dbQuery, userId, newRole);
 }
 
 /**
@@ -1541,7 +1549,7 @@ app.post('/api/admin/users/update-role', requireAuth, requireAdmin, async (req, 
             'Thành công',
             req,
         );
-        refreshSessionsRole(uid, newRole);
+        await refreshSessionsRole(uid, newRole);
 
         return res.json({
             success: true,
