@@ -1,0 +1,28 @@
+<div class="view-container hidden" id="view-deposit">
+    <div class="view-header-flex">
+        <h2 class="view-title text-neon-cyan">Nạp tiền (Cổng thanh toán MoMo)</h2>
+        <p class="view-subtitle">Thanh toán tự động qua cổng MoMo Business API v2. Tiền được cộng ngay lập tức.</p>
+    </div>
+    
+    <div style="display: flex; justify-content: center; margin-top: 40px;">
+        <div class="dashboard-card glass-card" style="padding: 40px; width: 100%; max-width: 500px; text-align: center;">
+            <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 20px;">
+            <h3 class="section-title" style="margin: 0 0 10px; font-size: 1.5rem; color: #A50064;">Nạp qua MoMo</h3>
+            <p style="color: var(--text-dim); margin-bottom: 30px;">Nhập số tiền bạn muốn nạp. Hệ thống sẽ chuyển hướng bạn đến trang thanh toán bảo mật của MoMo.</p>
+            
+            <div class="form-group" style="text-align: left; margin-bottom: 30px;">
+                <label style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 8px; display: block;">Số tiền muốn nạp (VNĐ)</label>
+                <input type="number" id="deposit-momo-amount" placeholder="VD: 50000" value="50000" style="width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(165, 0, 100, 0.5); border-radius: 8px; color: #fff; font-size: 1.2rem; font-weight: bold; outline: none; font-family: monospace; text-align: center;">
+            </div>
+
+            <button id="btn-momo-pay" style="width: 100%; padding: 16px; background: #A50064; border: none; border-radius: 8px; color: #fff; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                Thanh toán qua MoMo <i data-lucide="arrow-right" style="width: 20px;"></i>
+            </button>
+            <div id="momo-pay-error" style="color: #ff4d4d; font-size: 0.9rem; margin-top: 15px; display: none;"></div>
+            
+            <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                <i data-lucide="shield-check" style="width: 16px; display: inline-block; vertical-align: middle; margin-right: 5px;"></i> Giao dịch được mã hóa an toàn 256-bit
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="view-container hidden" id="view-pricing">
+    <div class="view-header-flex">
+        <div>
+            <h2 class="view-title text-neon-cyan">Bảng giá dịch vụ</h2>
+            <p class="view-subtitle">Bảng giá các dịch vụ tương tác mạng xã hội với ưu đãi hấp dẫn theo cấp bậc tài khoản</p>
+        </div>
+    </div>
+
+    <!-- Tiers/Benefits Section -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0 28px;">
+        <!-- Member Card -->
+        <div class="dashboard-card glass-card" style="padding: 20px; border-left: 4px solid var(--text-secondary); display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden;">
+            <div style="position: absolute; right: -15px; top: -15px; font-size: 5rem; opacity: 0.05; font-weight: 800; color: #fff; pointer-events: none;">M</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; display: flex;">
+                    <i data-lucide="user" style="color: var(--text-secondary); width: 20px; height: 20px;"></i>
+                </div>
+                <h4 style="color: var(--text-primary); margin: 0; font-size: 1.05rem; font-weight: 700;">Thành viên</h4>
+            </div>
+            <p class="text-dim" style="font-size: 0.85rem; margin: 0; line-height: 1.5;">Tài khoản đăng ký mặc định. Được hưởng mức giá dịch vụ chuẩn trên hệ thống.</p>
+            <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.8rem; color: var(--text-dim);">Điều kiện nâng cấp:</span>
+                <span class="badge" style="background: rgba(255,255,255,0.08); color: var(--text-primary); font-size: 0.75rem;">Mặc định</span>
+            </div>
+        </div>
+
+        <!-- Collaborator Card -->
+        <div class="dashboard-card glass-card" style="padding: 20px; border-left: 4px solid var(--neon-cyan); display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 243, 255, 0.05);">
+            <div style="position: absolute; right: -15px; top: -15px; font-size: 5rem; opacity: 0.05; font-weight: 800; color: var(--neon-cyan); pointer-events: none;">R</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="background: rgba(0, 243, 255, 0.1); padding: 8px; border-radius: 8px; display: flex;">
+                    <i data-lucide="sparkles" style="color: var(--neon-cyan); width: 20px; height: 20px;"></i>
+                </div>
+                <h4 style="color: var(--neon-cyan); margin: 0; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">Cộng tác viên <span class="badge badge-neon-cyan" style="font-size: 0.7rem; padding: 2px 6px;">ĐỒNG GIÁ</span></h4>
+            </div>
+            <p class="text-dim" style="font-size: 0.85rem; margin: 0; line-height: 1.5;">Hưởng đơn giá đồng bộ chuẩn với cấp <strong style="color: var(--neon-cyan);">Thành viên</strong>, cùng các quyền lợi quản lý nâng cao.</p>
+            <div style="margin-top: auto; border-top: 1px solid rgba(0, 243, 255, 0.1); padding-top: 10px; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.8rem; color: var(--text-dim);">Tổng nạp tích lũy:</span>
+                    <span style="font-size: 0.85rem; color: var(--neon-cyan); font-weight: 600;">&ge; 1.000.000đ</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.8rem; color: var(--text-dim);">Hoặc số dư ví:</span>
+                    <span style="font-size: 0.85rem; color: var(--neon-cyan); font-weight: 600;">&ge; 200.000đ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIP Partner Card -->
+        <div class="dashboard-card glass-card" style="padding: 20px; border-left: 4px solid var(--neon-yellow); display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.05);">
+            <div style="position: absolute; right: -15px; top: -15px; font-size: 5rem; opacity: 0.05; font-weight: 800; color: var(--neon-yellow); pointer-events: none;">D</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 8px; border-radius: 8px; display: flex;">
+                    <i data-lucide="crown" style="color: var(--neon-yellow); width: 20px; height: 20px;"></i>
+                </div>
+                <h4 style="color: var(--neon-yellow); margin: 0; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">Nhà phân phối <span class="badge badge-neon-yellow" style="font-size: 0.7rem; padding: 2px 6px; color: #000;">GIÁ GỐC</span></h4>
+            </div>
+            <p class="text-dim" style="font-size: 0.85rem; margin: 0; line-height: 1.5;">Hưởng đơn giá tối ưu sát giá gốc của nhà cung cấp chỉ cộng thêm <strong style="color: var(--neon-yellow);">1% cost</strong> chi phí vận hành.</p>
+            <div style="margin-top: auto; border-top: 1px solid rgba(255, 215, 0, 0.1); padding-top: 10px; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.8rem; color: var(--text-dim);">Tổng nạp tích lũy:</span>
+                    <span style="font-size: 0.85rem; color: var(--neon-yellow); font-weight: 600;">&ge; 5.000.000đ</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.8rem; color: var(--text-dim);">Hoặc số dư ví:</span>
+                    <span style="font-size: 0.85rem; color: var(--neon-yellow); font-weight: 600;">&ge; 1.000.000đ</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Grid Table Card -->
+    <div class="dashboard-card glass-card" style="padding: 24px; min-height: 400px; display: flex; flex-direction: column; gap: 20px;">
+        <!-- Filter Controls -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px;">
+            <div class="table-filters" style="margin: 0; display: flex; flex-wrap: wrap; gap: 8px;" id="pricing-platform-tabs">
+                <!-- Dynamically populated or static platform selector buttons -->
+                <button class="btn btn-secondary active pricing-tab-btn" data-platform="ALL">Tất cả</button>
+            </div>
+            
+            <div class="form-group" style="margin: 0; min-width: 280px; position: relative;">
+                <i data-lucide="search" style="position: absolute; left: 12px; top: 11px; width: 16px; color: var(--text-dim);"></i>
+                <input type="text" id="pricing-search-input" placeholder="Tìm tên hoặc ID dịch vụ..." style="width: 100%; padding: 10px 12px 10px 36px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; font-size: 0.88rem; outline: none;">
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-responsive" style="flex: 1;">
+            <table class="neon-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">ID</th>
+                        <th style="min-width: 250px;">Dịch vụ</th>
+                        <th style="width: 130px;">Min / Max</th>
+                        <th style="width: 120px; color: var(--text-secondary);">Thành viên</th>
+                        <th style="width: 130px; color: var(--neon-cyan);">Cộng tác viên</th>
+                        <th style="width: 130px; color: var(--neon-yellow);">Nhà phân phối</th>
+                        <th style="width: 100px;" class="text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="pricing-table-body">
+                    <tr>
+                        <td colspan="7" class="text-center" style="padding: 40px; color: var(--text-dim);">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                <i data-lucide="loader-2" class="lucide-spin" style="width: 32px; height: 32px; color: var(--neon-cyan);"></i>
+                                <span>Đang tải bảng giá dịch vụ từ API...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+            <div id="pricing-pagination-info" style="font-size: 0.85rem; color: var(--text-dim);">
+                Hiển thị 0 - 0 của 0 dịch vụ
+            </div>
+            <div id="pricing-pagination-controls" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                <!-- Page buttons will be injected dynamically -->
+            </div>
+        </div>
+    </div>
+</div>

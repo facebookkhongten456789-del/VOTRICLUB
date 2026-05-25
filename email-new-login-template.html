@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Đăng nhập thiết bị mới — VÔ TRI CLUB</title>
+    <!--
+      EmailJS: tạo template mới, dán HTML này.
+      Biến bắt buộc: {{name}} {{device}} {{ip}} {{login_time}} {{profile_link}}
+      Subject gợi ý: Cảnh báo đăng nhập từ thiết bị mới — VÔ TRI CLUB
+      .env: EMAILJS_NEW_LOGIN_TEMPLATE_ID=template_xxxxx
+    -->
+</head>
+<body style="margin:0;padding:0;background-color:#050508;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#050508;">
+        <tr>
+            <td align="center" style="padding:40px 16px;">
+
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:520px;background-color:#0c0c14;border:1px solid #1e1e2a;border-top:3px solid #00f0ff;border-radius:8px;">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding:28px 32px 20px;border-bottom:1px solid #1e1e2a;">
+                            <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:18px;font-weight:700;color:#f5f6fa;letter-spacing:0.3px;">
+                                VÔ TRI CLUB - SYSTEM
+                            </p>
+                            <p style="margin:8px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#718096;">
+                                Thông báo bảo mật — Đăng nhập thiết bị mới
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding:28px 32px;">
+                            <p style="margin:0 0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.6;color:#a0aec0;">
+                                Xin chào <strong style="color:#f5f6fa;">{{name}}</strong>,
+                            </p>
+                            <p style="margin:0 0 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;line-height:1.7;color:#a0aec0;">
+                                Tài khoản <strong style="color:#f5f6fa;">{{user_email}}</strong> vừa đăng nhập từ một <strong style="color:#f5f6fa;">thiết bị chưa từng dùng</strong> trên hệ thống. Nếu đúng là bạn, bạn có thể bỏ qua email này.
+                            </p>
+
+                            <!-- Chi tiết đăng nhập -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#080810;border:1px solid #1e1e2a;border-radius:6px;margin-bottom:24px;">
+                                <tr>
+                                    <td style="padding:20px 20px 8px;">
+                                        <p style="margin:0 0 4px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#718096;">
+                                            Chi tiết phiên đăng nhập
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0 20px 12px;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="padding:6px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#718096;width:100px;vertical-align:top;">Thiết bị</td>
+                                                <td style="padding:6px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#f5f6fa;font-weight:600;">{{device}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:6px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#718096;vertical-align:top;">Địa chỉ IP</td>
+                                                <td style="padding:6px 0;font-family:'Courier New',Courier,monospace;font-size:13px;color:#00f0ff;">{{ip}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:6px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#718096;vertical-align:top;">Thời gian</td>
+                                                <td style="padding:6px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:13px;color:#f5f6fa;">{{login_time}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- CTA -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto 24px;">
+                                <tr>
+                                    <td align="center" style="border-radius:6px;background-color:#00f0ff;">
+                                        <a href="{{profile_link}}" target="_blank" style="display:inline-block;padding:14px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;font-weight:600;color:#050508;text-decoration:none;letter-spacing:0.3px;">
+                                            Xem hồ sơ &amp; bảo mật
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:12px;color:#718096;">
+                                Hoặc mở link:
+                            </p>
+                            <p style="margin:0 0 24px;font-family:'Courier New',Courier,monospace;font-size:11px;line-height:1.6;color:#00f0ff;word-break:break-all;">
+                                <a href="{{profile_link}}" style="color:#00f0ff;text-decoration:underline;">{{profile_link}}</a>
+                            </p>
+
+                            <!-- Warning -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="padding:14px 16px;background-color:#120808;border-left:3px solid #ff3131;border-radius:0 4px 4px 0;">
+                                        <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:12px;line-height:1.6;color:#a0aec0;">
+                                            <strong style="color:#f5f6fa;">Không phải bạn?</strong> Đổi mật khẩu ngay, bật xác thực 2 lớp (2FA) trong mục Hồ sơ → Bảo mật, và liên hệ <a href="mailto:booking.votriclub@gmail.com" style="color:#00f0ff;">booking.votriclub@gmail.com</a>.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:24px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:12px;line-height:1.6;color:#718096;">
+                                Bạn nhận email này vì đã bật <em>Thông báo đăng nhập thiết bị mới</em> trong cài đặt tài khoản. Tắt tùy chọn này tại Hồ sơ cá nhân nếu không muốn nhận thông báo.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding:20px 32px;border-top:1px solid #1e1e2a;">
+                            <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:11px;line-height:1.6;color:#718096;text-align:center;">
+                                © 2026 VÔ TRI CLUB — SYSTEM<br>
+                                Email tự động, vui lòng không trả lời.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

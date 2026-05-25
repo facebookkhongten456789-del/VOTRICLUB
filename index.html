@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://graph.facebook.com;">
+    <title>VÔ TRI CLUB - SYSTEM | Quản lý trang Facebook</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=1.1.0">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Background Grid & Neon Orbs for Glassmorphism Context -->
+        <div class="neon-orb orb-1"></div>
+        <div class="neon-orb orb-2"></div>
+        <div class="neon-orb orb-3"></div>
+        <div class="grid-overlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <i data-lucide="shield-alert" class="logo-icon"></i>
+                </div>
+                <span class="brand-text" style="text-align: center; width: 100%;"><span class="brand-line" style="font-size: 20px; font-weight: 800; letter-spacing: 1px; color: var(--neon-cyan);">VÔ TRI CLUB</span><span class="brand-line text-neon-pink brand-sub" style="font-size: 10px; opacity: 0.8; letter-spacing: 0.5px;">HỆ THỐNG DỊCH VỤ SMM</span></span>
+            </div>
+
+            <nav class="sidebar-menu">
+                <details class="sidebar-group" open>
+                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                        <span>MENU</span>
+                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                    </summary>
+                    <div class="sidebar-group-content" style="padding-top: 5px;">
+                        <a href="#" class="menu-item active" data-tab="dashboard">
+                            <i data-lucide="layout-dashboard"></i>
+                            <span>Tổng quan</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="create-order">
+                            <i data-lucide="shopping-cart"></i>
+                            <span>Tạo đơn hàng</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="deposit">
+                            <i data-lucide="landmark"></i>
+                            <span>Nạp tiền</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="history">
+                            <i data-lucide="shopping-bag"></i>
+                            <span>Đơn hàng đã mua</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="pricing">
+                            <i data-lucide="folder"></i>
+                            <span>Bảng giá dịch vụ</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="support">
+                            <i data-lucide="message-square"></i>
+                            <span>Yêu cầu hỗ trợ</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="profile">
+                            <i data-lucide="user-circle"></i>
+                            <span>Hồ sơ cá nhân</span>
+                        </a>
+                    </div>
+                </details>
+
+                <details class="sidebar-group">
+                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                        <span>DỊCH VỤ</span>
+                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                    </summary>
+                    <div class="sidebar-group-content" style="padding-top: 5px;">
+                        <a href="#" class="menu-item" data-tab="service-facebook" data-platform="Facebook">
+                            <i data-lucide="facebook"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="service-tiktok" data-platform="TIKTOK">
+                            <i data-lucide="music"></i>
+                            <span>TIKTOK</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="service-instagram" data-platform="Instagram">
+                            <i data-lucide="instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="service-shopee" data-platform="Shopee">
+                            <i data-lucide="shopping-bag"></i>
+                            <span>Shopee</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="service-telegram" data-platform="Telegram">
+                            <i data-lucide="send"></i>
+                            <span>Telegram</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="service-youtube" data-platform="Youtube">
+                            <i data-lucide="youtube"></i>
+                            <span>Youtube</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="service-traffic" data-platform="Traffic">
+                            <i data-lucide="globe"></i>
+                            <span>Traffic</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="service-whatsapp" data-platform="WhatsApp">
+                            <i data-lucide="message-circle"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                    </div>
+                </details>
+
+                <details class="sidebar-group">
+                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                        <span>CÔNG CỤ (CŨ)</span>
+                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                    </summary>
+                    <div class="sidebar-group-content" style="padding-top: 5px;">
+                        <a href="#" class="menu-item" data-tab="pages">
+                            <i data-lucide="layers"></i>
+                            <span>Quản lý Fanpage</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="analytics">
+                            <i data-lucide="line-chart"></i>
+                            <span>Phân tích dữ liệu</span>
+                        </a>
+                        <a href="#" class="menu-item" data-tab="settings">
+                            <i data-lucide="settings"></i>
+                            <span>Cài đặt Token FB</span>
+                        </a>
+                    </div>
+                </details>
+
+                <details class="sidebar-group admin-only hidden">
+                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: var(--neon-pink); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                        <span>QUẢN TRỊ VIÊN</span>
+                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                    </summary>
+                    <div class="sidebar-group-content" style="padding-top: 5px;">
+                        <a href="#" class="menu-item admin-only hidden" data-tab="accounts" id="menu-item-accounts">
+                            <i data-lucide="users"></i>
+                            <span>Tài khoản đã đăng ký</span>
+                        </a>
+
+                        <a href="#" class="menu-item admin-only hidden" data-tab="apiservice">
+                            <i data-lucide="server"></i>
+                            <span>Cấu hình API gốc</span>
+                        </a>
+                        <a href="#" class="menu-item admin-only hidden" data-tab="service-api-update">
+                            <i data-lucide="server"></i>
+                            <span>API + Update Dịch Vụ</span>
+                        </a>
+                    </div>
+                </details>
+
+                <a href="#" class="menu-item" id="btn-logout" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <i data-lucide="log-out"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Avatar" id="sidebar-user-avatar">
+                        <span class="status-indicator-online"></span>
+                    </div>
+                    <div class="user-info">
+                        <span class="username">Alex Mercer</span>
+                        <span class="user-role">Quản trị viên</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="mobile-toggle-btn" id="mobile-toggle" aria-label="Mở/đóng menu">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="header-search">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" placeholder="Tìm trang, niche, tier..." id="global-search">
+                </div>
+                <div class="header-actions" id="header-actions-container" style="display: none;" aria-hidden="true">
+                    <button class="btn btn-primary" id="btn-add-page-header">
+                        <i data-lucide="plus"></i>
+                        <span>Thêm trang mới</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <!-- INCLUDE views/view-dashboard.html -->
+
+            <!-- Pages View Container (Grid of Cards) -->
+            <!-- INCLUDE views/view-pages.html -->
+            
+            <!-- Analytics View Container (Interactive Charts) -->
+            <!-- INCLUDE views/view-analytics.html -->
+
+            <!-- Settings View Container (Theme & DB control) -->
+            <!-- INCLUDE views/view-settings.html -->
+
+            <!-- Profile View Container -->
+            <!-- INCLUDE views/view-profile.html -->
+
+            <!-- Accounts View Container (Auditing & Admin Panel) -->
+            <!-- INCLUDE views/view-accounts.html -->
+
+            <!-- API Service View -->
+            <!-- INCLUDE views/view-apiservice.html -->
+            <!-- SMM View Containers -->
+            <!-- INCLUDE views/view-create-order.html -->
+
+            <!-- INCLUDE views/view-deposit.html -->
+
+            <!-- INCLUDE views/view-history.html -->
+
+            <!-- INCLUDE views/view-pricing.html -->
+
+            <!-- INCLUDE views/view-support.html -->
+
+            <!-- INCLUDE views/view-service-api-update.html -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals Section -->
+    <!-- Add / Edit Page Modal -->
+    <div class="modal-backdrop" id="modal-page">
+        <div class="modal glass-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Thêm trang Facebook</h3>
+                <button class="modal-close" id="modal-btn-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="form-page" class="modal-form">
+                <input type="hidden" id="field-id">
+                
+                <div class="form-group">
+                    <label for="field-name">Tên trang</label>
+                    <input type="text" id="field-name" required placeholder="vd. Vô Tri Club Entertainment">
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="field-niche">Niche</label>
+                        <input type="text" id="field-niche" required placeholder="vd. Comedy, Tech, Gaming">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="field-tier">Tier</label>
+                        <select id="field-tier" required>
+                            <option value="Tier 1">Tier 1</option>
+                            <option value="Tier 2">Tier 2</option>
+                            <option value="Tier 3">Tier 3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="field-followers">Người theo dõi</label>
+                        <input type="number" id="field-followers" required min="0" placeholder="vd. 75000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="field-status">Status</label>
+                        <select id="field-status" required>
+                            <option value="Active">Hoạt động 🟢</option>
+                            <option value="Inactive">Không hoạt động 🟡</option>
+                            <option value="Die">DIE 🔴</option>
+                            <option value="Restricted">Hạn chế</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field-url">URL trang Facebook (tuỳ chọn — chỉ để hiển thị/link)</label>
+                    <input type="url" id="field-url" placeholder="https://facebook.com/profile.php?id=61590091392544">
+                    <span class="help-text">Kiểm tra page dùng <strong>Page Access Token</strong> (Cài đặt), không cần URL. Hỗ trợ dạng profile.php?id=...</span>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="modal-btn-cancel">Huỷ</button>
+                    <button type="submit" class="btn btn-primary" id="modal-btn-submit">
+                        <span>Lưu trang</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Liên hệ Zalo (góc dưới phải) -->
+    <a
+        href="https://zalo.me/0383330278"
+        class="zalo-float"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat Zalo 0383 330 278"
+        title="Chat Zalo: 0383 330 278"
+    >
+        <span class="zalo-float-icon" aria-hidden="true">
+            <svg class="zalo-float-img" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+                <rect width="48" height="48" rx="11" fill="#0068FF"/>
+                <g transform="translate(12 12)">
+                    <path fill="#FFFFFF" d="M12.491 0C5.645 0 0 4.78 0 10.668c0 3.196 1.737 6.027 4.452 7.87L3.732 24l6.953-3.827c.65.093 1.32.14 1.998.14 6.846 0 12.491-4.78 12.491-10.668C24.982 4.78 19.337 0 12.491 0zm-.245 15.456h-1.322l-3.81 2.103.724-4.372H5.91c-.805 0-1.458-.665-1.458-1.484V8.456c0-.819.653-1.484 1.458-1.484h12.672c.805 0 1.458.665 1.458 1.484v2.247c0 .819-.653 1.484-1.458 1.484h-2.156l.899 5.269z"/>
+                </g>
+            </svg>
+        </span>
+        <span class="zalo-float-text">
+            <span class="zalo-float-label">Chat Zalo</span>
+            <span class="zalo-float-phone">0383 330 278</span>
+        </span>
+    </a>
+
+    <!-- Authentication Screen Overlay (Login/Register/Forgot/OTP) -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-box glass-card">
+            <div class="auth-header">
+                <div class="logo-group">
+                    <div class="logo-icon">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <span class="brand-text"><span class="brand-line">VÔ TRI CLUB</span><span class="brand-line text-neon-cyan brand-sub">- SYSTEM</span></span>
+                </div>
+                <p class="auth-subtitle" id="auth-subtitle-text">Đăng nhập để quản lý hệ thống</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="form-login" class="auth-form active">
+                <div class="form-group margin-bottom-md">
+                    <label for="login-email">Địa chỉ Email</label>
+                    <input type="email" id="login-email" required placeholder="name@votri.club">
+                </div>
+                <div class="form-group margin-bottom-md">
+                    <label for="login-password">Mật khẩu</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                    <i data-lucide="log-in"></i>
+                    <span>Đăng nhập</span>
+                </button>
+                <div class="auth-footer">
+                    <a href="#" id="link-goto-forgot" class="auth-link">Quên mật khẩu?</a>
+                    <span class="text-dim">Chưa có tài khoản? <a href="#" id="link-goto-register" class="auth-link">Đăng ký tại đây</a></span>
+                </div>
+            </form>
+
+            <!-- 2FA bước 2 (sau mật khẩu đúng) -->
+            <form id="form-login-2fa" class="auth-form">
+                <p class="text-dim" style="font-size: 13px; margin-bottom: 16px;">Mở app <strong>Google Authenticator</strong> → chọn tài khoản <strong>Votri Club</strong> → nhập mã 6 số (đổi mỗi 30 giây).</p>
+                <div class="form-group margin-bottom-md">
+                    <label for="login-2fa-code">Mã xác thực</label>
+                    <input type="text" id="login-2fa-code" maxlength="6" inputmode="numeric" required placeholder="000000" autocomplete="one-time-code">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                    <i data-lucide="shield-check"></i>
+                    <span>Xác nhận đăng nhập</span>
+                </button>
+                <div class="auth-footer text-center">
+                    <a href="#" id="link-2fa-back-login" class="auth-link">Quay lại đăng nhập</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="form-register" class="auth-form">
+                <div class="form-group margin-bottom-sm">
+                    <label for="register-name">Họ và tên</label>
+                    <input type="text" id="register-name" required placeholder="vd. Huy Nguyen">
+                </div>
+                <div class="form-group margin-bottom-sm">
+                    <label for="register-email">Địa chỉ Email</label>
+                    <input type="email" id="register-email" required placeholder="yourname@gmail.com">
+                </div>
+                <div class="form-grid margin-bottom-md">
+                    <div class="form-group">
+                        <label for="register-password">Mật khẩu</label>
+                        <input type="password" id="register-password" required placeholder="Tối thiểu 6 ký tự">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Xác nhận</label>
+                        <input type="password" id="register-confirm" required placeholder="Xác nhận">
+                    </div>
+                </div>
+                <button type="button" id="btn-send-register-otp" class="btn btn-secondary btn-full margin-bottom-sm">
+                    <i data-lucide="mail-warning"></i>
+                    <span>Gửi Mã OTP</span>
+                </button>
+                <div id="register-otp-section" class="register-otp-section" style="display: none;">
+                    <div class="otp-instruction margin-bottom-sm">
+                        <p class="text-center text-dim" style="font-size: 13px;">
+                            Mã OTP đã gửi đến <strong id="register-otp-target-email" class="text-neon-cyan">your email</strong>. Nhập mã bên dưới:
+                        </p>
+                    </div>
+                    <div class="form-group margin-bottom-md">
+                        <label for="register-otp-code">Mã xác minh OTP</label>
+                        <input type="text" id="register-otp-code" maxlength="6" pattern="\d{6}" placeholder="vd. 123456" autocomplete="one-time-code" style="text-align: center; font-size: 24px; letter-spacing: 6px; font-family: monospace;">
+                    </div>
+                </div>
+                <button type="submit" id="btn-create-account" class="btn btn-primary btn-full margin-bottom-md" disabled>
+                    <i data-lucide="user-plus"></i>
+                    <span>Tạo Tài Khoản</span>
+                </button>
+                <div class="auth-agreement-section">
+                    <p class="agreement-text">
+                        Khi đăng ký, bạn đồng ý với 
+                        <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer" class="agreement-link">Chính sách bảo mật</a>
+                        và
+                        <a href="terms-of-service.html" target="_blank" rel="noopener noreferrer" class="agreement-link">Điều khoản dịch vụ</a>
+                    </p>
+                </div>
+                <div class="auth-footer text-center">
+                    <span class="text-dim">Đã có tài khoản? <a href="#" id="link-goto-login-1" class="auth-link">Đăng nhập</a></span>
+                </div>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="form-forgot" class="auth-form">
+                <div class="form-group margin-bottom-md">
+                    <label for="forgot-email">Email tài khoản</label>
+                    <input type="email" id="forgot-email" required placeholder="yourname@gmail.com">
+                </div>
+                <p class="text-dim text-center margin-bottom-md" style="font-size: 13px; line-height: 1.6;">
+                    Chúng tôi sẽ gửi link đặt lại mật khẩu đến email của bạn. Nhấn vào link trong email để đặt mật khẩu mới.
+                </p>
+                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                    <i data-lucide="mail"></i>
+                    <span>Gửi Link Đặt Lại Mật Khẩu</span>
+                </button>
+                <div class="auth-footer text-center">
+                    <span class="text-dim">Nhớ mật khẩu? <a href="#" id="link-goto-login-2" class="auth-link">Đăng nhập</a></span>
+                </div>
+            </form>
+
+            <!-- Reset Password Form (opened via email link) -->
+            <form id="form-reset-password" class="auth-form">
+                <div class="otp-instruction margin-bottom-md">
+                    <p class="text-center text-dim">Đặt lại mật khẩu cho tài khoản <strong id="reset-target-email" class="text-neon-cyan">your email</strong></p>
+                </div>
+                <div class="form-grid margin-bottom-md">
+                    <div class="form-group">
+                        <label for="reset-new-password">Mật khẩu mới</label>
+                        <input type="password" id="reset-new-password" required placeholder="Tối thiểu 6 ký tự" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="reset-confirm-password">Xác nhận mật khẩu</label>
+                        <input type="password" id="reset-confirm-password" required placeholder="Xác nhận" minlength="6">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                    <i data-lucide="key-round"></i>
+                    <span>Đặt Lại Mật Khẩu</span>
+                </button>
+                <div class="auth-footer text-center">
+                    <span class="text-dim"><a href="#" id="link-reset-goto-login" class="auth-link">Quay lại đăng nhập</a></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacy-policy-modal" class="modal-overlay">
+        <div class="modal-window modal-scrollable">
+            <div class="modal-header-neon">
+                <h2>🔐 Chính sách bảo mật</h2>
+                <button class="modal-close-btn" onclick="closeLegalModal('privacy-policy-modal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body-content">
+                <h3>1. Giới thiệu chung</h3>
+                <p>VÔ TRI CLUB cam kết bảo vệ quyền riêng tư của bạn. Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng, công bố và bảo vệ dữ liệu của bạn.</p>
+
+                <h3>2. Thông tin chúng tôi thu thập</h3>
+                <ul>
+                    <li><strong>Thông tin cá nhân:</strong> Tên, email, số điện thoại</li>
+                    <li><strong>Thông tin tài khoản:</strong> Tên người dùng, mật khẩu (mã hóa)</li>
+                    <li><strong>Thông tin sử dụng:</strong> Hoạt động trên website, thời gian truy cập</li>
+                    <li><strong>Thông tin kỹ thuật:</strong> Địa chỉ IP, loại trình duyệt, cookies</li>
+                </ul>
+
+                <h3>3. Cách chúng tôi sử dụng thông tin</h3>
+                <p>Thông tin được thu thập để:</p>
+                <ul>
+                    <li>Cung cấp và cải thiện dịch vụ của chúng tôi</li>
+                    <li>Xác minh danh tính người dùng</li>
+                    <li>Gửi thông báo quan trọng và cập nhật</li>
+                    <li>Phản hồi các yêu cầu hỗ trợ khách hàng</li>
+                    <li>Tuân thủ các quy định pháp luật</li>
+                </ul>
+
+                <div class="modal-highlight">
+                    <strong>⚠️ Quan trọng:</strong> Chúng tôi KHÔNG bao giờ chia sẻ mã OTP với bất kỳ bên thứ ba nào.
+                </div>
+
+                <h3>4. Bảo mật dữ liệu</h3>
+                <p>Chúng tôi sử dụng các biện pháp bảo mật tiêu chuẩn công nghiệp:</p>
+                <ul>
+                    <li>Mã hóa SSL/TLS cho tất cả các kết nối</li>
+                    <li>Mã hóa mật khẩu bằng thuật toán bcrypt</li>
+                    <li>Quyền truy cập được kiểm soát nghiêm ngặt</li>
+                    <li>Kiểm tra bảo mật định kỳ</li>
+                </ul>
+
+                <h3>5. Quyền của bạn</h3>
+                <ul>
+                    <li>Truy cập dữ liệu cá nhân của bạn</li>
+                    <li>Yêu cầu chỉnh sửa dữ liệu không chính xác</li>
+                    <li>Yêu cầu xóa tài khoản và dữ liệu liên quan</li>
+                    <li>Rút lại sự đồng ý bất cứ lúc nào</li>
+                </ul>
+
+                <h3>6. Liên hệ với chúng tôi</h3>
+                <p>Nếu bạn có câu hỏi về chính sách bảo mật này, vui lòng liên hệ với chúng tôi tại:</p>
+                <p><strong>Email:</strong> <a href="mailto:support@votri.club" class="link-neon">support@votri.club</a></p>
+
+                <p style="margin-top: 40px; text-align: center; font-size: 12px; color: #888;">
+                    <em>Cập nhật lần cuối: 24/05/2026</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div id="terms-modal" class="modal-overlay">
+        <div class="modal-window modal-scrollable">
+            <div class="modal-header-neon modal-header-cyan">
+                <h2>📋 Điều khoản dịch vụ</h2>
+                <button class="modal-close-btn" onclick="closeLegalModal('terms-modal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body-content">
+                <h3>1. Chấp nhận điều khoản</h3>
+                <p>Bằng cách đăng ký tài khoản trên VÔ TRI CLUB, bạn đồng ý với tất cả các điều khoản dịch vụ này.</p>
+
+                <h3>2. Yêu cầu tài khoản</h3>
+                <p>Để sử dụng dịch vụ, bạn phải:</p>
+                <ul>
+                    <li>Là người lớn (18 tuổi trở lên)</li>
+                    <li>Cung cấp thông tin đúng và đầy đủ</li>
+                    <li>Bảo vệ mật khẩu của bạn</li>
+                    <li>Chịu trách nhiệm cho tất cả hoạt động trên tài khoản</li>
+                </ul>
+
+                <div class="modal-warning">
+                    <strong>⚠️ NGUY HIỂM:</strong> KHÔNG bao giờ chia sẻ mật khẩu hoặc mã OTP. Chúng tôi KHÔNG bao giờ yêu cầu những thông tin này.
+                </div>
+
+                <h3>3. Hành vi cấm</h3>
+                <p>Bạn KHÔNG được:</p>
+                <ul>
+                    <li>Sử dụng dịch vụ cho các hoạt động bất hợp pháp</li>
+                    <li>Tấn công, hack, hoặc cố gắng phá vỡ hệ thống bảo mật</li>
+                    <li>Phát tán nội dung độc hại, lạm dụng, hoặc phỉ báng</li>
+                    <li>Chia sẻ thông tin của người khác mà không có sự đồng ý</li>
+                    <li>Spam hoặc lạm dụng hệ thống gửi email</li>
+                </ul>
+
+                <h3>4. Trách nhiệm của người dùng</h3>
+                <p>Người dùng chịu trách nhiệm hoàn toàn về nội dung mà bạn tải lên hoặc chia sẻ.</p>
+
+                <h3>5. Từ chối trách nhiệm</h3>
+                <p>Dịch vụ của chúng tôi được cung cấp "như là". Chúng tôi KHÔNG đảm bảo dịch vụ sẽ không bị gián đoạn hoặc hoàn toàn không có lỗi.</p>
+
+                <h3>6. Chấm dứt tài khoản</h3>
+                <p>Chúng tôi có quyền chấm dứt hoặc tạm ngừng tài khoản nếu bạn vi phạm các điều khoản này hoặc gây hại cho dịch vụ.</p>
+
+                <h3>7. Luật áp dụng</h3>
+                <p>Các điều khoản này được điều chỉnh bởi luật pháp của <strong>Việt Nam</strong>.</p>
+
+                <h3>8. Liên hệ</h3>
+                <p><strong>Email:</strong> <a href="mailto:support@votri.club" class="link-neon">support@votri.club</a></p>
+
+                <p style="margin-top: 40px; text-align: center; font-size: 12px; color: #888;">
+                    <em>Cập nhật lần cuối: 24/05/2026</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Script (thứ tự: core → api → feature → app) -->
+    <script src="js/votri-core.js?v=1.0.2"></script>
+    <script src="js/user-roles.js?v=1.0.0"></script>
+    <script src="js/rank-progress.js?v=1.0.0"></script>
+    <script src="js/page-status.js?v=1.0.0"></script>
+    <script src="js/pages-api.js?v=1.0.1"></script>
+    <script src="js/orders-page.js?v=1.0.1"></script>
+    <script src="js/votri-fanpages.js?v=1.1.2"></script>
+    <script src="js/votri-support.js?v=1.0.0"></script>
+    <script src="js/votri-deposit.js?v=1.0.1"></script>
+    <script src="js/profile-api.js?v=1.0.0"></script>
+    <script src="js/votri-guard.js?v=1.0.0"></script>
+    <script src="js/votri-nav.js?v=1.0.1"></script>
+    <script src="js/votri-smm.js?v=1.0.2"></script>
+    <script src="js/votri-accounts-admin.js?v=1.0.1"></script>
+    <script src="js/votri-profile.js?v=1.0.2"></script>
+    <script src="app.js?v=3.6.2"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<div class="view-container hidden" id="view-analytics">
+                <div class="view-header-flex">
+                    <h2 class="view-title text-neon-cyan">Phân tích & Phân bổ hệ thống</h2>
+                    <p class="view-subtitle">Tính toán thời gian thực theo phân khúc, quy mô và niche</p>
+                </div>
+
+                <div class="analytics-grid">
+                    <!-- Followers comparison -->
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title">So sánh người theo dõi theo trang</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="analyticsFollowersChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Niche donut chart -->
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Tỷ lệ Niche</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="analyticsNicheChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-empty-state" id="analytics-empty-state">
+                    <i data-lucide="bar-chart-2" class="empty-icon"></i>
+                    <p>Chưa có dữ liệu trang để tạo báo cáo. Vui lòng thêm trang trước.</p>
+                </div>
+            </div>

@@ -1,0 +1,65 @@
+<div class="view-container hidden" id="view-history">
+    <div class="view-header-flex">
+        <h2 class="view-title text-neon-cyan">Đơn hàng đã mua</h2>
+        <p class="view-subtitle">Quản lý và theo dõi tiến độ các đơn hàng SMM</p>
+    </div>
+
+    <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <div class="dashboard-card glass-card" style="padding: 20px;">
+            <div id="orders-stat-total" style="font-size: 1.8rem; font-weight: 700;">0</div>
+            <div style="font-size: 0.8rem; color: var(--text-dim);">Tổng đơn</div>
+        </div>
+        <div class="dashboard-card glass-card" style="padding: 20px;">
+            <div id="orders-stat-processing" style="font-size: 1.8rem; font-weight: 700; color: var(--neon-yellow);">0</div>
+            <div style="font-size: 0.8rem; color: var(--text-dim);">Đang xử lý</div>
+        </div>
+        <div class="dashboard-card glass-card" style="padding: 20px;">
+            <div id="orders-stat-completed" style="font-size: 1.8rem; font-weight: 700; color: #39FF14;">0</div>
+            <div style="font-size: 0.8rem; color: var(--text-dim);">Hoàn thành</div>
+        </div>
+        <div class="dashboard-card glass-card" style="padding: 20px;">
+            <div id="orders-stat-failed" style="font-size: 1.8rem; font-weight: 700; color: #ff4b4b;">0</div>
+            <div style="font-size: 0.8rem; color: var(--text-dim);">Thất bại / Hủy</div>
+        </div>
+    </div>
+
+    <div class="dashboard-card glass-card" style="padding: 24px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+            <input type="text" id="orders-filter-search" placeholder="Mã đơn, dịch vụ, link, ID SMM..." style="flex: 1; min-width: 220px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.85rem;">
+            <select id="orders-filter-status" style="background: #0d1117; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.85rem; min-width: 160px;">
+                <option value="ALL">Tất cả trạng thái</option>
+                <option value="processing">Đang xử lý</option>
+                <option value="completed">Hoàn thành</option>
+                <option value="failed">Thất bại</option>
+            </select>
+            <button type="button" class="btn btn-secondary" id="btn-orders-filter-apply" style="padding: 8px 16px;">Tìm kiếm</button>
+            <button type="button" class="btn btn-secondary" id="btn-orders-filter-reset" style="padding: 8px 16px;">Bỏ lọc</button>
+            <button type="button" class="btn" id="btn-orders-refresh" style="padding: 8px 16px; background: var(--neon-cyan); color: #000; font-weight: 600;">Làm mới</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="neon-table">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th id="th-orders-user" class="admin-only" style="display: none;">Thành viên</th>
+                        <th>Dịch vụ</th>
+                        <th>Liên kết</th>
+                        <th style="text-align: center;">SL</th>
+                        <th style="text-align: right;">Thanh toán</th>
+                        <th style="text-align: center;">Trạng thái</th>
+                        <th>Thời gian</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table-body">
+                    <tr><td colspan="8" class="text-center text-dim" style="padding: 40px;">Đang tải...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px;">
+            <span id="orders-pagination-info" class="text-dim" style="font-size: 0.85rem;">Hiển thị 0 - 0 của 0 đơn hàng</span>
+            <div id="orders-pagination-controls" style="display: flex; gap: 4px;"></div>
+        </div>
+    </div>
+</div>

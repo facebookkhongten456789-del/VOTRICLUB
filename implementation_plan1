@@ -1,0 +1,72 @@
+# Implementation Plan - Hardening Security and Resolving Critical Bugs
+
+We will implement complete end-to-end security hardening and fix critical functional gaps in the Vô Tri Club SMM Panel. This includes implementing an in-memory session token architecture to replace insecure email-based requests, adding brute force rate limiters, securing all admin actions, fixing password reset database sync, and implementing full SMM order placement.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Authentication Hardening**: We are replacing email-based body credentials (`adminEmail`, `email`) in authenticated API requests with a secure random `sessionToken` issued upon login. The token must be sent in the `Authorization: Bearer <token>` header.
+>
+> **Restarting the Server**: A server restart (`npm start`) will be required after these updates as we are modifying `server.js` and configuring a database helper.
+
+---
+
+## Proposed Changes
+
+### Backend Component (`server.js`)
+
+We will add a secure token-based session store, implement strict route authorization middlewares, apply rate limiters, secure admin actions against spoofing and math bugs, and add a fully featured SMM order endpoint.
+
+#### [MODIFY] [server.js](file:///c:/Users/PC/Downloads/Dashboard/server.js)
+- **Rate Limiters**: Add `express-rate-limit` for `/api/auth/login`, `/api/send-otp`, `/api/forgot-password` to block automated brute-force attacks.
+- **Session Store**: Initialize a secure, in-memory `activeSessions = new Map()` mapping a cryptographically secure random `sessionToken` (hex) to the user's session data (`id`, `email`, `role`, `expiresAt`).
+- **Authorization Middlewares**:
+  - `requireAuth`: Validates `Authorization: Bearer <token>` against the active sessions, attaching the authenticated user object to `req.user`.
+  - `requireAdmin`: Validates `req.user.role === 'admin'`.
+- **API Adjustments**:
+  - Update `/api/auth/login` to generate and return a `token`.
+  - Secure `/api/sync/data` with `requireAuth` and extract email from token rather than body.
+  - Secure all `/api/admin/*` endpoints with `requireAdmin`.
+  - Fix `/api/admin/update-balance` logic to perform relative additions/subtractions of target balance, instead of replacing it entirely, matching the admin GUI expectation.
+  - Fix duplicate `/api/reset-password` endpoint. Move strict password complexity checks to `/api/auth/reset-password` and ensure the password is correctly hashed and saved to MySQL.
+- **SMM Orders Endpoint [NEW]**:
+  - Implement `POST /api/smm/order` with `requireAuth`.
+  - Verify user balance, compute charged SMM price including profit margin, debit the user's balance, insert the order into the `orders` MySQL table, and call the Bytemart SMM gateway API (`action: 'add'`).
+
+---
+
+### Frontend Component (`app.js` & `views/*`)
+
+We will update all API fetch calls to attach the `Authorization` header, fix SMM order placement inputs/triggers, and render the dynamic transaction history.
+
+#### [MODIFY] [app.js](file:///c:/Users/PC/Downloads/Dashboard/app.js)
+- **Token Management**: On login, store the returned token in `sessionStorage.setItem('votri_sys_token', token)`.
+- **Fetch Interceptor/Headers**: Add helper function or modify fetches to include `Authorization: Bearer sessionStorage.getItem('votri_sys_token')` in headers.
+- **Balance Adjustments**: Update `/api/admin/update-balance` body parameters to supply the admin token and adjustments correctly.
+- **SMM Order Placement [NEW]**:
+  - Bind click handler on `btn-place-order` (the button inside `view-create-order.html`).
+  - Read active service rate, link, quantity, validate user balance, send request to `/api/smm/order`, show notifications, and refresh UI stats/balance.
+- **Transaction History**: Update page view rendering to display actual orders from `/api/sync/data` in the transaction history tab.
+
+#### [MODIFY] [views/view-create-order.html](file:///c:/Users/PC/Downloads/Dashboard/views/view-create-order.html)
+- Add `id="btn-place-order"` to the "ĐẶT HÀNG NGAY" button to allow event listener binding.
+- Add name / class to link inputs for robust selectors.
+
+#### [MODIFY] [views/view-history.html](file:///c:/Users/PC/Downloads/Dashboard/views/view-history.html)
+- Replace static dummy template with a premium glassmorphic table showing dynamic user orders (Service name, Social link, quantity, price charged, date created, SMM status).
+
+---
+
+## Verification Plan
+
+### Automated Verification
+- Verify code compiles and backend boots properly.
+- Run local integration tests on endpoint request handling.
+
+### Manual Verification
+- Log in as admin and member, verify token gets generated in `sessionStorage`.
+- Attempt admin actions with no token, token of standard member, and verify they are blocked with 401/403.
+- Place an SMM order, verify balance gets deducted, and order shows up in history view.
+- Try entering letters in OTP/Register and verify validation.

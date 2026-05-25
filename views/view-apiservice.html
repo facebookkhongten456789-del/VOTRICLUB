@@ -1,0 +1,48 @@
+<div class="view-container hidden" id="view-apiservice">
+                <div class="view-header-flex">
+                    <h2 class="view-title text-neon-cyan">API Service Reference</h2>
+                    <p class="view-subtitle">Tài liệu tích hợp hệ thống kiểm tra Fanpage</p>
+                </div>
+                
+                <div class="dashboard-card glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i data-lucide="terminal"></i> Endpoint: /api/check-page</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="api-doc-content">
+                            <div class="api-endpoint">
+                                <span class="status-pill status-active">POST</span>
+                                <code class="endpoint-url">/api/check-page</code>
+                            </div>
+                            <p style="margin-top: 15px; color: var(--text-secondary); line-height: 1.6;">Endpoint này sử dụng Access Token (User hoặc Page) để quét toàn bộ thông tin Fanpage từ Graph API (bao gồm trạng thái, follow, số bài đăng và các vi phạm).</p>
+                            
+                            <h4 style="margin-top: 25px; margin-bottom: 10px; color: var(--neon-cyan);">Request Body (JSON)</h4>
+                            <div class="code-block">
+<pre><code>{
+  <span style="color: #ff79c6;">"accessToken"</span>: <span style="color: #f1fa8c;">"EAA..."</span>, <span style="color: #6272a4;">// Bắt buộc: User Token hoặc Page Token</span>
+  <span style="color: #ff79c6;">"pageId"</span>: <span style="color: #f1fa8c;">"109xxxxxxxxxx"</span>, <span style="color: #6272a4;">// ID của Fanpage (tuỳ chọn nếu có url)</span>
+  <span style="color: #ff79c6;">"url"</span>: <span style="color: #f1fa8c;">"https://facebook.com/..."</span> <span style="color: #6272a4;">// URL Fanpage (tuỳ chọn nếu có pageId)</span>
+}</code></pre>
+                            </div>
+
+                            <h4 style="margin-top: 25px; margin-bottom: 10px; color: var(--neon-cyan);">Secure Response Report</h4>
+                            <p style="color: var(--text-secondary); margin-bottom: 15px;">API trả về dữ liệu cơ bản. <strong>Lưu ý:</strong> Để đảm bảo tính bảo mật (ẩn các thông số quét ngầm), Object <code>report</code> chi tiết đã bị loại bỏ hoàn toàn khỏi response công khai.</p>
+                            
+                            <div class="code-block" style="max-height: 400px; overflow-y: auto;">
+<pre><code>{
+  <span style="color: #ff79c6;">"success"</span>: <span style="color: #bd93f9;">true</span>,
+  <span style="color: #ff79c6;">"message"</span>: <span style="color: #f1fa8c;">"Hoạt Động · 895 follow/like · Post cuối: 2 ngày trước"</span>,
+  <span style="color: #ff79c6;">"readSummary"</span>: <span style="color: #f1fa8c;">"Page: VO TRI CLUB... Đọc được: followers_count..."</span>,
+  <span style="color: #ff79c6;">"page"</span>: {
+    <span style="color: #ff79c6;">"fbPageId"</span>: <span style="color: #f1fa8c;">"109xxxxxxxxxx"</span>,
+    <span style="color: #ff79c6;">"name"</span>: <span style="color: #f1fa8c;">"VO TRI CLUB - xxxxxxxxx"</span>,
+    <span style="color: #ff79c6;">"followers"</span>: <span style="color: #bd93f9;">895</span>,
+    <span style="color: #ff79c6;">"status"</span>: <span style="color: #f1fa8c;">"Active"</span>,
+    <span style="color: #ff79c6;">"isPublished"</span>: <span style="color: #bd93f9;">true</span>
+  }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>

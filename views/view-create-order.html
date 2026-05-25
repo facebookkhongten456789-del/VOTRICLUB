@@ -1,0 +1,109 @@
+<div class="view-container hidden" id="view-create-order">
+                <div class="view-header-flex">
+                    <h2 class="view-title text-neon-cyan">Tạo đơn hàng</h2>
+                    <p class="view-subtitle">Chọn dịch vụ và khởi tạo đơn hàng mới của bạn</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 20px; align-items: start;">
+                    <!-- Left Column: Form -->
+                    <div class="dashboard-card glass-card" style="padding: 24px; grid-column: span 2;">
+                        <h3 class="section-title" style="margin: 0 0 20px; font-size: 1.1rem; color: var(--neon-cyan); display: flex; align-items: center; gap: 8px;"><i data-lucide="shopping-cart" style="width: 20px;"></i> Thông tin đơn hàng</h3>
+                        
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; display: block;">Tìm nhanh dịch vụ</label>
+                            <div style="position: relative;">
+                                <i data-lucide="search" style="position: absolute; left: 12px; top: 12px; width: 18px; color: var(--text-dim);"></i>
+                                <input type="text" id="smm-quick-search" autocomplete="off" placeholder="Nhập tên hoặc ID dịch vụ để tìm kiếm nhanh..." style="width: 100%; padding: 12px 12px 12px 40px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit;">
+                                <div id="smm-quick-search-results" class="hidden" style="position:absolute;left:0;right:0;top:100%;margin-top:4px;max-height:240px;overflow-y:auto;background:#0c0c14;border:1px solid rgba(0,240,255,0.25);border-radius:8px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,0.5);"></div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; display: block;">Nền tảng</label>
+                                <select id="smm-platform" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; outline: none; cursor: pointer;">
+                                    <option value="" disabled selected>Đang tải dữ liệu...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; display: block;">Phân loại</label>
+                                <select id="smm-category" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; outline: none; cursor: pointer;">
+                                    <option value="" disabled selected>Vui lòng chọn Nền tảng trước</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; display: block;">Dịch vụ</label>
+                            <select id="smm-service" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; cursor: pointer;">
+                                <option value="" disabled selected>Vui lòng chọn Phân loại trước</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <label style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Liên kết cần tăng</label>
+                                <a href="#" style="color: var(--neon-cyan); font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 4px;"><i data-lucide="layers" style="width: 14px;"></i> Bạn muốn mua 1 lần nhiều link?</a>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="smm-link" placeholder="Nhập liên kết cần tăng tương tác..." style="flex: 1; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit;">
+                                <button style="padding: 0 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'"><i data-lucide="clipboard" style="width: 16px;"></i> Dán</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; display: block;">Số lượng</label>
+                            <input type="number" id="smm-quantity" placeholder="100" value="100" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; outline: none;">
+                            <div id="smm-quantity-limit" style="font-size: 0.85rem; color: var(--text-dim); margin-top: 8px;">Tối thiểu: 100 - Tối đa: 100,000</div>
+                        </div>
+
+                        <div style="background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                            <span style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Tổng tiền cần thanh toán:</span>
+                            <span id="smm-total-price" style="font-size: 1.6rem; font-weight: 700; color: var(--neon-cyan); letter-spacing: 1px;">0đ</span>
+                        </div>
+
+                        <button id="btn-place-order" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--neon-cyan), #0077ff); border: none; border-radius: 8px; color: #000; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(0, 243, 255, 0.4)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">ĐẶT HÀNG NGAY</button>
+                    </div>
+
+                    <!-- Right Column: Info -->
+                    <div class="dashboard-card glass-card" style="padding: 24px; grid-column: span 1; position: sticky; top: 20px;">
+                        <h3 class="section-title" style="margin: 0 0 20px; font-size: 1.1rem; color: var(--neon-purple); display: flex; align-items: center; gap: 8px;"><i data-lucide="info" style="width: 20px;"></i> Chi tiết dịch vụ</h3>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">ID dịch vụ:</span>
+                                <span id="smm-detail-id" style="color: var(--neon-cyan); font-weight: 600; flex: 2; text-align: right;">-</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">Tên dịch vụ:</span>
+                                <span id="smm-detail-name" style="color: var(--text-primary); font-weight: 500; flex: 2; text-align: right; line-height: 1.5; font-size: 0.95rem;">-</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">Loại dịch vụ:</span>
+                                <span id="smm-detail-type" style="background: rgba(24, 119, 242, 0.2); border: 1px solid rgba(24, 119, 242, 0.4); color: #1877F2; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-block;">-</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">Giới hạn lượng:</span>
+                                <span id="smm-detail-limit" style="color: var(--text-primary); font-weight: 500; flex: 2; text-align: right;">-</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">Giá mỗi 1,000:</span>
+                                <span id="smm-detail-rate" style="color: var(--neon-pink); font-weight: 700; flex: 2; text-align: right; font-size: 1.1rem;">-</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">Mô tả chi tiết:</span>
+                                <div id="smm-detail-desc" style="color: var(--text-dim); font-size: 0.85rem; line-height: 1.5; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px;">-</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px; padding: 16px; background: rgba(255, 165, 0, 0.05); border: 1px solid rgba(255, 165, 0, 0.2); border-radius: 8px;">
+                            <h4 style="color: orange; margin: 0 0 10px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;"><i data-lucide="alert-triangle" style="width: 16px;"></i> Lưu ý hệ thống</h4>
+                            <ul style="margin: 0; padding-left: 20px; color: var(--text-dim); font-size: 0.85rem; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+                                <li>Vui lòng kiểm tra kỹ Link trước khi mua. Không hoàn tiền cho các đơn hàng sai Link do cá nhân.</li>
+                                <li>Chỉ cài 1 đơn cho 1 link tại một thời điểm, đợi đơn cũ hoàn thành mới cài tiếp.</li>
+                                <li>Không đổi Username hoặc bật chế độ Riêng tư trong lúc đơn đang chạy.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>

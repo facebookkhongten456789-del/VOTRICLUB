@@ -1,0 +1,159 @@
+<div class="view-container hidden" id="view-profile">
+                <div class="view-header-flex">
+                    <h2 class="view-title text-neon-cyan">Hồ sơ cá nhân</h2>
+                    <p class="view-subtitle">Quản lý thông tin tài khoản và bảo mật</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <div class="dashboard-card glass-card" style="text-align: center; padding: 30px; position: relative;">
+                        <div class="user-avatar-large" style="width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0, 255, 136, 0.1); margin: 0 auto 20px; border: 3px solid var(--neon-cyan); color: var(--neon-cyan); position: relative; cursor: pointer; overflow: hidden;" id="profile-avatar-container" title="Bấm để đổi ảnh đại diện">
+                            <img id="profile-avatar-img" src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <i id="profile-avatar-icon" data-lucide="user" style="width: 40px; height: 40px;"></i>
+                            <div class="avatar-edit-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); padding: 5px 0; font-size: 11px; color: #fff; text-align: center;">Thay đổi</div>
+                        </div>
+                        <input type="file" id="profile-avatar-upload" accept="image/*" style="display: none;">
+                        
+                        <h3 id="profile-name-display" style="font-size: 24px; margin-bottom: 5px;">-</h3>
+                        <p id="profile-role-display" style="color: var(--neon-pink); font-weight: 500; margin-bottom: 10px;">-</p>
+                        <div style="margin-bottom: 15px;">
+                            <span class="badge" style="background: rgba(255, 165, 0, 0.1); color: orange; border: 1px solid orange; padding: 5px 10px; font-size: 13px;"><i data-lucide="coins" style="width: 14px; height: 14px; display: inline-block; vertical-align: text-bottom;"></i> Credits: <strong id="profile-credits-display">0</strong></span>
+                        </div>
+                        <div id="profile-status-badge" style="margin-bottom: 20px;"></div>
+                        <div class="dashboard-card glass-card rank-progress-card rank-progress-card--compact" id="rank-progress-profile" style="text-align: left; padding: 16px; margin-bottom: 16px;">
+                            <div class="rank-progress-header">
+                                <div class="rank-progress-title-wrap">
+                                    <i data-lucide="trending-up"></i>
+                                    <span class="rank-progress-title" style="font-size: 0.9rem;">Tiến trình hạng</span>
+                                </div>
+                                <span class="rank-progress-current-badge" data-rank-current>—</span>
+                            </div>
+                            <div class="rank-progress-next-row" style="margin-top: 10px;">
+                                <span class="text-dim" style="font-size: 0.8rem;">Hạng tiếp theo:</span>
+                                <strong style="font-size: 0.85rem;" data-rank-next>—</strong>
+                            </div>
+                            <div class="rank-progress-bar-track" style="margin-top: 8px;">
+                                <div class="rank-progress-bar-fill" data-rank-bar style="width: 0%;"></div>
+                            </div>
+                            <p class="rank-progress-message text-dim" data-rank-message style="font-size: 0.78rem; margin: 8px 0 0;"></p>
+                            <span class="rank-progress-percent" data-rank-percent style="display: none;">0%</span>
+                            <span data-rank-deposited style="display: none;">0</span>
+                        </div>
+                        <p class="text-dim" style="font-size: 13px;">Gia nhập: <span id="profile-join-date">-</span></p>
+                    </div>
+
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i data-lucide="shield"></i> Chi tiết tài khoản</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Địa chỉ Email (Đăng nhập)</label>
+                                <input type="email" id="profile-email-input" class="form-control" disabled style="background: rgba(255,255,255,0.05); color: #888;">
+                            </div>
+                            <div class="form-group">
+                                <label>Họ và Tên <span id="profile-name-cooldown" style="font-size: 11px; color: var(--neon-pink); float: right;"></span></label>
+                                <input type="text" id="profile-name-input" class="form-control" placeholder="Tên hiển thị của bạn">
+                            </div>
+                            <button id="btn-update-profile" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Cập nhật Thông tin</button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i data-lucide="shield-check"></i> Bảo mật</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                                <div>
+                                    <label style="margin: 0;">Xác thực 2 lớp (2FA)</label>
+                                    <p class="text-dim" style="font-size: 12px; margin: 4px 0 0;" id="profile-2fa-status">Đang tắt</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="profile-2fa-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div id="profile-2fa-setup-panel" class="hidden" style="margin-top: 16px; padding: 16px; border-radius: 8px; background: rgba(0,0,0,0.25); border: 1px solid rgba(0,240,255,0.15);">
+                                <p style="font-size: 13px; margin: 0 0 12px;"><strong>Thiết lập Google Authenticator</strong></p>
+                                <ol class="profile-2fa-steps text-dim" style="font-size: 12px; margin: 0 0 14px; padding-left: 18px; line-height: 1.6;">
+                                    <li>Cài <strong>Google Authenticator</strong> trên điện thoại (App Store / CH Play).</li>
+                                    <li>Mở app → <strong>+</strong> → <strong>Quét mã QR</strong>.</li>
+                                    <li>Quét mã bên dưới (hoặc nhập khóa thủ công).</li>
+                                    <li>Nhập mã 6 số hiện trên app → bấm <strong>Xác nhận bật 2FA</strong>.</li>
+                                </ol>
+                                <div id="profile-2fa-qr-wrap" style="text-align: center; margin-bottom: 12px;">
+                                    <img id="profile-2fa-qr-img" alt="QR Google Authenticator" width="220" height="220" style="display:none;background:#fff;border-radius:8px;padding:8px;max-width:100%;">
+                                    <p class="text-dim" style="font-size: 11px; margin-top: 8px;">Mã QR — quét bằng Google Authenticator</p>
+                                </div>
+                                <details style="font-size: 12px; margin-bottom: 12px;">
+                                    <summary class="text-dim" style="cursor: pointer;">Không quét được? Nhập khóa thủ công</summary>
+                                    <p class="text-dim" style="margin: 8px 0 4px;">Tài khoản: <span id="profile-2fa-account-label">-</span></p>
+                                    <p class="text-dim" style="margin: 0 0 4px;">Khóa (secret):</p>
+                                    <code id="profile-2fa-secret" style="display: block; word-break: break-all; font-size: 12px; user-select: all;"></code>
+                                </details>
+                                <div class="form-group" style="margin-top: 10px;">
+                                    <label>Mã 6 số từ Google Authenticator</label>
+                                    <input type="text" id="profile-2fa-code" class="form-control" maxlength="6" inputmode="numeric" placeholder="000000" autocomplete="one-time-code">
+                                </div>
+                                <button type="button" id="btn-2fa-confirm-enable" class="btn btn-primary btn-full">Xác nhận bật 2FA</button>
+                            </div>
+                            <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 18px 0;">
+                            <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                                <div>
+                                    <label style="margin: 0;">Thông báo đăng nhập</label>
+                                    <p class="text-dim" style="font-size: 12px; margin: 4px 0 0;">Nhận email khi tài khoản đăng nhập từ thiết bị mới</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="profile-notify-login-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i data-lucide="key"></i> Đổi mật khẩu</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Mật khẩu hiện tại</label>
+                                <input type="password" id="profile-old-password" class="form-control" placeholder="Nhập mật khẩu hiện tại">
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu mới</label>
+                                <input type="password" id="profile-new-password" class="form-control" placeholder="Nhập mật khẩu mới">
+                            </div>
+                            <div class="form-group">
+                                <label>Xác nhận mật khẩu mới</label>
+                                <input type="password" id="profile-confirm-password" class="form-control" placeholder="Nhập lại mật khẩu mới">
+                            </div>
+                            <button id="btn-change-password" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Đổi Mật khẩu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card glass-card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h3 class="card-title"><i data-lucide="activity"></i> Nhật ký hoạt động</h3>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="dashboard-table" style="text-align: left;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left; padding-left: 20px;">Hành động</th>
+                                        <th style="text-align: center;">Trạng thái</th>
+                                        <th style="text-align: right; padding-right: 20px;">Thời gian</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="profile-logs-table">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-dim" style="text-align: center;">Chưa có hoạt động nào.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>

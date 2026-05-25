@@ -1,0 +1,91 @@
+<div class="view-container hidden" id="view-accounts">
+    <div class="view-header-flex">
+        <div>
+            <h2 class="view-title text-neon-cyan">Tài khoản đã đăng ký</h2>
+            <p class="view-subtitle">Đồng bộ MySQL — vai trò: Thành viên / Cộng tác viên / Nhà phân phối (chỉnh trên đây hoặc XAMPP)</p>
+        </div>
+        <button type="button" class="btn btn-secondary accounts-admin-refresh" id="btn-accounts-refresh" title="Tải lại từ database">
+            <i data-lucide="refresh-cw"></i> Làm mới
+        </button>
+    </div>
+
+    <div class="accounts-admin-stats">
+        <div class="dashboard-card glass-card accounts-stat-card">
+            <div class="accounts-stat-value" id="accounts-stat-total">0</div>
+            <div class="accounts-stat-label">Tổng tài khoản</div>
+        </div>
+        <div class="dashboard-card glass-card accounts-stat-card">
+            <div class="accounts-stat-value accounts-stat-member" id="accounts-stat-member">0</div>
+            <div class="accounts-stat-label">Thành viên</div>
+        </div>
+        <div class="dashboard-card glass-card accounts-stat-card">
+            <div class="accounts-stat-value accounts-stat-collab" id="accounts-stat-collaborator">0</div>
+            <div class="accounts-stat-label">Cộng tác viên</div>
+        </div>
+        <div class="dashboard-card glass-card accounts-stat-card">
+            <div class="accounts-stat-value accounts-stat-dist" id="accounts-stat-distributor">0</div>
+            <div class="accounts-stat-label">Nhà phân phối</div>
+        </div>
+    </div>
+
+    <div class="dashboard-card glass-card accounts-admin-panel">
+        <div class="accounts-admin-toolbar">
+            <input type="search" id="accounts-filter-search" class="accounts-admin-input" placeholder="Tìm theo tên, email, IP..." autocomplete="off">
+            <select id="accounts-filter-status" class="accounts-admin-select">
+                <option value="">Tất cả trạng thái</option>
+                <option value="Verified">Đang hoạt động</option>
+                <option value="Blocked">Đã chặn (hành vi)</option>
+            </select>
+            <select id="accounts-filter-role" class="accounts-admin-select">
+                <option value="">Mọi vai trò</option>
+                <option value="member">Thành viên</option>
+                <option value="collaborator">Cộng tác viên</option>
+                <option value="distributor">Nhà phân phối</option>
+                <option value="admin">Quản trị viên</option>
+            </select>
+        </div>
+
+        <div class="table-responsive accounts-table-wrap">
+            <table class="neon-table accounts-admin-table">
+                <thead>
+                    <tr>
+                        <th>Thành viên</th>
+                        <th>Vai trò</th>
+                        <th style="text-align: right;">Số dư</th>
+                        <th>Trạng thái</th>
+                        <th>Đăng ký</th>
+                        <th>Thiết bị / IP</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="accounts-table-body"></tbody>
+            </table>
+        </div>
+        <p class="accounts-admin-hint text-dim" id="accounts-table-empty" hidden>Không có tài khoản phù hợp bộ lọc.</p>
+    </div>
+</div>
+
+<!-- Modal chặn theo hành vi -->
+<div id="accounts-block-modal" class="accounts-modal hidden" aria-hidden="true">
+    <div class="accounts-modal-backdrop" data-close-block-modal></div>
+    <div class="accounts-modal-card glass-card">
+        <h3 class="accounts-modal-title"><i data-lucide="shield-alert"></i> Chặn tài khoản (hành vi)</h3>
+        <p class="text-dim accounts-modal-sub">Ghi rõ lý do để đồng bộ nhật ký và thông báo khi thành viên đăng nhập.</p>
+        <p class="accounts-modal-target"><strong id="accounts-block-target-email">—</strong></p>
+        <label class="accounts-modal-label" for="accounts-block-reason-preset">Loại vi phạm</label>
+        <select id="accounts-block-reason-preset" class="accounts-admin-select accounts-modal-field">
+            <option value="Spam / quảng cáo trái phép">Spam / quảng cáo trái phép</option>
+            <option value="Lạm dụng API / gọi quá mức">Lạm dụng API / gọi quá mức</option>
+            <option value="Gian lận / giao dịch bất thường">Gian lận / giao dịch bất thường</option>
+            <option value="Vi phạm điều khoản dịch vụ">Vi phạm điều khoản dịch vụ</option>
+            <option value="Hành vi độc hại / tấn công hệ thống">Hành vi độc hại / tấn công hệ thống</option>
+            <option value="__custom__">Khác (mô tả chi tiết)</option>
+        </select>
+        <label class="accounts-modal-label" for="accounts-block-reason-detail">Chi tiết hành vi</label>
+        <textarea id="accounts-block-reason-detail" class="accounts-admin-input accounts-modal-field" rows="3" placeholder="Mô tả ngắn hành vi cần chặn..."></textarea>
+        <div class="accounts-modal-actions">
+            <button type="button" class="btn btn-secondary" data-close-block-modal>Hủy</button>
+            <button type="button" class="btn accounts-btn-block-confirm" id="btn-accounts-block-confirm">Xác nhận chặn</button>
+        </div>
+    </div>
+</div>

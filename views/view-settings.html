@@ -1,0 +1,75 @@
+<div class="view-container hidden" id="view-settings">
+                <div class="view-header-flex">
+                    <h2 class="view-title text-neon-cyan">Cấu hình hệ thống</h2>
+                    <p class="view-subtitle">Tùy chỉnh màu theme, quản lý cơ sở dữ liệu và cấu hình API</p>
+                </div>
+
+                <div class="settings-layout">
+                    <!-- Theme Selector -->
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title text-neon-cyan">Tùy chỉnh giao diện</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-dim margin-bottom-md">Chọn màu accent hệ thống. Theme áp dụng ngay và lưu toàn cục.</p>
+                            
+                            <div class="theme-picker-group">
+                                <button class="theme-btn theme-cyan active" data-theme="cyan">
+                                    <span class="color-dot bg-cyan"></span>
+                                    <span>Neon Cyan</span>
+                                </button>
+                                <button class="theme-btn theme-green" data-theme="green">
+                                    <span class="color-dot bg-green"></span>
+                                    <span>Neon Xanh lá</span>
+                                </button>
+                                <button class="theme-btn theme-purple" data-theme="purple">
+                                    <span class="color-dot bg-purple"></span>
+                                    <span>Neon Tím</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data management -->
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title text-neon-cyan">Quản lý dữ liệu</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-dim margin-bottom-md">Điều khiển cơ sở dữ liệu local. Xóa sẽ xóa localStorage của trang này.</p>
+                            
+                            <div class="settings-actions">
+                                <button class="btn btn-secondary" id="settings-btn-load-demo">
+                                    <i data-lucide="download"></i>
+                                    <span>Tải trang Demo</span>
+                                </button>
+                                <button class="btn btn-danger-outline" id="settings-btn-clear">
+                                    <i data-lucide="trash-2"></i>
+                                    <span>Xóa toàn bộ dữ liệu</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mock API Config -->
+                    <div class="dashboard-card glass-card">
+                        <div class="card-header">
+                            <h3 class="card-title text-neon-cyan">Cài đặt tích hợp Facebook</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="settings-form-api">
+                                <div class="form-group margin-bottom-md">
+                                    <label for="settings-fb-token">Facebook Access Token</label>
+                                    <input type="password" id="settings-fb-token" placeholder="Page Token (khuyến nghị) hoặc User Token">
+                                    <span class="help-text">Nên dùng <strong>Page Token</strong>: Graph Explorer → User or Page → chọn Fanpage → Generate. User Token: tick <code>pages_show_list</code> rồi Generate lại.</span>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-lucide="save"></i>
+                                    <span>Lưu cấu hình API</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
