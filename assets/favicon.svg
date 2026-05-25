@@ -1,23 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Vô Tri Club">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0a1628"/>
-      <stop offset="100%" stop-color="#050508"/>
-    </linearGradient>
-    <linearGradient id="shield" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#00f0ff"/>
-      <stop offset="100%" stop-color="#00a8b8"/>
-    </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="0.8" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-  <rect width="32" height="32" rx="8" fill="url(#bg)"/>
-  <path filter="url(#glow)" fill="url(#shield)" d="M16 4.5 8 8.2v7.1c0 5.1 3.4 9.9 8 11.2 4.6-1.3 8-6.1 8-11.2V8.2L16 4.5z"/>
-  <path fill="#ff2ea8" opacity="0.95" d="M16 10.2 12.2 12v4.1c0 2.5 1.7 4.9 3.8 5.5 2.1-.6 3.8-3 3.8-5.5V12L16 10.2z"/>
-  <text x="16" y="18.5" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="7" font-weight="800" fill="#050508">V</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#050508"/>
+  <path fill="#00f0ff" d="M16 5 9 8.5v6.5c0 4.5 3 8.7 7 9.8 4-1.1 7-5.3 7-9.8V8.5L16 5z"/>
+  <path fill="#ff2ea8" d="M13.5 12.5 16 11l2.5 1.5v3.2c0 1.6-1.1 3.1-2.5 3.5-1.4-.4-2.5-1.9-2.5-3.5v-3.2z"/>
+  <path fill="#050508" d="M16 13.2 13.8 14.5v2.4L16 19.2l2.2-2.3v-2.4L16 13.2z"/>
 </svg>
