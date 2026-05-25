@@ -226,6 +226,11 @@ app.get('/assets/zalo-icon.svg', (_req, res) => {
     res.sendFile(path.join(__dirname, 'assets', 'zalo-icon.svg'));
 });
 
+app.get('/favicon.ico', (_req, res) => {
+    res.type('image/svg+xml');
+    res.sendFile(path.join(__dirname, 'assets', 'favicon.svg'));
+});
+
 // --- In-Memory OTP Store (server-side security) ---
 // Map<email, { code, expiresAt, type, attempts }>
 const otpStore = new Map();
