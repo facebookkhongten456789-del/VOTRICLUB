@@ -2426,7 +2426,7 @@ body.theme-purple .btn-primary {
     min-width: 0;
 }
 
-/* --- Nút liên hệ Zalo (góc dưới phải) --- */
+/* --- Nút liên hệ Zalo (góc dưới phải, tròn gọn) --- */
 .zalo-float {
     position: fixed;
     right: 20px;
@@ -2434,28 +2434,25 @@ body.theme-purple .btn-primary {
     z-index: 2100;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 14px 8px 8px;
-    border-radius: 999px;
-    background: rgba(10, 12, 18, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
     box-shadow:
-        0 8px 28px rgba(0, 0, 0, 0.45),
-        0 0 0 1px rgba(0, 104, 255, 0.25);
-    backdrop-filter: blur(10px);
-    color: #fff;
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        0 0 16px rgba(0, 104, 255, 0.2);
     text-decoration: none;
-    font-family: inherit;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    max-width: calc(100vw - 32px);
 }
 
 .zalo-float:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-2px) scale(1.06);
     box-shadow:
-        0 12px 32px rgba(0, 104, 255, 0.35),
-        0 0 20px rgba(0, 104, 255, 0.25);
-    color: #fff;
+        0 10px 28px rgba(0, 104, 255, 0.4),
+        0 0 24px rgba(0, 104, 255, 0.3);
 }
 
 .zalo-float:focus-visible {
@@ -2463,67 +2460,25 @@ body.theme-purple .btn-primary {
     outline-offset: 3px;
 }
 
-.zalo-float-icon {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .zalo-float-img {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     display: block;
-    border-radius: 11px;
+    border-radius: 50%;
     flex-shrink: 0;
-}
-
-.zalo-float-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-    padding-right: 4px;
-}
-
-.zalo-float-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    opacity: 0.9;
-}
-
-.zalo-float-phone {
-    font-size: 0.95rem;
-    font-weight: 700;
-    white-space: nowrap;
 }
 
 @media (max-width: 480px) {
     .zalo-float {
         right: 14px;
         bottom: 14px;
-        padding: 8px;
-        border-radius: 50%;
-        width: 56px;
-        height: 56px;
-        justify-content: center;
-    }
-
-    .zalo-float-text {
-        display: none;
-    }
-
-    .zalo-float-icon {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
     }
 
     .zalo-float-img {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
     }
 }
 
