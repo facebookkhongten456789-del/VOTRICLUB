@@ -5,6 +5,7 @@
  */
 
 const express = require('express');
+const { isAdminRole } = require('../lib/user-roles');
 
 const TICKET_STATUS = {
     PENDING: 'Pending',
@@ -129,7 +130,7 @@ function createSupportRouter({ dbQuery, requireAuth, requireAdmin, supportTicket
             const ticket = await loadTicket(dbQuery, tid);
             if (!ticket) return res.status(404).json({ success: false, message: 'Ticket không tồn tại.' });
 
-            const isAdmin = req.user.role === 'admin';
+            const isAdmin = isAdminRole(req.user.role);
 
             if (!isAdmin && ticket.user_id !== req.user.id) {
                 return res.status(403).json({ success: false, message: 'Không có quyền trên ticket này.' });

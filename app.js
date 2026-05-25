@@ -5,44 +5,6 @@
  * @version 1.1.0
  */
 
-// #region agent log
-(function () {
-    const ep = 'http://127.0.0.1:7429/ingest/bab48c62-adab-4008-aac1-13c63b94fd88';
-    const sid = 'd15afd';
-    const dbg = (location, message, data, hypothesisId) =>
-        fetch(ep, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': sid },
-            body: JSON.stringify({
-                sessionId: sid,
-                location,
-                message,
-                data: data || {},
-                timestamp: Date.now(),
-                hypothesisId,
-                runId: 'crash-debug'
-            })
-        }).catch(() => {});
-    window.__votriDbg = dbg;
-    window.addEventListener('error', (e) =>
-        dbg('app.js:global', 'uncaught', { msg: e.message, line: e.lineno, col: e.colno }, 'A')
-    );
-    window.addEventListener('unhandledrejection', (e) =>
-        dbg('app.js:global', 'unhandled', { msg: String(e.reason) }, 'B')
-    );
-    const builtins = {
-        ceil: typeof Math.ceil,
-        confirm: typeof confirm,
-        cloneNode: typeof document.createElement('div').cloneNode,
-        querySelectorAll: typeof document.querySelectorAll,
-        createIcons: typeof window.lucide?.createIcons
-    };
-    const bad = Object.entries(builtins).filter(([, t]) => t !== 'function');
-    if (bad.length) dbg('app.js:builtins', 'missing', Object.fromEntries(bad), 'F');
-    else dbg('app.js:builtins', 'ok', builtins, 'F');
-})();
-// #endregion
-
 // --- Demo Seed Data (Can be loaded from Settings) ---
 const DEMO_PAGES = [
     {
@@ -526,27 +488,6 @@ function setupAuthListeners() {
             finishLoginFromServer(data);
         } catch (err) {
             console.error('Login error:', err);
-            // #region agent log
-            fetch('http://127.0.0.1:7429/ingest/bab48c62-adab-4008-aac1-13c63b94fd88', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '99cc47' },
-                body: JSON.stringify({
-                    sessionId: '99cc47',
-                    location: 'app.js:login-catch',
-                    message: 'Login fetch failed',
-                    data: {
-                        apiBase: apiBase(),
-                        origin: window.location.origin,
-                        port: window.location.port,
-                        err: err?.message,
-                        isLocalDev: window.VotriApp?.isLocalDevHost?.(),
-                    },
-                    hypothesisId: 'B',
-                    timestamp: Date.now(),
-                    runId: 'pre-fix',
-                }),
-            }).catch(() => {});
-            // #endregion
             const isLocal = window.VotriApp?.isLocalDevHost?.() ?? false;
             const hint = err.message && err.message.includes('HTML')
                 ? (isLocal

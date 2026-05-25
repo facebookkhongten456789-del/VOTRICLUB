@@ -4,6 +4,7 @@
  */
 
 const express = require('express');
+const { isAdminRole } = require('../lib/user-roles');
 
 function mapOrderRow(o) {
     return {
@@ -42,7 +43,7 @@ function createOrdersRouter({ dbQuery, requireAuth, ordersListLimiter }) {
 
     router.get('/list', requireAuth, ordersListLimiter, async (req, res) => {
         try {
-            const isAdmin = req.user.role === 'admin';
+            const isAdmin = isAdminRole(req.user.role);
             const orders = await fetchOrdersForUser(dbQuery, req.user.id, isAdmin);
             return res.json({ success: true, orders });
         } catch (err) {

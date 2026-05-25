@@ -93,8 +93,9 @@ Trân trọng,
 
 - **CSS/JS 404:** Cần `includeFiles` trong `vercel.json` (xem file trong repo). Kiểm tra `/style.css` trả CSS, không 404.
 - **Đăng nhập gọi `:3000`:** `js/votri-core.js` phải dùng `window.location.origin` trên Vercel (không port). Sau sửa, redeploy và hard-refresh (Ctrl+F5).
-- **Phiên đăng nhập & 2FA** lưu **MySQL** (`auth_sessions`, `auth_pending_tokens`) — không còn Map RAM (tránh lỗi “Phiên 2FA hết hạn” trên Vercel).
-- OTP / reset mật khẩu vẫn RAM — đăng ký/forgot trên Vercel có thể cần VPS hoặc bổ sung DB sau.
+- **Phiên, 2FA, OTP, reset MK** lưu **MySQL** (`auth_sessions`, `auth_pending_tokens`, `auth_otp_codes`, `auth_reset_tokens`) — Vercel serverless không dùng RAM.
+- **Admin** kiểm tra vai trò từ DB mỗi request — sửa `sessionStorage` trên trình duyệt không thể leo quyền admin.
+- **MoMo nạp tiền:** số tiền 10.000–50.000.000 VND; email thanh toán phải trùng tài khoản đăng nhập.
 - **IPN** cần URL public HTTPS — Vercel đáp ứng.
 - MySQL cloud: bật kết nối từ IP bên ngoài (allow `%` hoặc Vercel IP nếu host yêu cầu).
 

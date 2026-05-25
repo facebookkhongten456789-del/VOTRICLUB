@@ -7,6 +7,7 @@
  */
 
 const express = require('express');
+const { isAdminRole } = require('../lib/user-roles');
 
 async function ensureFanpagesTable(dbQuery) {
     await dbQuery(`
@@ -79,7 +80,7 @@ function createPagesRouter({ dbQuery, requireAuth, pagesListLimiter, pagesWriteL
     router.get('/list', requireAuth, pagesListLimiter, async (req, res) => {
         try {
             await ready();
-            const isAdmin = req.user.role === 'admin';
+            const isAdmin = isAdminRole(req.user.role);
             const pages = await fetchPagesForUser(dbQuery, req.user.id, isAdmin);
             return res.json({ success: true, pages });
         } catch (err) {

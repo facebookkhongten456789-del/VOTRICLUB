@@ -71,6 +71,14 @@ const {
     savePendingToken,
     getPendingToken,
     deletePendingToken,
+    saveOtp,
+    getOtp,
+    incrementOtpAttempts,
+    deleteOtp,
+    saveResetToken,
+    getResetToken,
+    getRecentResetForEmail,
+    deleteResetToken,
     PENDING_2FA_LOGIN,
 } = require('./lib/auth-store');
 
@@ -180,18 +188,46 @@ async function requireAuth(req, res, next) {
         });
     }
 
+    try {
+        const rows = await dbQuery('SELECT role, status FROM users WHERE id = ? LIMIT 1', [session.id]);
+        if (rows.length) {
+            session.role = normalizeUserRole(rows[0].role);
+            session.status = rows[0].status || session.status;
+            if (rows[0].status === 'Blocked') {
+                await deleteSession(dbQuery, token).catch(() => {});
+                return res.status(403).json({
+                    success: false,
+                    message: 'Tài khoản đã bị khóa. Liên hệ hỗ trợ.',
+                });
+            }
+        }
+    } catch (err) {
+        console.error('[AUTH HYDRATE]', err.message);
+    }
+
     req.user = session;
     next();
 }
 
-function requireAdmin(req, res, next) {
-    if (!isAdminRole(req.user?.role)) {
-        return res.status(403).json({ 
-            success: false, 
-            message: 'Không có quyền. Chỉ admin mới được phép.' 
-        });
+async function requireAdmin(req, res, next) {
+    try {
+        const rows = await dbQuery('SELECT role, status FROM users WHERE id = ? LIMIT 1', [req.user.id]);
+        if (!rows.length || rows[0].status === 'Blocked') {
+            return res.status(403).json({ success: false, message: 'Không có quyền.' });
+        }
+        const role = normalizeUserRole(rows[0].role);
+        req.user.role = role;
+        if (!isAdminRole(role)) {
+            return res.status(403).json({
+                success: false,
+                message: 'Không có quyền. Chỉ admin mới được phép.',
+            });
+        }
+        next();
+    } catch (err) {
+        console.error('[REQUIRE ADMIN]', err.message);
+        return res.status(500).json({ success: false, message: 'Lỗi xác thực quyền.' });
     }
-    next();
 }
 
 // --- Rate Limiters ---
@@ -248,14 +284,7 @@ app.get('/favicon.ico', (_req, res) => {
     res.sendFile(path.join(__dirname, 'assets', 'favicon.svg'));
 });
 
-// --- In-Memory OTP Store (server-side security) ---
-// Map<email, { code, expiresAt, type, attempts }>
-const otpStore = new Map();
-
-// Map<token, { email, expiresAt }>
-const resetTokenStore = new Map();
-
-// Phiên đăng nhập & 2FA tạm: lưu MySQL (lib/auth-store) — Vercel serverless không giữ RAM
+// OTP, reset link, phiên, 2FA: lưu MySQL (lib/auth-store) — Vercel serverless không giữ RAM
 
 const OTP_VALIDITY_MS = 10 * 60 * 1000; // 10 minutes (matches email template)
 const RESET_VALIDITY_MS = 30 * 60 * 1000; // 30 minutes
@@ -281,13 +310,6 @@ function getAppBaseUrl(req) {
 
 // Cleanup expired OTPs, reset tokens, and sessions every 5 minutes
 setInterval(() => {
-    const now = Date.now();
-    for (const [email, data] of otpStore.entries()) {
-        if (now > data.expiresAt) otpStore.delete(email);
-    }
-    for (const [token, data] of resetTokenStore.entries()) {
-        if (now > data.expiresAt) resetTokenStore.delete(token);
-    }
     purgeExpired(dbQuery).catch((err) => console.error('[AUTH PURGE]', err.message));
 }, 5 * 60 * 1000);
 
@@ -1026,12 +1048,17 @@ app.post('/api/auth/register', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Vui lòng cung cấp đầy đủ: Tên, Email, Mật khẩu, OTP.' });
         }
 
-        const stored = otpStore.get(email.toLowerCase());
+        const stored = await getOtp(dbQuery, email);
         if (!stored) return res.status(400).json({ success: false, message: 'Không tìm thấy mã OTP cho email này.' });
-        if (stored.attempts >= 5) { otpStore.delete(email.toLowerCase()); return res.status(429).json({ success: false, message: 'Thử OTP quá nhiều lần. Lấy mã mới.' }); }
-        if (Date.now() > stored.expiresAt) { otpStore.delete(email.toLowerCase()); return res.status(400).json({ success: false, message: 'Mã OTP đã hết hạn.' }); }
-        if (code !== stored.code) { stored.attempts++; return res.status(400).json({ success: false, message: `OTP không đúng. Còn ${5 - stored.attempts} lần thử.` }); }
-        otpStore.delete(email.toLowerCase());
+        if (stored.attempts >= 5) {
+            await deleteOtp(dbQuery, email);
+            return res.status(429).json({ success: false, message: 'Thử OTP quá nhiều lần. Lấy mã mới.' });
+        }
+        if (code !== stored.code) {
+            await incrementOtpAttempts(dbQuery, email);
+            return res.status(400).json({ success: false, message: `OTP không đúng. Còn ${5 - stored.attempts - 1} lần thử.` });
+        }
+        await deleteOtp(dbQuery, email);
 
         const existing = await dbQuery('SELECT id FROM users WHERE email = ?', [email.toLowerCase()]);
         if (existing.length > 0) return res.status(400).json({ success: false, message: 'Email này đã được sử dụng.' });
@@ -1248,16 +1275,15 @@ app.post('/api/auth/reset-password', resetLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Mật khẩu phải có ít nhất 6 ký tự.' });
         }
 
-        const stored = resetTokenStore.get(token);
-        if (!stored || Date.now() > stored.expiresAt) {
-            resetTokenStore.delete(token);
+        const stored = await getResetToken(dbQuery, token);
+        if (!stored) {
             return res.status(400).json({ success: false, message: 'Link hết hạn hoặc không hợp lệ.' });
         }
 
         const email = stored.email;
         const hashed = await bcrypt.hash(password, 10);
         await dbQuery('UPDATE users SET password = ? WHERE email = ?', [hashed, email]);
-        resetTokenStore.delete(token);
+        await deleteResetToken(dbQuery, token);
 
         return res.json({ success: true, email, message: 'Đặt lại mật khẩu thành công.' });
     } catch (err) {
@@ -1577,6 +1603,13 @@ app.use('/api/support', createSupportRouter({
 app.post('/api/momo/create-payment', requireAuth, momoPaymentLimiter, async (req, res) => {
     try {
         const { amount, userEmail } = req.body;
+        const payAmount = parseInt(amount, 10);
+        if (!Number.isFinite(payAmount) || payAmount < 10000 || payAmount > 50000000) {
+            return res.status(400).json({
+                success: false,
+                message: 'Số tiền nạp phải từ 10.000 đến 50.000.000 VND.',
+            });
+        }
         const sessionEmail = (req.user.email || '').toLowerCase();
         const bodyEmail = (userEmail || '').trim().toLowerCase();
         if (!bodyEmail || bodyEmail !== sessionEmail) {
@@ -1601,16 +1634,16 @@ app.post('/api/momo/create-payment', requireAuth, momoPaymentLimiter, async (req
         const ipnUrl    = `${baseUrl}/api/webhooks/momo`;
         const extraData = ''; const orderGroupId = ''; const requestType = 'captureWallet';
 
-        const rawSig = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${baseUrl}&requestId=${requestId}&requestType=${requestType}`;
+        const rawSig = `accessKey=${accessKey}&amount=${payAmount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${baseUrl}&requestId=${requestId}&requestType=${requestType}`;
         const signature = crypto.createHmac('sha256', secretKey).update(rawSig).digest('hex');
 
-        const body = { partnerCode, partnerName: 'VO TRI CLUB', storeId: 'VTC_STORE', requestId, amount, orderId, orderInfo, redirectUrl: baseUrl, ipnUrl, lang: 'vi', requestType, autoCapture: true, extraData, orderGroupId, signature };
+        const body = { partnerCode, partnerName: 'VO TRI CLUB', storeId: 'VTC_STORE', requestId, amount: payAmount, orderId, orderInfo, redirectUrl: baseUrl, ipnUrl, lang: 'vi', requestType, autoCapture: true, extraData, orderGroupId, signature };
         const result = await (await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json();
 
         if (result.resultCode === 0) {
             try {
                 const uRows = await dbQuery('SELECT id FROM users WHERE email=?', [userEmail.toLowerCase()]);
-                if (uRows.length) await dbQuery('INSERT INTO deposits (user_id,amount,method,transaction_id,status,note) VALUES (?,?,?,?,?,?)', [uRows[0].id, amount, 'MoMo', orderId, 'pending', `Nap tien MoMo (${userEmail})`]);
+                if (uRows.length) await dbQuery('INSERT INTO deposits (user_id,amount,method,transaction_id,status,note) VALUES (?,?,?,?,?,?)', [uRows[0].id, payAmount, 'MoMo', orderId, 'pending', `Nap tien MoMo (${userEmail})`]);
             } catch (dbErr) { console.error('[DB momo pending]:', dbErr); }
             return res.json({ success: true, payUrl: result.payUrl, qrCodeUrl: result.qrCodeUrl });
         }
@@ -1724,8 +1757,8 @@ app.post('/api/send-otp', otpLimiter, async (req, res) => {
         const emailKey = email.toLowerCase();
 
         // Rate limiting: prevent spam (max 1 OTP per email per 60 seconds)
-        const existing = otpStore.get(emailKey);
-        if (existing && (Date.now() - (existing.expiresAt - OTP_VALIDITY_MS)) < 60 * 1000) {
+        const existing = await getOtp(dbQuery, emailKey);
+        if (existing && Date.now() - existing.createdAt < 60 * 1000) {
             return res.status(429).json({ 
                 success: false, 
                 message: 'Vui lòng đợi 60 giây trước khi yêu cầu mã OTP mới.' 
@@ -1736,12 +1769,7 @@ app.post('/api/send-otp', otpLimiter, async (req, res) => {
         const expiresAt = Date.now() + OTP_VALIDITY_MS;
         const mockIp = `192.168.1.${Math.floor(Math.random() * 230) + 15}`;
 
-        otpStore.set(emailKey, { 
-            code: otpCode, 
-            expiresAt, 
-            type,
-            attempts: 0 
-        });
+        await saveOtp(dbQuery, emailKey, { code: otpCode, type, expiresAt });
 
         const pubKey = process.env.EMAILJS_PUBLIC_KEY;
         const privKey = process.env.EMAILJS_PRIVATE_KEY;
@@ -1784,7 +1812,7 @@ app.post('/api/send-otp', otpLimiter, async (req, res) => {
         console.error('[OTP] Email send error:', err);
         
         const email = req.body.email?.toLowerCase();
-        const stored = otpStore.get(email);
+        const stored = email ? await getOtp(dbQuery, email) : null;
         const errText = err?.text || err?.message || String(err);
 
         let message = 'Gửi email thất bại. Mã OTP hiển thị trong simulator.';
@@ -1829,8 +1857,8 @@ app.post('/api/forgot-password', resetLimiter, async (req, res) => {
         }
         const userName = name || userRows[0].name || 'Thành viên';
 
-        const existing = [...resetTokenStore.entries()].find(([, data]) => data.email === emailKey);
-        if (existing && (Date.now() - (existing[1].expiresAt - RESET_VALIDITY_MS)) < 60 * 1000) {
+        const existing = await getRecentResetForEmail(dbQuery, emailKey);
+        if (existing && Date.now() - existing.createdAt < 60 * 1000) {
             return res.status(429).json({
                 success: false,
                 message: 'Vui lòng đợi 60 giây trước khi yêu cầu link mới.',
@@ -1842,7 +1870,7 @@ app.post('/api/forgot-password', resetLimiter, async (req, res) => {
         const baseUrl = getAppBaseUrl(req);
         const resetLink = `${baseUrl}/?reset=${token}`;
 
-        resetTokenStore.set(token, { email: emailKey, expiresAt });
+        await saveResetToken(dbQuery, token, emailKey, expiresAt);
 
         const pubKey = process.env.EMAILJS_PUBLIC_KEY;
         const privKey = process.env.EMAILJS_PRIVATE_KEY;
@@ -1895,25 +1923,21 @@ app.post('/api/forgot-password', resetLimiter, async (req, res) => {
 /**
  * GET /api/verify-reset-token?token=xxx
  */
-app.get('/api/verify-reset-token', (req, res) => {
-    const { token } = req.query;
-
-    if (!token) {
-        return res.status(400).json({ success: false, message: 'Token is required.' });
+app.get('/api/verify-reset-token', async (req, res) => {
+    try {
+        const { token } = req.query;
+        if (!token) {
+            return res.status(400).json({ success: false, message: 'Token is required.' });
+        }
+        const stored = await getResetToken(dbQuery, token);
+        if (!stored) {
+            return res.status(400).json({ success: false, message: 'Link đã hết hạn. Vui lòng yêu cầu link mới.' });
+        }
+        return res.json({ success: true, email: stored.email });
+    } catch (err) {
+        console.error('[VERIFY RESET TOKEN]', err);
+        return res.status(500).json({ success: false, message: 'Lỗi server.' });
     }
-
-    const stored = resetTokenStore.get(token);
-
-    if (!stored) {
-        return res.status(400).json({ success: false, message: 'Link không hợp lệ hoặc đã được sử dụng.' });
-    }
-
-    if (Date.now() > stored.expiresAt) {
-        resetTokenStore.delete(token);
-        return res.status(400).json({ success: false, message: 'Link đã hết hạn. Vui lòng yêu cầu link mới.' });
-    }
-
-    return res.json({ success: true, email: stored.email });
 });
 
 /**
@@ -1923,45 +1947,34 @@ app.get('/api/verify-reset-token', (req, res) => {
  * Body: { email: string, code: string }
  * Validates OTP server-side. Returns success/failure.
  */
-app.post('/api/verify-otp', otpLimiter, (req, res) => {
-    const { email, code } = req.body;
-
-    if (!email || !code) {
-        return res.status(400).json({ success: false, message: 'Email and OTP code are required.' });
+app.post('/api/verify-otp', otpLimiter, async (req, res) => {
+    try {
+        const { email, code } = req.body;
+        if (!email || !code) {
+            return res.status(400).json({ success: false, message: 'Email and OTP code are required.' });
+        }
+        const stored = await getOtp(dbQuery, email);
+        if (!stored) {
+            return res.status(400).json({ success: false, message: 'No OTP found. Please request a new one.' });
+        }
+        if (stored.attempts >= 5) {
+            await deleteOtp(dbQuery, email);
+            return res.status(429).json({ success: false, message: 'Too many failed attempts. Please request a new OTP.' });
+        }
+        if (code !== stored.code) {
+            await incrementOtpAttempts(dbQuery, email);
+            return res.status(400).json({
+                success: false,
+                message: `Invalid OTP code. ${5 - stored.attempts - 1} attempts remaining.`,
+            });
+        }
+        const otpType = stored.type;
+        await deleteOtp(dbQuery, email);
+        return res.json({ success: true, type: otpType, message: 'OTP verified successfully.' });
+    } catch (err) {
+        console.error('[VERIFY OTP]', err);
+        return res.status(500).json({ success: false, message: 'Lỗi server.' });
     }
-
-    const stored = otpStore.get(email.toLowerCase());
-
-    if (!stored) {
-        return res.status(400).json({ success: false, message: 'No OTP found. Please request a new one.' });
-    }
-
-    // Max 5 attempts to prevent brute force
-    if (stored.attempts >= 5) {
-        otpStore.delete(email.toLowerCase());
-        return res.status(429).json({ success: false, message: 'Too many failed attempts. Please request a new OTP.' });
-    }
-
-    // Check expiry
-    if (Date.now() > stored.expiresAt) {
-        otpStore.delete(email.toLowerCase());
-        return res.status(400).json({ success: false, message: 'OTP has expired. Please request a new one.' });
-    }
-
-    // Verify code
-    if (code !== stored.code) {
-        stored.attempts++;
-        return res.status(400).json({ 
-            success: false, 
-            message: `Invalid OTP code. ${5 - stored.attempts} attempts remaining.` 
-        });
-    }
-
-    // Success - remove OTP from store
-    const otpType = stored.type;
-    otpStore.delete(email.toLowerCase());
-
-    return res.json({ success: true, type: otpType, message: 'OTP verified successfully.' });
 });
 
 /**

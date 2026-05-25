@@ -582,7 +582,7 @@
     </div>
 
     <!-- App Script (thứ tự: core → api → feature → app) -->
-    <script src="js/votri-core.js?v=1.0.4"></script>
+    <script src="js/votri-core.js?v=1.0.5"></script>
     <script>
     /* Production (Vercel): API cùng origin — chạy trước app.js nếu votri-core cache cũ */
     (function () {
@@ -597,9 +597,6 @@
                     configurable: true,
                 });
             }
-            // #region agent log
-            fetch('http://127.0.0.1:7429/ingest/bab48c62-adab-4008-aac1-13c63b94fd88',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'99cc47'},body:JSON.stringify({sessionId:'99cc47',location:'index.html:api-patch',message:'API_BASE patched for production',data:{origin:origin,hostname:loc.hostname,port:loc.port||'(empty)'},hypothesisId:'E',timestamp:Date.now(),runId:'post-fix'})}).catch(function(){});
-            // #endregion
         }
     })();
     </script>
@@ -617,6 +614,6 @@
     <script src="js/votri-smm.js?v=1.0.2"></script>
     <script src="js/votri-accounts-admin.js?v=1.0.1"></script>
     <script src="js/votri-profile.js?v=1.0.2"></script>
-    <script src="app.js?v=3.6.3"></script>
+    <script src="app.js?v=3.6.4"></script>
 </body>
 </html>
