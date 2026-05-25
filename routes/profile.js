@@ -229,7 +229,7 @@ function createProfileRouter({ dbQuery, requireAuth, profileUpdateLimiter }) {
         try {
             const { setupToken, code } = req.body;
             const pending = await getPendingToken(dbQuery, setupToken, PENDING_2FA_SETUP);
-            if (!pending || pending.userId !== req.user.id) {
+            if (!pending || String(pending.userId) !== String(req.user.id)) {
                 await deletePendingToken(dbQuery, setupToken);
                 return res.status(400).json({ success: false, message: 'Phiên thiết lập 2FA hết hạn. Thử lại.' });
             }
