@@ -39,10 +39,6 @@
                             <p class="text-dim margin-bottom-md">Điều khiển cơ sở dữ liệu local. Xóa sẽ xóa localStorage của trang này.</p>
                             
                             <div class="settings-actions">
-                                <button class="btn btn-secondary" id="settings-btn-load-demo">
-                                    <i data-lucide="download"></i>
-                                    <span>Tải trang Demo</span>
-                                </button>
                                 <button class="btn btn-danger-outline" id="settings-btn-clear">
                                     <i data-lucide="trash-2"></i>
                                     <span>Xóa toàn bộ dữ liệu</span>
@@ -57,17 +53,65 @@
                             <h3 class="card-title text-neon-cyan">Cài đặt tích hợp Facebook</h3>
                         </div>
                         <div class="card-body">
+                            <!-- Facebook Connected Account Info -->
+                            <div id="fb-user-info" class="hidden" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;">
+                                <img id="fb-user-avatar" src="" alt="Avatar" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent-color, #00f0ff); object-fit: cover;">
+                                <div>
+                                    <div id="fb-user-name" style="font-weight: 700; color: #fff; font-size: 14px;">Đang tải...</div>
+                                    <div style="font-size: 11px; color: #888; display: flex; align-items: center; gap: 4px;">
+                                        <span class="status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                                        <span class="status-text">Đã kết nối tài khoản Facebook</span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <form id="settings-form-api">
                                 <div class="form-group margin-bottom-md">
                                     <label for="settings-fb-token">Facebook Access Token</label>
                                     <input type="password" id="settings-fb-token" placeholder="Page Token (khuyến nghị) hoặc User Token">
                                     <span class="help-text">Nên dùng <strong>Page Token</strong>: Graph Explorer → User or Page → chọn Fanpage → Generate. User Token: tick <code>pages_show_list</code> rồi Generate lại.</span>
                                 </div>
+                                <div class="settings-actions" style="margin-bottom: 12px;">
+                                    <button type="button" class="btn btn-primary" id="btn-fb-connect-app">
+                                        <i data-lucide="facebook"></i>
+                                        <span>Kết nối Facebook App</span>
+                                    </button>
+                                </div>
                                 <button type="submit" class="btn btn-primary">
                                     <i data-lucide="save"></i>
                                     <span>Lưu cấu hình API</span>
                                 </button>
                             </form>
+                        </div>
+                    </div>
+
+                    <!-- Facebook Fanpages Management Card -->
+                    <div id="settings-fb-pages-card" class="dashboard-card glass-card hidden" style="margin-top: 24px;">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <div>
+                                <h3 class="card-title text-neon-cyan" style="margin: 0; font-size: 1.1rem; font-weight: 600;">Quản Lý Fanpage Facebook</h3>
+                                <p class="text-dim" style="font-size: 0.85rem; margin: 4px 0 0 0;">Quản lý các fanpage Facebook đã kết nối để sử dụng trong ứng dụng.</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span id="settings-fb-pages-badge" class="badge badge-neon-green" style="font-size: 0.75rem; padding: 4px 8px;">✔ 0 fanpage đã kết nối</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                    <span>Trạng thái kết nối Fanpage </span>
+                                    <i data-lucide="info" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; cursor: help; color: #888;" title="Danh sách các trang bạn quản lý trên Facebook đã được đồng bộ vào hệ thống local."></i>
+                                    <div id="settings-fb-pages-last-update" style="font-size: 0.75rem; color: #888; margin-top: 4px;">Cập nhật lần cuối: Chưa rõ</div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="btn-sync-fb-pages" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem;">
+                                    <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+                                    <span>Kiểm tra lại</span>
+                                </button>
+                            </div>
+                            
+                            <div id="settings-fb-pages-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;">
+                                <!-- Dynamically loaded pages -->
+                            </div>
                         </div>
                     </div>
 

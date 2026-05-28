@@ -1,0 +1,15 @@
+/* ==========================================================================
+   Analytics View Grid (analytics.css)
+   ========================================================================== */
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+}
+
+@media (max-width: 1024px) {
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}

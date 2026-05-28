@@ -67,7 +67,44 @@
         if (s === 'failed') {
             return '<span class="badge" style="background:rgba(255,75,75,0.1);color:#ff4b4b;padding:4px 8px;border-radius:6px;">Thất bại</span>';
         }
+        if (s === 'canceled') {
+            return '<span class="badge" style="background:rgba(255,255,255,0.1);color:#9e9e9e;padding:4px 8px;border-radius:6px;">Đã hủy</span>';
+        }
         return `<span class="badge" style="padding:4px 8px;border-radius:6px;">${esc(status)}</span>`;
+    }
+
+    async function updateOrderStatuses() {
+        const activeOrders = ordersCache.filter((o) => /processing|pending/i.test(o.status) && o.externalOrderId);
+        if (!activeOrders.length) return;
+        
+        const { API_BASE, authHeaders, parseJsonResponse } = app();
+        let changed = false;
+        
+        for (const o of activeOrders) {
+            try {
+                const res = await fetch(`${API_BASE}/api/smm/status`, {
+                    method: 'POST',
+                    headers: authHeaders(),
+                    body: JSON.stringify({ orderId: o.id })
+                });
+                const data = await parseJsonResponse(res);
+                if (data && data.success && data.data) {
+                    if (o.status !== data.data.status || o.startCount !== data.data.startCount || o.remains !== data.data.remains) {
+                        o.status = data.data.status;
+                        o.startCount = data.data.startCount;
+                        o.remains = data.data.remains;
+                        changed = true;
+                    }
+                }
+            } catch (e) {
+                // Ignore silent errors for background update
+            }
+        }
+        
+        if (changed) {
+            localStorage.setItem('votri_sys_orders', JSON.stringify(ordersCache));
+            render();
+        }
     }
 
     function render() {
@@ -115,7 +152,7 @@
         if (statTotal) statTotal.textContent = list.length;
         if (statProc) statProc.textContent = list.filter((o) => /processing|pending/i.test(o.status)).length;
         if (statDone) statDone.textContent = list.filter((o) => /completed/i.test(o.status)).length;
-        if (statFail) statFail.textContent = list.filter((o) => /failed/i.test(o.status)).length;
+        if (statFail) statFail.textContent = list.filter((o) => /failed|canceled/i.test(o.status)).length;
 
         const total = filtered.length;
         const pages = Math.ceil(total / perPage) || 1;
@@ -132,7 +169,7 @@
         }
 
         if (!pageItems.length) {
-            tableBody.innerHTML = `<tr><td colspan="${admin ? 8 : 7}" class="text-center text-dim" style="padding:40px;">Không có đơn hàng nào.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="${admin ? 13 : 12}" class="text-center text-dim" style="padding:40px;">Không có đơn hàng nào.</td></tr>`;
             const pg = document.getElementById('orders-pagination-controls');
             if (pg) pg.innerHTML = '';
             return;
@@ -140,19 +177,38 @@
 
         tableBody.innerHTML = pageItems.map((o) => {
             const dateStr = o.createdAt
-                ? new Date(o.createdAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                ? new Date(o.createdAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
                 : '-';
-            const linkShort = o.link && o.link.length > 40 ? o.link.slice(0, 40) + '...' : (o.link || '');
+            const updatedStr = o.updatedAt
+                ? new Date(o.updatedAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                : '-';
+            const linkShort = o.link && o.link.length > 35 ? o.link.slice(0, 35) + '...' : (o.link || '');
             const ext = o.externalOrderId ? `<div style="font-size:0.7rem;color:var(--text-dim);">SMM #${esc(String(o.externalOrderId))}</div>` : '';
+            
+            const s = (o.status || '').toLowerCase();
+            const canCancel = admin || (!o.externalOrderId && (s === 'pending' || s === 'processing'));
+            const cancelBtn = canCancel 
+                ? `<button class="btn btn-sm btn-danger cancel-order-btn" data-id="${esc(o.id)}" style="padding:3px 10px;font-size:10px;background:#ff4b4b;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;transition:all 0.2s ease;">Hủy đơn</button>` 
+                : '<span style="color:var(--text-dim);font-size:0.75rem;">—</span>';
+
+            const startVal = (o.startCount !== null && o.startCount !== undefined) ? o.startCount.toLocaleString() : '-';
+            const remainsVal = (o.remains !== null && o.remains !== undefined) ? o.remains.toLocaleString() : '-';
+            const commentVal = o.comments || o.comment || '';
+
             return `<tr>
-                <td style="font-weight:600;text-align:center;">${esc(o.id)}${ext}</td>
+                <td style="font-weight:600;text-align:center;white-space:nowrap;">${esc(o.id)}${ext}</td>
                 ${admin ? `<td style="font-size:0.8rem;">${esc(o.userEmail || '')}</td>` : ''}
+                <td style="font-size:0.8rem;white-space:nowrap;">${dateStr}</td>
                 <td title="${esc(o.serviceName || '')}">${esc(o.serviceName || 'N/A')}<div style="font-size:0.7rem;color:var(--text-dim);">ID ${esc(String(o.serviceId || ''))}</div></td>
                 <td><a href="${esc(o.link || '#')}" target="_blank" style="color:var(--neon-cyan);font-size:0.8rem;">${esc(linkShort)}</a></td>
-                <td style="text-align:center;font-weight:600;">${(o.quantity || 0).toLocaleString()}</td>
-                <td style="text-align:right;color:var(--neon-pink);font-weight:600;">${(o.charge || 0).toLocaleString('vi-VN')}đ</td>
+                <td style="font-size:0.8rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(commentVal)}">${esc(commentVal) || '<span style="color:var(--text-dim);">—</span>'}</td>
                 <td style="text-align:center;">${statusBadge(o.status)}</td>
-                <td style="font-size:0.8rem;color:var(--text-dim);">${dateStr}</td>
+                <td style="text-align:right;color:var(--neon-pink);font-weight:600;white-space:nowrap;">${(o.charge || 0).toLocaleString('vi-VN')}đ</td>
+                <td style="text-align:center;font-weight:600;">${(o.quantity || 0).toLocaleString()}</td>
+                <td style="text-align:center;font-weight:600;">${startVal}</td>
+                <td style="text-align:center;font-weight:600;">${remainsVal}</td>
+                <td style="font-size:0.8rem;white-space:nowrap;color:var(--text-dim);">${updatedStr}</td>
+                <td style="text-align:center;">${cancelBtn}</td>
             </tr>`;
         }).join('');
 
@@ -177,12 +233,14 @@
 
     async function loadAndRender() {
         const tableBody = document.getElementById('orders-table-body');
+        const admin = isAdmin();
         if (tableBody) {
-            tableBody.innerHTML = '<tr><td colspan="8" class="text-center text-dim" style="padding:40px;">Đang tải...</td></tr>';
+            tableBody.innerHTML = `<tr><td colspan="${admin ? 13 : 12}" class="text-center text-dim" style="padding:40px;">Đang tải...</td></tr>`;
         }
         try {
             await fetchOrders();
             render();
+            updateOrderStatuses();
         } catch (e) {
             console.error('[OrdersPage]', e);
             // #region agent log
@@ -191,7 +249,7 @@
             }
             // #endregion
             if (tableBody) {
-                tableBody.innerHTML = `<tr><td colspan="8" class="text-center text-dim" style="padding:40px;">${esc(e.message)}</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="${admin ? 13 : 12}" class="text-center text-dim" style="padding:40px;">${esc(e.message)}</td></tr>`;
             }
             const toast = app().showToast;
             if (toast) toast(e.message || 'Lỗi tải đơn hàng', 'error');
@@ -221,8 +279,54 @@
         }
     }
 
+    function bindCancelActions() {
+        const tableBody = document.getElementById('orders-table-body');
+        if (!tableBody) return;
+
+        tableBody.onclick = async (e) => {
+            const btn = e.target.closest('.cancel-order-btn');
+            if (!btn) return;
+
+            e.preventDefault();
+            const orderId = btn.getAttribute('data-id');
+            if (!orderId) return;
+
+            const { API_BASE, authHeaders, showToast } = app();
+
+            if (!confirm(`Bạn có chắc chắn muốn hủy đơn hàng #${orderId} và nhận lại tiền không?`)) {
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Đang hủy...';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/smm/orders/${orderId}/cancel`, {
+                    method: 'POST',
+                    headers: authHeaders()
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    showToast(data.message || 'Hủy đơn hàng thành công và đã hoàn tiền!', 'success');
+                    loadAndRender();
+                } else {
+                    showToast(data.message || 'Không thể hủy đơn hàng này.', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Hủy đơn';
+                }
+            } catch (err) {
+                console.error('[CANCEL BUTTON ERROR]', err);
+                showToast('Lỗi mạng, không thể kết nối tới server.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Hủy đơn';
+            }
+        };
+    }
+
     function init() {
         bindFilters();
+        bindCancelActions();
     }
 
     window.OrdersPage = {

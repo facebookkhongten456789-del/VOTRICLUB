@@ -9,12 +9,34 @@
   },
   "dependencies": {
     "@emailjs/nodejs": "^4.0.4",
+    "@google/generative-ai": "^0.24.1",
+    "@payos/node": "^2.0.5",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.6.1",
     "express": "^4.21.0",
     "express-rate-limit": "^8.5.2",
+    "jimp": "^1.6.1",
     "mysql2": "^3.22.3",
-    "qrcode": "^1.5.4"
-  }
+    "onnxruntime-web": "^1.26.0",
+    "playwright": "^1.60.0",
+    "qrcode": "^1.5.4",
+    "tesseract.js": "^7.0.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/facebookkhongten456789-del/VOTRICLUB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/facebookkhongten456789-del/VOTRICLUB/issues"
+  },
+  "homepage": "https://github.com/facebookkhongten456789-del/VOTRICLUB#readme"
 }

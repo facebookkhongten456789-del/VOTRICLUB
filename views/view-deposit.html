@@ -1,27 +1,147 @@
 <div class="view-container hidden" id="view-deposit">
     <div class="view-header-flex">
-        <h2 class="view-title text-neon-cyan">Nạp tiền (Cổng thanh toán MoMo)</h2>
-        <p class="view-subtitle">Thanh toán tự động qua cổng MoMo Business API v2. Tiền được cộng ngay lập tức.</p>
+        <h2 class="view-title text-neon-cyan">Nạp tiền (Cổng thanh toán PayOS)</h2>
+        <p class="view-subtitle">Hỗ trợ chuyển khoản nhanh VietQR tự động 24/7 qua cổng PayOS. Tiền cộng ngay lập tức.</p>
     </div>
     
-    <div style="display: flex; justify-content: center; margin-top: 40px;">
-        <div class="dashboard-card glass-card" style="padding: 40px; width: 100%; max-width: 500px; text-align: center;">
-            <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 20px;">
-            <h3 class="section-title" style="margin: 0 0 10px; font-size: 1.5rem; color: #A50064;">Nạp qua MoMo</h3>
-            <p style="color: var(--text-dim); margin-bottom: 30px;">Nhập số tiền bạn muốn nạp. Hệ thống sẽ chuyển hướng bạn đến trang thanh toán bảo mật của MoMo.</p>
-            
-            <div class="form-group" style="text-align: left; margin-bottom: 30px;">
-                <label style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 8px; display: block;">Số tiền muốn nạp (VNĐ)</label>
-                <input type="number" id="deposit-momo-amount" placeholder="VD: 50000" value="50000" style="width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(165, 0, 100, 0.5); border-radius: 8px; color: #fff; font-size: 1.2rem; font-weight: bold; outline: none; font-family: monospace; text-align: center;">
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- FORM NẠP TIỀN VIETQR                               -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <div style="display: flex; justify-content: center;">
+        <div class="dashboard-card glass-card" style="padding: 0; width: 100%; max-width: 520px; overflow: hidden;">
+            <!-- Header gradient -->
+            <div style="background: linear-gradient(135deg, rgba(0, 102, 255, 0.15), rgba(0, 60, 180, 0.08)); padding: 28px 32px 24px; border-bottom: 1px solid rgba(0, 102, 255, 0.12);">
+                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 102, 255, 0.12); border: 1px solid rgba(0, 102, 255, 0.2); display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="qr-code" style="width: 22px; color: #3385ff;"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.15rem; color: var(--text-primary); font-weight: 700;">Nạp tiền qua VietQR</h3>
+                        <p style="margin: 2px 0 0; font-size: 0.82rem; color: var(--text-dim);">Chuyển khoản nhanh 24/7 · Tự động cộng tiền</p>
+                    </div>
+                </div>
             </div>
 
-            <button id="btn-momo-pay" style="width: 100%; padding: 16px; background: #A50064; border: none; border-radius: 8px; color: #fff; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                Thanh toán qua MoMo <i data-lucide="arrow-right" style="width: 20px;"></i>
-            </button>
-            <div id="momo-pay-error" style="color: #ff4d4d; font-size: 0.9rem; margin-top: 15px; display: none;"></div>
-            
-            <div style="margin-top: 30px; font-size: 0.85rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
-                <i data-lucide="shield-check" style="width: 16px; display: inline-block; vertical-align: middle; margin-right: 5px;"></i> Giao dịch được mã hóa an toàn 256-bit
+            <!-- Body -->
+            <div style="padding: 28px 32px 32px;">
+                <div class="form-group" style="text-align: left; margin-bottom: 24px;">
+                    <label style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="banknote" style="width: 15px; color: var(--text-dim);"></i>
+                        Số tiền muốn nạp (VNĐ)
+                    </label>
+                    <input type="number" id="deposit-momo-amount" placeholder="VD: 50000" value="50000" style="width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; font-size: 1.15rem; font-weight: 700; outline: none; font-family: 'JetBrains Mono', monospace; text-align: center; transition: all 0.2s;" onfocus="this.style.borderColor='#3385ff'; this.style.boxShadow='0 0 0 3px rgba(51, 133, 255, 0.1)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';">
+                </div>
+
+                <!-- Quick amounts -->
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+                    <button type="button" class="dep-quick-amt" data-amount="10000">10K</button>
+                    <button type="button" class="dep-quick-amt" data-amount="50000">50K</button>
+                    <button type="button" class="dep-quick-amt" data-amount="100000">100K</button>
+                    <button type="button" class="dep-quick-amt" data-amount="200000">200K</button>
+                    <button type="button" class="dep-quick-amt" data-amount="500000">500K</button>
+                    <button type="button" class="dep-quick-amt" data-amount="1000000">1M</button>
+                </div>
+
+                <button id="btn-momo-pay" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #0066ff, #0044cc); border: none; border-radius: 10px; color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(0, 102, 255, 0.25);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(0, 102, 255, 0.35)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 102, 255, 0.25)';">
+                    <i data-lucide="scan-line" style="width: 18px;"></i>
+                    Tạo mã VietQR Thanh toán
+                </button>
+                <div id="momo-pay-error" style="color: #ff4d4d; font-size: 0.85rem; margin-top: 12px; display: none; text-align: center;"></div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding: 14px 32px; background: rgba(255,255,255,0.015); border-top: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.78rem; color: var(--text-dim);">
+                <i data-lucide="shield-check" style="width: 13px;"></i> Giao dịch VietQR được mã hóa an toàn · Tối thiểu 2,000đ
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- LỊCH SỬ NẠP TIỀN                                   -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <div style="margin-top: 48px;">
+        <div class="view-header-flex" style="margin-bottom: 20px;">
+            <h3 id="deposit-history-title" class="section-title" style="font-size: 1.3rem; display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="receipt" style="width: 22px; color: var(--neon-cyan);"></i>
+                <span id="deposit-history-title-text">Lịch sử nạp tiền của bạn</span>
+            </h3>
+            <p id="deposit-history-subtitle" class="view-subtitle" style="font-size: 0.85rem;">Các giao dịch nạp tiền vào tài khoản của bạn</p>
+        </div>
+
+        <!-- Stat Cards — đồng bộ style với view-history -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            <div class="dashboard-card glass-card" style="padding: 20px;">
+                <div id="deposit-stat-total" style="font-size: 1.8rem; font-weight: 700;">0</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Tổng giao dịch</div>
+            </div>
+            <div class="dashboard-card glass-card" style="padding: 20px;">
+                <div id="deposit-stat-pending" style="font-size: 1.8rem; font-weight: 700; color: var(--neon-yellow);">0</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Đang chờ</div>
+            </div>
+            <div class="dashboard-card glass-card" style="padding: 20px;">
+                <div id="deposit-stat-completed" style="font-size: 1.8rem; font-weight: 700; color: #39FF14;">0</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Thành công</div>
+            </div>
+            <div class="dashboard-card glass-card" style="padding: 20px;">
+                <div id="deposit-stat-failed" style="font-size: 1.8rem; font-weight: 700; color: #ff4b4b;">0</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Thất bại / Hủy</div>
+            </div>
+            <div class="dashboard-card glass-card" style="padding: 20px;">
+                <div id="deposit-stat-amount" style="font-size: 1.5rem; font-weight: 700; color: #a78bfa;">0đ</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">Tổng đã nạp</div>
+            </div>
+        </div>
+
+        <!-- Filter & Actions -->
+        <div class="dashboard-card glass-card" style="padding: 24px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center;">
+                <input type="text" id="deposit-filter-search" placeholder="Mã giao dịch, ghi chú..." style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--neon-cyan)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                <select id="deposit-filter-status" style="background: #0d1117; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.85rem; min-width: 150px; outline: none;">
+                    <option value="ALL">Tất cả trạng thái</option>
+                    <option value="pending">Đang chờ</option>
+                    <option value="completed">Thành công</option>
+                    <option value="failed">Thất bại</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+                <button type="button" class="btn btn-secondary" id="btn-deposit-filter" style="padding: 8px 16px; display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="search" style="width: 14px;"></i> Lọc
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-deposit-reset-filter" style="padding: 8px 16px; display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="rotate-ccw" style="width: 14px;"></i> Bỏ lọc
+                </button>
+                <button type="button" class="btn" id="btn-deposit-refresh" style="padding: 8px 16px; background: var(--neon-cyan); color: #000; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="refresh-cw" style="width: 14px;"></i> Làm mới
+                </button>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="neon-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th id="th-deposit-user" class="admin-only" style="display: none;">Email</th>
+                            <th>Mã giao dịch</th>
+                            <th style="text-align: right;">Số tiền</th>
+                            <th>Phương thức</th>
+                            <th style="text-align: center;">Trạng thái</th>
+                            <th>Ghi chú</th>
+                            <th>Thời gian</th>
+                            <th style="text-align: center;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deposit-history-body">
+                        <tr><td colspan="9" class="text-center text-dim" style="padding: 40px;">
+                            <i data-lucide="inbox" style="width: 32px; margin-bottom: 8px; opacity: 0.3; display: block; margin-left: auto; margin-right: auto;"></i>
+                            Chưa có giao dịch nạp tiền nào
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-wrap: wrap; gap: 10px;">
+                <span id="deposit-pagination-info" class="text-dim" style="font-size: 0.85rem;">Hiển thị 0 - 0 của 0 giao dịch</span>
+                <div id="deposit-pagination-controls" style="display: flex; gap: 4px;"></div>
             </div>
         </div>
     </div>

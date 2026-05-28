@@ -19,7 +19,7 @@ async function assertPageRecordAccess(dbQuery, parsePageId, pageRecordId, user) 
         err.status = 404;
         throw err;
     }
-    if (user.role !== 'admin' && rows[0].user_id !== user.id) {
+    if (rows[0].user_id !== user.id) {
         const err = new Error('Không có quyền kiểm tra Fanpage này.');
         err.status = 403;
         throw err;

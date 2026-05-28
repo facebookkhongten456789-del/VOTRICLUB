@@ -17,6 +17,8 @@ function mapOrderRow(o) {
         charge: parseFloat(o.charge),
         externalOrderId: o.external_order_id,
         status: o.status,
+        startCount: o.start_count,
+        remains: o.remains,
         createdAt: o.created_at
     };
 }

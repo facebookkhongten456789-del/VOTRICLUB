@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <!-- Background gradients -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#05050d"/>
+      <stop offset="50%" stop-color="#0a0a1f"/>
+      <stop offset="100%" stop-color="#060614"/>
+    </linearGradient>
+    
+    <!-- Neon glows -->
+    <radialGradient id="glowCyan" cx="20%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#00f2fe" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowPink" cx="80%" cy="20%" r="45%">
+      <stop offset="0%" stop-color="#ff007f" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#ff007f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowPurple" cx="50%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#7928ca" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#7928ca" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Border gradients -->
+    <linearGradient id="neonBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="50%" stop-color="#9b51e0"/>
+      <stop offset="100%" stop-color="#ff007f"/>
+    </linearGradient>
+
+    <!-- Glass card fills -->
+    <linearGradient id="glassFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="pillFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.01"/>
+    </linearGradient>
+
+    <!-- Title gradient -->
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#a5c4f2"/>
+    </linearGradient>
+
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="50%" stop-color="#7928ca"/>
+      <stop offset="100%" stop-color="#ff007f"/>
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="blurBack" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="30"/>
+    </filter>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Grid pattern -->
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Ambient Glows -->
+  <circle cx="200" cy="150" r="300" fill="url(#glowCyan)"/>
+  <circle cx="950" cy="180" r="250" fill="url(#glowPink)"/>
+  <circle cx="600" cy="500" r="350" fill="url(#glowPurple)"/>
+
+  <!-- Top Decorative Neon Bar -->
+  <rect x="0" y="0" width="1200" height="4" fill="url(#brandGrad)"/>
+
+  <!-- LEFT CONTENT SECTION -->
+  <g transform="translate(80, 90)">
+    
+    <!-- Premium Logo Icon -->
+    <g transform="translate(0, 0)">
+      <!-- Outer ring -->
+      <circle cx="36" cy="36" r="36" fill="url(#pillFill)" stroke="url(#brandGrad)" stroke-width="2" filter="url(#softShadow)"/>
+      <!-- Inner glowing orb -->
+      <circle cx="36" cy="36" r="20" fill="url(#brandGrad)" opacity="0.85" filter="url(#glow)"/>
+      <polygon points="32,26 46,36 32,46" fill="#ffffff"/>
+    </g>
+
+    <!-- Branding Text -->
+    <g transform="translate(92, 10)">
+      <rect x="0" y="0" width="168" height="32" rx="16" fill="#0c1020" stroke="#00f2fe" stroke-width="1.5" stroke-opacity="0.8" filter="url(#glow)"/>
+      <circle cx="16" cy="16" r="4.5" fill="#34d399"/>
+      <text x="28" y="21" font-family="'Outfit', 'Inter', sans-serif" font-size="12" font-weight="800" fill="#00f2fe" letter-spacing="2">NEXT-GEN AI</text>
+    </g>
+
+    <!-- Main Title -->
+    <text x="0" y="125" font-family="'Outfit', 'Inter', 'Segoe UI', sans-serif" font-size="70" font-weight="900" fill="url(#titleGrad)" letter-spacing="-1.5" filter="url(#softShadow)">VÔ TRI</text>
+    
+    <!-- Subtitle -->
+    <text x="0" y="172" font-family="'Inter', 'Segoe UI', sans-serif" font-size="22" font-weight="600" fill="#a5c4f2" opacity="0.9">Quản Lý Fanpage • Auto Post • Dịch Vụ MXH</text>
+    <text x="0" y="202" font-family="'Inter', 'Segoe UI', sans-serif" font-size="16" font-weight="400" fill="#6c7f99">Hệ thống tự động hóa marketing, tối ưu Ads-Safe bằng AI</text>
+
+    <!-- Glassmorphic Feature Badges (Grid layout) -->
+    <g transform="translate(0, 240)">
+      <!-- Row 1 -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="220" height="42" rx="12" fill="url(#pillFill)" stroke="#ffffff" stroke-opacity="0.1"/>
+        <circle cx="24" cy="21" r="6" fill="#00f2fe"/>
+        <text x="42" y="26" font-family="'Inter', sans-serif" font-size="14" font-weight="600" fill="#ffffff">Auto Post &amp; Quản lý FB</text>
+      </g>
+      <g transform="translate(235, 0)">
+        <rect x="0" y="0" width="220" height="42" rx="12" fill="url(#pillFill)" stroke="#ffffff" stroke-opacity="0.1"/>
+        <circle cx="24" cy="21" r="6" fill="#7928ca"/>
+        <text x="42" y="26" font-family="'Inter', sans-serif" font-size="14" font-weight="600" fill="#ffffff">Dịch vụ MXH (SMM Panel)</text>
+      </g>
+      <!-- Row 2 -->
+      <g transform="translate(0, 56)">
+        <rect x="0" y="0" width="220" height="42" rx="12" fill="url(#pillFill)" stroke="#ffffff" stroke-opacity="0.1"/>
+        <circle cx="24" cy="21" r="6" fill="#ff007f"/>
+        <text x="42" y="26" font-family="'Inter', sans-serif" font-size="14" font-weight="600" fill="#ffffff">Tối ưu Ads-Safe bằng AI</text>
+      </g>
+      <g transform="translate(235, 56)">
+        <rect x="0" y="0" width="220" height="42" rx="12" fill="url(#pillFill)" stroke="#ffffff" stroke-opacity="0.1"/>
+        <circle cx="24" cy="21" r="6" fill="#34d399"/>
+        <text x="42" y="26" font-family="'Inter', sans-serif" font-size="14" font-weight="600" fill="#ffffff">Nạp tiền VietQR tự động</text>
+      </g>
+    </g>
+
+  </g>
+
+  <!-- RIGHT INTERACTIVE DASHBOARD SECTION -->
+  <g transform="translate(620, 80)" filter="url(#softShadow)">
+    
+    <!-- Main Card Body -->
+    <rect width="500" height="400" rx="28" fill="url(#glassFill)" stroke="url(#neonBorder)" stroke-width="1.5" stroke-opacity="0.4"/>
+    
+    <!-- Browser Title Bar -->
+    <g transform="translate(24, 20)">
+      <circle cx="12" cy="16" r="6" fill="#ff5f56"/>
+      <circle cx="32" cy="16" r="6" fill="#ffbd2e"/>
+      <circle cx="52" cy="16" r="6" fill="#27c93f"/>
+      <rect x="84" y="4" width="280" height="24" rx="8" fill="#ffffff" fill-opacity="0.04" stroke="#ffffff" stroke-opacity="0.08"/>
+      <text x="224" y="20" text-anchor="middle" font-family="'Inter', sans-serif" font-size="11" font-weight="500" fill="#6c7f99">votri.id.vn/dashboard</text>
+    </g>
+
+    <!-- Mini KPIs Section -->
+    <g transform="translate(24, 75)">
+      <!-- KPI 1 -->
+      <g transform="translate(0, 0)">
+        <rect width="140" height="85" rx="16" fill="#ffffff" fill-opacity="0.02" stroke="#ffffff" stroke-opacity="0.05"/>
+        <text x="16" y="28" font-family="'Inter', sans-serif" font-size="12" font-weight="500" fill="#6c7f99">Đơn Thành Công</text>
+        <text x="16" y="60" font-family="'Outfit', 'Inter', sans-serif" font-size="28" font-weight="800" fill="#00f2fe">15,842</text>
+      </g>
+      <!-- KPI 2 -->
+      <g transform="translate(156, 0)">
+        <rect width="140" height="85" rx="16" fill="#ffffff" fill-opacity="0.02" stroke="#ffffff" stroke-opacity="0.05"/>
+        <text x="16" y="28" font-family="'Inter', sans-serif" font-size="12" font-weight="500" fill="#6c7f99">Chiến Dịch AI</text>
+        <text x="16" y="60" font-family="'Outfit', 'Inter', sans-serif" font-size="28" font-weight="800" fill="#ff007f">3,412</text>
+      </g>
+      <!-- KPI 3 -->
+      <g transform="translate(312, 0)">
+        <rect width="140" height="85" rx="16" fill="#ffffff" fill-opacity="0.02" stroke="#ffffff" stroke-opacity="0.05"/>
+        <text x="16" y="28" font-family="'Inter', sans-serif" font-size="12" font-weight="500" fill="#6c7f99">Uptime Hệ Thống</text>
+        <text x="16" y="60" font-family="'Outfit', 'Inter', sans-serif" font-size="28" font-weight="800" fill="#34d399">99.98%</text>
+      </g>
+    </g>
+
+    <!-- Main Chart Area -->
+    <g transform="translate(24, 185)">
+      <rect width="452" height="185" rx="18" fill="#ffffff" fill-opacity="0.01" stroke="#ffffff" stroke-opacity="0.05"/>
+      <text x="18" y="28" font-family="'Inter', sans-serif" font-size="13" font-weight="600" fill="#ffffff">Hiệu Suất Tiếp Cận AI (Real-time)</text>
+      
+      <!-- Chart Area Path Gradient -->
+      <defs>
+        <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#7928ca" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Draw waves -->
+      <path d="M 20 140 Q 80 50 140 100 T 260 60 T 380 110 L 430 40 L 432 150 L 20 150 Z" fill="url(#chartAreaGrad)"/>
+      <path d="M 20 140 Q 80 50 140 100 T 260 60 T 380 110 L 430 40" fill="none" stroke="#00f2fe" stroke-width="4" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M 20 140 Q 80 50 140 100 T 260 60 T 380 110 L 430 40" fill="none" stroke="#ff007f" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+
+      <!-- Glowing dots at peak -->
+      <circle cx="140" cy="100" r="5" fill="#ffffff" stroke="#00f2fe" stroke-width="2" filter="url(#glow)"/>
+      <circle cx="260" cy="60" r="5" fill="#ffffff" stroke="#ff007f" stroke-width="2" filter="url(#glow)"/>
+      <circle cx="430" cy="40" r="6" fill="#ffffff" stroke="#00f2fe" stroke-width="2" filter="url(#glow)"/>
+    </g>
+
+  </g>
+
+  <!-- BOTTOM FLOATING HEADER BAR -->
+  <g transform="translate(80, 520)">
+    <!-- Glass bar background -->
+    <rect width="1040" height="70" rx="20" fill="url(#pillFill)" stroke="#ffffff" stroke-opacity="0.08" filter="url(#softShadow)"/>
+    
+    <!-- Platforms List -->
+    <g transform="translate(30, 0)">
+      <text x="0" y="40" font-family="'Inter', sans-serif" font-size="14" font-weight="600" fill="#6c7f99" letter-spacing="1">
+        SUPPORTED: <tspan fill="#ffffff">FACEBOOK</tspan> • <tspan fill="#ffffff">TIKTOK</tspan> • <tspan fill="#ffffff">INSTAGRAM</tspan> • <tspan fill="#ffffff">YOUTUBE</tspan>
+      </text>
+    </g>
+    
+    <!-- Domain URL Address bar style -->
+    <g transform="translate(740, 16)">
+      <rect width="270" height="38" rx="19" fill="#070913" stroke="url(#brandGrad)" stroke-width="1.5" stroke-opacity="0.8"/>
+      <!-- lock icon -->
+      <path d="M 28 15 L 28 12 A 4 4 0 0 1 36 12 L 36 15 M 25 15 L 39 15 L 39 25 L 25 25 Z" fill="none" stroke="#34d399" stroke-width="1.5"/>
+      <text x="125" y="24" text-anchor="middle" font-family="'Outfit', 'Inter', monospace" font-size="15" font-weight="700" fill="#ffffff">https://votri.id.vn</text>
+    </g>
+  </g>
+</svg>

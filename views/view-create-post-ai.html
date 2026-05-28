@@ -1,0 +1,584 @@
+<link rel="stylesheet" href="views/ai-post-creator.css?v=1.1.0">
+
+<div class="view-container hidden" id="view-create-post-ai">
+    <!-- View Header -->
+    <div class="view-header-flex">
+        <h2 class="view-title text-neon-cyan">Tạo Bài Viết AI</h2>
+        <p class="view-subtitle">Sáng tạo nội dung và lập kế hoạch đăng bài tự động bằng trí tuệ nhân tạo</p>
+    </div>
+
+    <!-- Main Light-Themed Dashboard Container -->
+    <div id="ai-post-shell">
+        <div id="ai-post-grid">
+            
+            <!-- Column 1: Sidebar Inputs -->
+            <div id="ai-post-controls">
+                
+                <!-- 1. Platform (Facebook only) -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">Chọn nền tảng đăng bài</label>
+                    <div id="ai-platform-fixed">
+                        <i data-lucide="facebook" class="w-5 h-5"></i> Facebook
+                    </div>
+                </div>
+
+                <!-- 2. Textarea prompt -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="ai-post-requirement" class="text-xs font-bold text-gray-500 uppercase tracking-wider">Yêu cầu bài viết</label>
+                        <div class="flex items-center gap-3">
+                            <span id="btn-form-trigger-suggestions" class="text-[10px] text-[#00f0ff] font-semibold cursor-pointer hover:underline flex items-center gap-1 bg-[#00f0ff]/5 px-2 py-0.5 rounded border border-solid border-[#00f0ff]/20">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#00f0ff] animate-pulse"></i> Gợi ý chủ đề
+                            </span>
+                            <span id="char-count" class="text-xs text-gray-400 font-mono font-medium">0 / 8000</span>
+                        </div>
+                    </div>
+                    <textarea id="ai-post-requirement" rows="5" maxlength="8000" placeholder="Mô tả chi tiết nội dung bạn mong muốn AI viết. Ví dụ: Viết một bài giới thiệu về dịch vụ chăm sóc da mụn chất lượng cao, có cam kết hết mụn sau 2 tuần, giọng điệu thân thiện, có kêu gọi hành động ở cuối bài kèm ưu đãi giảm 10%..." class="w-full p-3.5 border border-solid border-gray-300 rounded-lg focus:outline-none focus:border-[#1877F2] focus:ring-1 focus:ring-[#1877F2] resize-none text-sm text-gray-800 font-sans leading-relaxed"></textarea>
+                </div>
+
+                <!-- 3. Reference URL -->
+                <div>
+                    <label for="ai-post-ref-url" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">URL bài viết tham khảo (Tùy chọn)</label>
+                    <div class="relative">
+                        <i data-lucide="link" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                        <input type="url" id="ai-post-ref-url" placeholder="https://example.com/ref-post-url" class="w-full pl-9 pr-3 py-2.5 border border-solid border-gray-300 rounded-lg focus:outline-none focus:border-[#1877F2] text-sm text-gray-800 font-sans">
+                    </div>
+                </div>
+
+                <!-- 4. Length Buttons -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">Độ dài bài viết</label>
+                    <div class="ai-segmented-row" id="length-buttons-container">
+                        <button type="button" data-length="very-short">Siêu ngắn</button>
+                        <button type="button" data-length="short">Ngắn gọn</button>
+                        <button type="button" data-length="medium" class="active">Vừa phải</button>
+                        <button type="button" data-length="full">Đầy đủ</button>
+                        <button type="button" data-length="detailed">Chi tiết</button>
+                    </div>
+                </div>
+
+                <!-- 5. Tone Tags -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">Phong cách nội dung (Chọn nhiều)</label>
+                    <div class="ai-chip-row" id="style-tags-container">
+                        <button type="button" data-style="professional" class="active">💼 Chuyên nghiệp</button>
+                        <button type="button" data-style="funny">🤣 Hài hước</button>
+                        <button type="button" data-style="creative">💡 Sáng tạo</button>
+                        <button type="button" data-style="emotional">❤️ Cảm xúc</button>
+                        <button type="button" data-style="persuasive" class="active">🎯 Thuyết phục</button>
+                        <button type="button" data-style="storytelling">📖 Kể chuyện</button>
+                        <button type="button" data-style="formal">👔 Trang trọng</button>
+                    </div>
+                </div>
+
+                <!-- 6. Image Source cards -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">Chọn nguồn hình ảnh</label>
+                    <div class="ai-source-row" id="image-source-container">
+                        <!-- Card 1: Internet -->
+                        <div data-source="internet" class="cursor-pointer p-4 border border-solid border-gray-200 rounded-xl text-center hover:border-[#1877F2] hover:bg-blue-50/10 transition-all flex flex-col items-center justify-center gap-2">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-[#1877F2]">
+                                <i data-lucide="globe" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-xs font-bold text-gray-800">Internet</span>
+                        </div>
+                        <!-- Card 2: AI Generated -->
+                        <div data-source="ai" class="cursor-pointer p-4 border-2 border-solid border-[#1877F2] bg-blue-50/30 rounded-xl text-center hover:border-[#1877F2] transition-all flex flex-col items-center justify-center gap-2 relative">
+                            <div class="absolute top-1.5 right-1.5 text-[#1877F2]">
+                                <i data-lucide="check-circle" class="w-4 h-4 fill-[#1877F2] text-white"></i>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                                <i data-lucide="sparkles" class="w-5 h-5 animate-pulse"></i>
+                            </div>
+                            <span class="text-xs font-bold text-gray-800">AI tạo ảnh</span>
+                        </div>
+                        <!-- Card 3: Upload Device -->
+                        <div data-source="device" class="cursor-pointer p-4 border border-solid border-gray-200 rounded-xl text-center hover:border-[#1877F2] hover:bg-blue-50/10 transition-all flex flex-col items-center justify-center gap-2">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                                <i data-lucide="hard-drive" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-xs font-bold text-gray-800">Thiết bị</span>
+                        </div>
+                    </div>
+
+                    <!-- Inputs dynamically shown based on source -->
+                    <div id="img-source-inputs" class="mt-3.5">
+                        <!-- URL Input for internet (Removed by Antigravity) -->
+                        <div id="img-input-internet" class="hidden"></div>
+                        <!-- Prompts for AI -->
+                        <div id="img-input-ai">
+                            <div class="ai-image-config-card">
+                                <span class="ai-image-config-title">
+                                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i> Cấu hình ảnh AI
+                                </span>
+                                
+                                <div>
+                                    <!-- Row 1: Phong cách ảnh -->
+                                    <div style="margin-bottom: 12px;">
+                                        <label class="ai-image-config-label">Phong cách ảnh</label>
+                                        <div class="ai-select-wrapper">
+                                            <select id="ai-img-style" class="ai-select-control">
+                                                <option value="realistic">📸 Chân thực</option>
+                                                <option value="illustration">🎨 Minh họa</option>
+                                                <option value="watercolor">🖌️ Màu nước</option>
+                                                <option value="cinematic">🎬 Điện ảnh</option>
+                                                <option value="minimalist">◽ Tối giản</option>
+                                                <option value="cartoon">🎭 Hoạt hình</option>
+                                                <option value="3d-render">🧊 3D Render</option>
+                                                <option value="vintage">📻 Cổ điển</option>
+                                            </select>
+                                            <i data-lucide="chevron-down" class="ai-select-chevron"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row 2: Tỷ lệ ảnh -->
+                                    <div style="margin-bottom: 12px;">
+                                        <label class="ai-image-config-label">Tỷ lệ ảnh</label>
+                                        <div class="ai-aspect-selector" id="ai-img-aspect-selector">
+                                            <button type="button" data-aspect="1:1" class="ai-aspect-btn active">
+                                                <span>⬜ Vuông</span>
+                                                <span style="font-size: 9px; opacity: 0.6;">(1:1)</span>
+                                            </button>
+                                            <button type="button" data-aspect="16:9" class="ai-aspect-btn">
+                                                <span>🖥️ Ngang</span>
+                                                <span style="font-size: 9px; opacity: 0.6;">(16:9)</span>
+                                            </button>
+                                            <button type="button" data-aspect="9:16" class="ai-aspect-btn">
+                                                <span>📱 Dọc</span>
+                                                <span style="font-size: 9px; opacity: 0.6;">(9:16)</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="ai-image-config-label">Yêu cầu thêm cho ảnh (tùy chọn)</label>
+                                    <div class="ai-prompt-input-wrapper">
+                                        <i data-lucide="bot" class="ai-prompt-icon"></i>
+                                        <input type="text" id="ai-post-img-prompt" placeholder="Ví dụ: tông màu ấm, độ phân giải cao..." class="ai-prompt-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Drag-n-drop for Device -->
+                        <div id="img-input-device" class="hidden">
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 flex flex-col items-center gap-1.5" id="drop-zone">
+                                <i data-lucide="upload-cloud" class="w-7 h-7 text-gray-400"></i>
+                                <span class="text-xs font-bold text-gray-600">Kéo thả hoặc click để upload ảnh từ thiết bị</span>
+                                <input type="file" id="ai-post-img-file" class="hidden" accept="image/*">
+                                <div id="preview-upload-filename" class="text-[11px] text-green-600 font-bold hidden bg-green-50 px-2.5 py-1 rounded-full border border-solid border-green-200"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Actions -->
+                <div class="ai-action-stack">
+                    <button type="button" id="btn-generate-ai-post" class="w-full py-4 bg-gradient-to-r from-[#1877F2] to-[#125ebd] hover:from-[#166fe5] hover:to-[#0f54ab] text-white font-bold rounded-lg border-0 cursor-pointer shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="cpu" class="w-5 h-5"></i> Tạo bài viết bằng AI
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Column 2: Scheduler Settings -->
+            <div id="ai-post-scheduler-settings">
+                <!-- If not connected -->
+                <div id="ai-post-fb-not-connected" class="scheduler-not-connected">
+                    <div class="not-connected-icon">
+                        <i data-lucide="facebook" class="w-8 h-8 text-[#1877F2]"></i>
+                    </div>
+                    <h4 class="text-sm font-bold text-gray-300 mb-2">Chưa kết nối Facebook</h4>
+                    <p class="text-xs text-gray-500 max-w-[240px] mb-5 leading-relaxed">Vui lòng thiết lập tài khoản Facebook của bạn để cấu hình và kích hoạt tính năng lên lịch đăng bài tự động.</p>
+                    <button type="button" id="btn-setup-platform-account" class="py-2.5 px-4 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-lg border border-solid border-gray-700 cursor-pointer transition-all flex items-center justify-center gap-2 text-xs">
+                        <i data-lucide="settings" class="w-4 h-4"></i> Thiết lập tài khoản Facebook
+                    </button>
+                </div>
+
+                <!-- If connected -->
+                <div id="ai-post-fb-connected" class="hidden">
+                    <!-- Title: Cài đặt lịch trình -->
+                    <div class="scheduler-header">
+                        <span class="scheduler-header-title">
+                            <i data-lucide="calendar" class="w-4.5 h-4.5 text-[#1877F2]"></i> Cài đặt lịch trình
+                        </span>
+                    </div>
+
+                    <!-- Chế độ lịch đăng bài -->
+                    <div class="mb-3">
+                        <label class="scheduler-label">Chế độ lịch đăng bài</label>
+                        <div class="scheduler-mode-container" id="schedule-mode-container">
+                            <!-- Mode 1: Lặp lại theo tuần -->
+                            <div data-mode="weekly" class="scheduler-mode-card active-mode">
+                                <div class="scheduler-mode-check" id="mode-check-weekly">
+                                    <i data-lucide="check-circle" class="w-4 h-4 fill-[#1877F2] text-white"></i>
+                                </div>
+                                <div class="scheduler-mode-icon-wrapper weekly">
+                                    <i data-lucide="repeat" class="w-4.5 h-4.5"></i>
+                                </div>
+                                <div>
+                                    <span class="mode-title">Lặp lại theo tuần</span>
+                                    <span class="mode-desc">Đăng lặp lại theo thứ</span>
+                                </div>
+                            </div>
+
+                            <!-- Mode 2: Ngày cố định -->
+                            <div data-mode="fixed" class="scheduler-mode-card">
+                                <div class="scheduler-mode-icon-wrapper fixed">
+                                    <i data-lucide="calendar-days" class="w-4.5 h-4.5"></i>
+                                </div>
+                                <div>
+                                    <span class="mode-title">Ngày cố định</span>
+                                    <span class="mode-desc">Đăng ngày cụ thể</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tip -->
+                        <p id="schedule-mode-tip" class="text-[11px] text-amber-300 bg-amber-500/5 border border-amber-500/10 rounded-lg p-2 mt-2 leading-relaxed">
+                            💡 Mẹo: Chế độ lặp lại theo tuần phù hợp cho lịch đăng bài thường xuyên và đều đặn.
+                        </p>
+                    </div>
+
+                    <!-- Mode content containers -->
+                    <!-- Content 1: Weekly repeat option -->
+                    <div id="weekly-mode-options" class="block">
+                        <!-- Times & Days Row -->
+                        <div class="scheduler-two-cols">
+                            <!-- Left: Giờ đăng bài -->
+                            <div class="scheduler-option-card">
+                                <span class="scheduler-card-label">Giờ đăng bài</span>
+                                <div id="weekly-times-list" class="space-y-2 max-h-[140px] overflow-y-auto pr-1">
+                                    <!-- Default Time picker row -->
+                                    <div class="weekly-time-row">
+                                        <select class="time-hour">
+                                            <!-- Hours -->
+                                        </select>
+                                        <span class="text-white text-xs">:</span>
+                                        <select class="time-minute">
+                                            <!-- Minutes -->
+                                        </select>
+                                        <button type="button" class="btn-delete-time">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="button" id="btn-add-weekly-time" class="btn-add-time-dashed">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Thêm giờ đăng
+                                </button>
+                            </div>
+
+                            <!-- Right: Ngày đăng bài -->
+                            <div class="scheduler-option-card">
+                                <span class="scheduler-card-label">Ngày đăng bài</span>
+                                <div class="weekly-days-chips" id="weekly-days-chips">
+                                    <button type="button" data-day="1" class="day-chip active">Thứ 2</button>
+                                    <button type="button" data-day="2" class="day-chip active">Thứ 3</button>
+                                    <button type="button" data-day="3" class="day-chip active">Thứ 4</button>
+                                    <button type="button" data-day="4" class="day-chip active">Thứ 5</button>
+                                    <button type="button" data-day="5" class="day-chip active">Thứ 6</button>
+                                    <button type="button" data-day="6" class="day-chip active">Thứ 7</button>
+                                    <button type="button" data-day="0" class="day-chip active">Chủ nhật</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content 2: Fixed date options -->
+                    <div id="fixed-mode-options" class="hidden">
+                        <!-- Thêm lịch đăng mới -->
+                        <div class="scheduler-highlight-card">
+                            <span class="scheduler-card-label text-[#1877F2] mb-2 flex items-center gap-1"><i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Thêm lịch đăng mới</span>
+                            <div class="scheduler-two-cols mb-2.5">
+                                <!-- Chọn ngày -->
+                                <div>
+                                    <label class="block text-[10px] text-gray-400 font-bold mb-1 uppercase">Chọn ngày</label>
+                                    <input type="date" id="fixed-date-input">
+                                </div>
+                                <!-- Giờ đăng -->
+                                <div>
+                                    <label class="block text-[10px] text-gray-400 font-bold mb-1 uppercase">Giờ đăng bài</label>
+                                    <div class="weekly-time-row">
+                                        <select id="fixed-hour-input">
+                                            <!-- Hours -->
+                                        </select>
+                                        <span class="text-white text-xs">:</span>
+                                        <select id="fixed-minute-input">
+                                            <!-- Minutes -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" id="btn-add-fixed-schedule" class="btn-add-fixed-schedule">
+                                Thêm lịch
+                            </button>
+                        </div>
+
+                        <!-- Fixed schedules list -->
+                        <div class="scheduler-option-card mt-3">
+                            <span class="scheduler-card-label">Danh sách ngày đã chọn</span>
+                            <div id="fixed-schedules-list" class="min-h-[100px] flex items-center justify-center py-2">
+                                <!-- Empty state initially -->
+                                <div id="fixed-schedules-empty" class="flex flex-col items-center text-gray-500 gap-1.5">
+                                    <i data-lucide="calendar" class="w-8 h-8 opacity-30"></i>
+                                    <span class="text-xs">Chưa có lịch đăng nào</span>
+                                </div>
+                                <div id="fixed-schedules-items" class="w-full space-y-1.5 hidden max-h-[140px] overflow-y-auto pr-1">
+                                    <!-- Dynamic fixed schedule chips/rows -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rest of the scheduling: Chọn Fanpage để đăng bài -->
+                    <div class="mt-3">
+                        <label class="scheduler-label flex justify-between items-center">
+                            <span>Chọn Fanpage để đăng bài</span>
+                            <span class="text-[10px] text-gray-400 font-normal" id="lbl-selected-pages-count">Đã chọn: 0</span>
+                        </label>
+                        <div class="fb-dropdown-wrapper" id="fb-pages-dropdown-wrapper">
+                            <button type="button" id="fb-pages-dropdown-btn" class="fb-dropdown-trigger">
+                                <span class="flex items-center gap-2">
+                                    <i data-lucide="facebook" class="w-4.5 h-4.5 text-[#1877F2]"></i>
+                                    <span id="fb-dropdown-btn-text">Chọn Fanpage để đăng bài</span>
+                                </span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 transition-transform duration-200" id="fb-dropdown-arrow"></i>
+                            </button>
+                            <div id="fb-pages-dropdown-menu" class="fb-dropdown-menu hidden">
+                                <div id="fanpage-checkbox-list" class="fanpage-checklist-container">
+                                    <div class="flex items-center justify-center py-4 text-xs text-gray-500">
+                                        <i data-lucide="loader-2" class="spinning w-4 h-4 mr-2 text-[#1877F2]"></i> Đang tải danh sách Fanpage...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tài khoản đã chọn (1) -->
+                    <div id="selected-accounts-section" class="selected-accounts-section hidden">
+                        <span class="scheduler-card-label" id="lbl-selected-accounts-count">Tài khoản đã chọn (1):</span>
+                        <div class="flex flex-wrap gap-2" id="selected-accounts-list">
+                            <!-- Selected account tag -->
+                        </div>
+                    </div>
+
+                    <!-- Tự động viết và đăng bài -->
+                    <div class="scheduler-flex-row mt-3">
+                        <div class="text-block">
+                            <span class="row-title">Tự động viết và đăng bài</span>
+                            <span class="row-desc">Hệ thống sẽ tự động viết và đăng bài theo thời gian đã cài đặt</span>
+                        </div>
+                        <label class="scheduler-toggle">
+                             <input type="checkbox" id="chk-auto-write-post" checked>
+                             <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Tự lặp lại khi đã đăng hết -->
+                    <div class="scheduler-flex-row">
+                        <div class="text-block">
+                            <span class="row-title">Tự lặp lại khi đã đăng hết</span>
+                            <span class="row-desc">Khi toàn bộ chủ đề trong thiết lập đã đăng xong, hệ thống sẽ tự reset trạng thái và bắt đầu lại từ đầu.</span>
+                        </div>
+                        <label class="scheduler-toggle">
+                            <input type="checkbox" id="chk-auto-repeat-all">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Chế độ đăng bài -->
+                    <div class="mt-3">
+                        <label class="scheduler-label">Chế độ đăng bài</label>
+                        <div class="posting-mode-row" id="posting-mode-tabs">
+                            <button type="button" data-post-mode="direct" class="active-post-mode">
+                                <i data-lucide="zap" class="w-3.5 h-3.5 text-[#1877F2]"></i> Đăng ngay
+                            </button>
+                            <button type="button" data-post-mode="moderated">
+                                <i data-lucide="eye" class="w-3.5 h-3.5 text-gray-400"></i> Duyệt trước
+                            </button>
+                        </div>
+                        <p id="posting-mode-desc" class="posting-mode-desc">
+                            Hệ thống sẽ tự động viết và đăng bài ngay theo lịch đã cài đặt.
+                        </p>
+                    </div>
+
+                    <!-- Chi phí dự kiến -->
+                    <div class="scheduler-cost-badge mt-3">
+                        💰 Chi phí dự kiến: <span>60 điểm/bài</span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-3" style="display: flex; flex-direction: column; gap: 8px;">
+                        <button type="button" id="btn-save-auto-schedule" class="btn-save-schedule">
+                            <i data-lucide="save" class="w-4 h-4"></i> Lưu thiết lập đăng bài tự động
+                        </button>
+                        <button type="button" id="btn-reset-scheduler" class="btn-reset-scheduler">
+                            Tạo thiết lập mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Column 4: Live Output Preview -->
+            <div id="preview-panel-container">
+                
+                <!-- Output Header -->
+                <div class="flex justify-between items-center border-b border-solid border-gray-100 pb-3.5 mb-4">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5"><i data-lucide="eye" class="w-4.5 h-4.5 text-[#1877F2]"></i> Xem trước kết quả</span>
+                    <span class="px-3 py-1 text-[10px] font-bold rounded-full bg-blue-100 text-[#1877F2] uppercase tracking-wider" id="preview-platform-badge">Facebook</span>
+                </div>
+
+                <!-- 1. EMPTY STATE -->
+                <div id="preview-empty-state" class="flex-1 flex flex-col justify-center items-center py-16 text-center">
+                    <div class="mb-4 text-gray-500">
+                        <i data-lucide="file-text" style="width: 52px; height: 52px; stroke-width: 1.2;"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-gray-300 mb-2">Chưa có bài viết nào</h4>
+                    <p class="text-xs text-gray-500 max-w-[340px] leading-relaxed mb-6">Nhập yêu cầu bài viết HOẶC URL tham khảo và nhấn "Tạo bài viết" để bắt đầu</p>
+                    <button type="button" id="btn-trigger-suggestions" class="px-5 py-2.5 bg-blue-600/10 border border-solid border-blue-500/20 hover:bg-blue-600/20 text-[#1877F2] font-semibold rounded-lg cursor-pointer transition-all flex items-center gap-2 text-xs">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Hoặc gợi ý chủ đề
+                    </button>
+                </div>
+
+                <!-- 2. LOADING STATE -->
+                <div id="preview-loading-state" class="hidden flex-1 flex flex-col justify-center items-center py-12 text-center">
+                    <div class="relative w-16 h-16 mb-4">
+                        <div class="absolute inset-0 rounded-full border-4 border-solid border-gray-800"></div>
+                        <div class="absolute inset-0 rounded-full border-4 border-solid border-t-[#1877F2] animate-spin"></div>
+                        <div class="absolute inset-0 flex items-center justify-center text-[#1877F2]">
+                            <i data-lucide="bot" class="w-6 h-6 animate-pulse"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-sm font-bold text-gray-400 mb-1" id="ai-loading-title">AI đang soạn thảo...</h4>
+                    <div class="w-64 bg-gray-800 h-1.5 rounded-full overflow-hidden mt-3 shadow-inner border border-solid border-gray-700">
+                        <div id="ai-loading-progress" class="bg-[#1877F2] h-full transition-all duration-300 rounded-full" style="width: 10%;"></div>
+                    </div>
+                    <p class="text-[11px] text-gray-500 mt-2 font-bold" id="ai-loading-step">Đang phân tích yêu cầu từ người dùng...</p>
+                </div>
+
+                <!-- 3. COMPLETED/OUTPUT STATE -->
+                <div id="preview-output-state" class="hidden flex-1 flex flex-col justify-between">
+                    
+                    <!-- Social Mockup Card -->
+                    <div class="social-mockup-card">
+                        <!-- Mockup Header -->
+                        <div class="fb-mockup-header">
+                            <div class="fb-mockup-author">
+                                <!-- Avatar -->
+                                <div class="fb-mockup-avatar-wrapper" id="mock-avatar">
+                                    <i data-lucide="facebook" class="w-5 h-5 text-[#1877F2]" id="mock-avatar-icon"></i>
+                                </div>
+                                <div class="fb-mockup-meta">
+                                    <h5 class="fb-mockup-name" id="mock-page-name">Vô Tri Entertainment</h5>
+                                    <div class="fb-mockup-subinfo">
+                                        <span id="mock-time">Vừa xong</span>
+                                        <span class="fb-mockup-bullet">•</span>
+                                        <i data-lucide="globe" class="w-3.5 h-3.5" id="mock-privacy-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="fb-mockup-options-btn">
+                                <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Post Text Content -->
+                        <div class="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap mb-4 font-sans px-0.5 select-text selection:bg-blue-100" id="mock-text-content">
+                            Nội dung bài viết AI được sinh ra ở đây...
+                        </div>
+                        
+                        <!-- Post Image Mockup -->
+                        <div id="mock-image-container" class="rounded-lg overflow-hidden border border-solid border-gray-100 bg-gray-50 mb-3 hidden">
+                            <!-- Dynamically injected by updateMockupImages() -->
+                        </div>
+                        
+                        <!-- Post Footer Actions (FB Style) -->
+                        <div id="mock-footer-facebook" class="border-t border-b border-solid border-gray-100 py-1.5 flex justify-between text-gray-500 text-xs font-bold mt-2">
+                            <button class="flex-grow py-2 hover:bg-gray-50 rounded flex items-center justify-center gap-1.5 bg-transparent border-0 cursor-pointer text-gray-500 font-bold"><i data-lucide="thumbs-up" class="w-4 h-4"></i> Thích</button>
+                            <button class="flex-grow py-2 hover:bg-gray-50 rounded flex items-center justify-center gap-1.5 bg-transparent border-0 cursor-pointer text-gray-500 font-bold"><i data-lucide="message-square" class="w-4 h-4"></i> Bình luận</button>
+                            <button class="flex-grow py-2 hover:bg-gray-50 rounded flex items-center justify-center gap-1.5 bg-transparent border-0 cursor-pointer text-gray-500 font-bold"><i data-lucide="share-2" class="w-4 h-4"></i> Chia sẻ</button>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Ads-Safe Scan Results Card -->
+                    <div id="ads-safe-check-card" class="p-4 bg-gray-900/60 rounded-xl border border-solid border-gray-800 mb-3.5 mt-3">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <span class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-[#00ffcc]"></i> Kiểm tra Ads-Safe (Quảng cáo an toàn)
+                            </span>
+                            <button type="button" id="btn-auto-fix-ads-safe" class="text-[10px] bg-green-500/10 text-green-400 font-bold px-2 py-0.5 rounded border border-solid border-green-500/20 hover:bg-green-500/20 transition-all cursor-pointer">
+                                ⚡ Tối ưu Ads-Safe
+                            </button>
+                        </div>
+                        <div id="ads-safe-check-list" class="space-y-1.5 text-xs">
+                            <!-- Dynamic check results here -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons Row below mockup -->
+                    <div class="preview-action-row">
+                        <button type="button" id="btn-edit-post">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i> Sửa bài
+                        </button>
+                        <button type="button" id="btn-copy-post">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Sao chép
+                        </button>
+                        <button type="button" id="btn-publish-post">
+                            <i data-lucide="send" class="w-4 h-4"></i> Đăng ngay
+                        </button>
+                    </div>
+
+                    <!-- Image Selection Grid (For Internet Search Image Sources) -->
+                    <div id="image-selection-wrapper" class="mt-4 hidden p-3 bg-gray-900/60 rounded-xl border border-solid border-gray-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="image" class="w-4 h-4 text-[#1877F2]"></i> Hình ảnh từ internet
+                            </span>
+                            <span class="text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-solid border-blue-500/20" id="selected-images-counter">
+                                Ảnh đã chọn: 0/9
+                            </span>
+                        </div>
+                        <div id="searched-images-grid" class="grid grid-cols-5 gap-2 overflow-y-auto max-h-[140px] p-1.5 scrollbar-thin scrollbar-thumb-gray-800">
+                            <!-- Dynamically loaded thumbnail grid -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- AI Suggested Topics Modal Popup -->
+    <div id="ai-suggestions-modal" class="modal-overlay hidden">
+        <div class="modal-content glassmorphism">
+            <!-- Modal Header -->
+            <div class="sug-modal-header">
+                <span class="sug-modal-title">
+                    <i data-lucide="sparkles" class="w-4.5 h-4.5 text-[#00f0ff] animate-pulse"></i> Gợi ý chủ đề phổ biến
+                </span>
+                <div class="sug-modal-actions">
+                    <button type="button" id="btn-refresh-suggestions-modal" class="sug-modal-btn" title="Làm mới gợi ý">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
+                    <button type="button" id="btn-close-suggestions-modal" class="sug-modal-btn" title="Đóng">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                Nhấp chọn một chủ đề dưới đây để tự động điền nội dung và các tùy chọn tương ứng:
+            </p>
+            
+            <!-- Topics list container -->
+            <div class="ai-topics-list" id="suggestions-list-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 480px; overflow-y: auto; padding-right: 6px;">
+                <!-- Dynamic suggestions loaded here -->
+            </div>
+        </div>
+    </div>
+</div>

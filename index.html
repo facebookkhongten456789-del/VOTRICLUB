@@ -1,24 +1,70 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Vô Tri Club — hệ thống SMM Panel, nạp ví MoMo, quản lý đơn hàng và Fanpage.">
+    <meta name="description" content="Vô Tri — hệ thống SMM Panel, nạp ví MoMo, quản lý đơn hàng và Fanpage.">
     <meta name="theme-color" content="#050508">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://graph.facebook.com;">
-    <title>Vô Tri Club · SMM Panel</title>
+    <link rel="canonical" href="https://votri.id.vn/">
+
+    <!-- Open Graph / Social Preview (Discord, Zalo, Messenger, Telegram) -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="vi_VN">
+    <meta property="og:url" content="https://votri.id.vn/">
+    <meta property="og:site_name" content="Vô Tri">
+    <meta property="og:title" content="Vô Tri · SMM Panel">
+    <meta property="og:description" content="Hệ thống SMM Panel — nạp MoMo, quản lý đơn hàng & Fanpage. Tự động • Nhanh • Bảo mật • Hỗ trợ 24/7">
+    <meta property="og:image" content="https://votri.id.vn/assets/og-cover.png">
+    <meta property="og:image:secure_url" content="https://votri.id.vn/assets/og-cover.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Vo Tri SMM Panel">
+
+    <!-- Twitter / Discord fallback -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Vô Tri · SMM Panel">
+    <meta name="twitter:description" content="Hệ thống SMM Panel — nạp MoMo, quản lý đơn hàng & Fanpage.">
+    <meta name="twitter:image" content="https://votri.id.vn/assets/og-cover.png">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-eval' https://unpkg.com https://www.google.com https://www.gstatic.com https://connect.facebook.net; frame-src 'self' https://www.google.com https://recaptcha.google.com https://www.facebook.com https://web.facebook.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000 https://graph.facebook.com https://www.google.com https://connect.facebook.net https://www.facebook.com;">
+    <title>Vô Tri · SMM Panel</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/assets/favicon.svg" sizes="any">
     <link rel="apple-touch-icon" href="/assets/favicon.svg">
+    <link rel="manifest" href="/assets/manifest.webmanifest">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap"
+        rel="stylesheet">
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="style.css?v=1.1.0">
+    <!-- Component-specific stylesheets -->
+    <link rel="stylesheet" href="views/auth.css?v=1.1.0">
+    <link rel="stylesheet" href="views/landing.css?v=1.1.0">
+    <link rel="stylesheet" href="views/admin-accounts.css?v=1.1.0">
+    <link rel="stylesheet" href="views/deposit.css?v=1.1.0">
+    <link rel="stylesheet" href="views/smm.css?v=1.1.0">
+    <link rel="stylesheet" href="views/pages.css?v=1.1.0">
+    <link rel="stylesheet" href="views/analytics.css?v=1.1.0">
+    <link rel="stylesheet" href="views/settings.css?v=1.1.0">
+    <link rel="stylesheet" href="views/ai-post-creator.css?v=1.1.0">
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Tailwind CSS CDN (Isolated to AI Creator view) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false,
+            }
+        }
+    </script>
 </head>
+
 <body>
     <div class="app-container">
         <!-- Background Grid & Neon Orbs for Glassmorphism Context -->
@@ -33,14 +79,18 @@
                 <div class="brand-logo">
                     <i data-lucide="shield-alert" class="logo-icon"></i>
                 </div>
-                <span class="brand-text" style="text-align: center; width: 100%;"><span class="brand-line" style="font-size: 20px; font-weight: 800; letter-spacing: 1px; color: var(--neon-cyan);">VÔ TRI CLUB</span><span class="brand-line text-neon-pink brand-sub" style="font-size: 10px; opacity: 0.8; letter-spacing: 0.5px;">HỆ THỐNG DỊCH VỤ SMM</span></span>
+                <span class="brand-text"><span class="brand-line"
+                        style="font-size: 18px; font-weight: 800; letter-spacing: 1px; color: var(--theme-color);">VÔ TRI</span><span class="brand-line text-neon-pink brand-sub"
+                        style="font-size: 9px; opacity: 0.8; letter-spacing: 0.5px;">HỆ THỐNG DỊCH VỤ SMM</span></span>
             </div>
 
             <nav class="sidebar-menu">
                 <details class="sidebar-group" open>
-                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                    <summary class="sidebar-category"
+                        style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
                         <span>MENU</span>
-                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                        <i data-lucide="chevron-down" class="chevron"
+                            style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
                     </summary>
                     <div class="sidebar-group-content" style="padding-top: 5px;">
                         <a href="#" class="menu-item active" data-tab="dashboard">
@@ -75,9 +125,11 @@
                 </details>
 
                 <details class="sidebar-group">
-                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                    <summary class="sidebar-category"
+                        style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
                         <span>DỊCH VỤ</span>
-                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                        <i data-lucide="chevron-down" class="chevron"
+                            style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
                     </summary>
                     <div class="sidebar-group-content" style="padding-top: 5px;">
                         <a href="#" class="menu-item" data-tab="service-facebook" data-platform="Facebook">
@@ -116,11 +168,17 @@
                 </details>
 
                 <details class="sidebar-group">
-                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                    <summary class="sidebar-category"
+                        style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
                         <span>CÔNG CỤ (CŨ)</span>
-                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                        <i data-lucide="chevron-down" class="chevron"
+                            style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
                     </summary>
                     <div class="sidebar-group-content" style="padding-top: 5px;">
+                        <a href="#" class="menu-item" data-tab="create-post-ai">
+                            <i data-lucide="wand-2"></i>
+                            <span>Tạo Bài Viết AI</span>
+                        </a>
                         <a href="#" class="menu-item" data-tab="pages">
                             <i data-lucide="layers"></i>
                             <span>Quản lý Fanpage</span>
@@ -137,9 +195,11 @@
                 </details>
 
                 <details class="sidebar-group admin-only hidden">
-                    <summary class="sidebar-category" style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: var(--neon-pink); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
+                    <summary class="sidebar-category"
+                        style="padding: 15px 20px 5px; font-size: 12px; font-weight: 700; color: var(--neon-pink); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none;">
                         <span>QUẢN TRỊ VIÊN</span>
-                        <i data-lucide="chevron-down" class="chevron" style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
+                        <i data-lucide="chevron-down" class="chevron"
+                            style="width: 14px; height: 14px; transition: transform 0.3s;"></i>
                     </summary>
                     <div class="sidebar-group-content" style="padding-top: 5px;">
                         <a href="#" class="menu-item admin-only hidden" data-tab="accounts" id="menu-item-accounts">
@@ -158,7 +218,8 @@
                     </div>
                 </details>
 
-                <a href="#" class="menu-item" id="btn-logout" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                <a href="#" class="menu-item" id="btn-logout"
+                    style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
                     <i data-lucide="log-out"></i>
                     <span>Đăng xuất</span>
                 </a>
@@ -167,7 +228,8 @@
             <div class="sidebar-footer">
                 <div class="user-profile">
                     <div class="avatar">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Avatar" id="sidebar-user-avatar">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                            alt="User Avatar" id="sidebar-user-avatar">
                         <span class="status-indicator-online"></span>
                     </div>
                     <div class="user-info">
@@ -202,7 +264,10 @@
 
             <!-- Pages View Container (Grid of Cards) -->
             <!-- INCLUDE views/view-pages.html -->
-            
+
+            <!-- AI Content Creation View -->
+            <!-- INCLUDE views/view-create-post-ai.html -->
+
             <!-- Analytics View Container (Interactive Charts) -->
             <!-- INCLUDE views/view-analytics.html -->
 
@@ -229,8 +294,8 @@
             <!-- INCLUDE views/view-support.html -->
 
             <!-- INCLUDE views/view-service-api-update.html -->
-            </div>
-        </main>
+    </div>
+    </main>
     </div>
 
     <!-- Modals Section -->
@@ -245,18 +310,18 @@
             </div>
             <form id="form-page" class="modal-form">
                 <input type="hidden" id="field-id">
-                
+
                 <div class="form-group">
                     <label for="field-name">Tên trang</label>
-                    <input type="text" id="field-name" required placeholder="vd. Vô Tri Club Entertainment">
+                    <input type="text" id="field-name" required placeholder="vd. Vô Tri Entertainment" autocomplete="off">
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="field-niche">Niche</label>
-                        <input type="text" id="field-niche" required placeholder="vd. Comedy, Tech, Gaming">
+                        <input type="text" id="field-niche" required placeholder="vd. Comedy, Tech, Gaming" autocomplete="off">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="field-tier">Tier</label>
                         <select id="field-tier" required>
@@ -270,9 +335,9 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="field-followers">Người theo dõi</label>
-                        <input type="number" id="field-followers" required min="0" placeholder="vd. 75000">
+                        <input type="number" id="field-followers" required min="0" placeholder="vd. 75000" autocomplete="off">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="field-status">Status</label>
                         <select id="field-status" required>
@@ -286,8 +351,9 @@
 
                 <div class="form-group">
                     <label for="field-url">URL trang Facebook (tuỳ chọn — chỉ để hiển thị/link)</label>
-                    <input type="url" id="field-url" placeholder="https://facebook.com/profile.php?id=61590091392544">
-                    <span class="help-text">Kiểm tra page dùng <strong>Page Access Token</strong> (Cài đặt), không cần URL. Hỗ trợ dạng profile.php?id=...</span>
+                    <input type="url" id="field-url" placeholder="https://facebook.com/profile.php?id=61590091392544" autocomplete="off">
+                    <span class="help-text">Kiểm tra page dùng <strong>Page Access Token</strong> (Cài đặt), không cần
+                        URL. Hỗ trợ dạng profile.php?id=...</span>
                 </div>
 
                 <div class="modal-actions">
@@ -304,159 +370,487 @@
     <div class="toast-container" id="toast-container"></div>
 
     <!-- Liên hệ Zalo (góc dưới phải) -->
-    <a
-        href="https://zalo.me/0383330278"
-        class="zalo-float"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Liên hệ Zalo"
-        title="Zalo"
-    >
+    <a href="https://zalo.me/0383330278" class="zalo-float" target="_blank" rel="noopener noreferrer"
+        aria-label="Liên hệ Zalo" title="Zalo">
         <img class="zalo-float-img" src="/assets/zalo-icon.svg" width="36" height="36" alt="" aria-hidden="true">
     </a>
 
     <!-- Authentication Screen Overlay (Login/Register/Forgot/OTP) -->
     <div id="auth-screen" class="auth-screen">
-        <div class="auth-box glass-card">
-            <div class="auth-header">
-                <div class="logo-group">
-                    <div class="logo-icon">
-                        <i data-lucide="shield-check"></i>
+        <!-- Landing Page Content -->
+        <div class="landing-container">
+            <!-- Header -->
+            <header class="landing-header">
+                <div class="landing-brand">
+                    <div class="landing-logo">
+                        <i data-lucide="shield-alert" class="logo-icon"></i>
                     </div>
-                    <span class="brand-text"><span class="brand-line">VÔ TRI CLUB</span><span class="brand-line text-neon-cyan brand-sub">- SYSTEM</span></span>
+                    <span class="brand-text">VÔ TRI <span class="brand-sub">SMM</span></span>
                 </div>
-                <p class="auth-subtitle" id="auth-subtitle-text">Đăng nhập để quản lý hệ thống</p>
-            </div>
+                <nav class="landing-nav">
+                    <a href="#hero" class="nav-link active">Trang chủ</a>
+                    <a href="#features" class="nav-link">Tính năng</a>
+                    <a href="#services" class="nav-link">Dịch vụ</a>
+                    <a href="#faq" class="nav-link">Câu hỏi (FAQ)</a>
+                </nav>
+                <div class="landing-actions">
+                    <button class="btn btn-secondary btn-sm btn-outline-neon" id="btn-show-login">Đăng nhập</button>
+                    <button class="btn btn-primary btn-sm btn-solid-neon" id="btn-show-register">Đăng ký</button>
+                </div>
+            </header>
 
-            <!-- Login Form -->
-            <form id="form-login" class="auth-form active">
-                <div class="form-group margin-bottom-md">
-                    <label for="login-email">Địa chỉ Email</label>
-                    <input type="email" id="login-email" required placeholder="name@votri.club">
+            <!-- Hero Section -->
+            <section id="hero" class="landing-section hero-section">
+                <div class="hero-content-wrapper">
+                    <div class="hero-text-col">
+                        <div class="badge-neon">🔥 HỆ THỐNG SMM PANEL TỰ ĐỘNG 100%</div>
+                        <h1 class="hero-title">Đột phá tương tác<br><span class="text-gradient-cyan-pink">Mạng xã
+                                hội</span></h1>
+                        <p class="hero-desc">Vô Tri cung cấp giải pháp Marketing tối ưu, giúp doanh nghiệp và cá
+                            nhân tăng trưởng Likes, Followers, Views, Comments tự động, nhanh chóng trên tất cả các nền
+                            tảng lớn.</p>
+                        <div class="hero-cta-group">
+                            <button class="btn btn-primary btn-lg btn-glow-neon" id="btn-hero-login-start">Trải nghiệm
+                                ngay <i data-lucide="arrow-right"></i></button>
+                            <a href="https://zalo.me/0383330278" target="_blank" rel="noopener noreferrer"
+                                class="btn btn-secondary btn-lg btn-outline-cyan"><i data-lucide="message-square"></i>
+                                Hỗ trợ Zalo</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual-col">
+                        <div class="visual-panel glass-card">
+                            <div class="panel-header">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                                <span class="panel-title-text">Hệ thống thời gian thực</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="stat-row">
+                                    <div class="stat-card">
+                                        <span class="stat-number text-neon-cyan">99.9%</span>
+                                        <span class="stat-label">Thời gian hoạt động</span>
+                                    </div>
+                                    <div class="stat-card">
+                                        <span class="stat-number text-neon-pink">15K+</span>
+                                        <span class="stat-label">Đơn hàng hoàn tất</span>
+                                    </div>
+                                </div>
+                                <div class="stat-row">
+                                    <div class="stat-card">
+                                        <span class="stat-number text-neon-green">&lt; 50ms</span>
+                                        <span class="stat-label">Độ trễ API</span>
+                                    </div>
+                                    <div class="stat-card">
+                                        <span class="stat-number text-neon-yellow">3,000+</span>
+                                        <span class="stat-label">Dịch vụ SMM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group margin-bottom-md">
-                    <label for="login-password">Mật khẩu</label>
-                    <input type="password" id="login-password" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
-                    <i data-lucide="log-in"></i>
-                    <span>Đăng nhập</span>
-                </button>
-                <div class="auth-footer">
-                    <a href="#" id="link-goto-forgot" class="auth-link">Quên mật khẩu?</a>
-                    <span class="text-dim">Chưa có tài khoản? <a href="#" id="link-goto-register" class="auth-link">Đăng ký tại đây</a></span>
-                </div>
-            </form>
+            </section>
 
-            <!-- 2FA bước 2 (sau mật khẩu đúng) -->
-            <form id="form-login-2fa" class="auth-form">
-                <p class="text-dim" style="font-size: 13px; margin-bottom: 16px;">Mở app <strong>Google Authenticator</strong> → chọn tài khoản <strong>Votri Club</strong> → nhập mã 6 số (đổi mỗi 30 giây).</p>
-                <div class="form-group margin-bottom-md">
-                    <label for="login-2fa-code">Mã xác thực</label>
-                    <input type="text" id="login-2fa-code" maxlength="6" inputmode="numeric" required placeholder="000000" autocomplete="one-time-code">
+            <!-- Features Section -->
+            <section id="features" class="landing-section features-section">
+                <div class="section-title-wrapper text-center">
+                    <span class="section-badge text-neon-cyan">Ưu điểm</span>
+                    <h2 class="section-title">Tại sao chọn Vô Tri?</h2>
+                    <p class="section-subtitle">Chúng tôi cung cấp dịch vụ SMM tối tân với công nghệ hiện đại và tốc độ
+                        vượt trội.</p>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
-                    <i data-lucide="shield-check"></i>
-                    <span>Xác nhận đăng nhập</span>
-                </button>
-                <div class="auth-footer text-center">
-                    <a href="#" id="link-2fa-back-login" class="auth-link">Quay lại đăng nhập</a>
+                <div class="features-grid-wrapper">
+                    <div class="feature-card-item glass-card">
+                        <div class="card-icon-container text-neon-cyan"><i data-lucide="zap"></i></div>
+                        <h3>Xử lý tự động</h3>
+                        <p>Các đơn hàng được kích hoạt và chạy tự động hoàn toàn chỉ vài giây sau khi bạn thanh toán
+                            thành công.</p>
+                    </div>
+                    <div class="feature-card-item glass-card">
+                        <div class="card-icon-container text-neon-pink"><i data-lucide="shield-check"></i></div>
+                        <h3>Bảo mật tối tân</h3>
+                        <p>Dữ liệu cá nhân và giao dịch nạp tiền được mã hóa hoàn toàn. Tích hợp xác thực 2FA Google
+                            Authenticator bảo vệ ví tiền của bạn.</p>
+                    </div>
+                    <div class="feature-card-item glass-card">
+                        <div class="card-icon-container text-neon-green"><i data-lucide="server"></i></div>
+                        <h3>API kết nối đại lý</h3>
+                        <p>Hỗ trợ đầy đủ cổng API kết nối tốc độ cao cho đại lý và đối tác muốn xây dựng thương hiệu SMM
+                            riêng.</p>
+                    </div>
+                    <div class="feature-card-item glass-card">
+                        <div class="card-icon-container text-neon-yellow"><i data-lucide="badge-percent"></i></div>
+                        <h3>Chiết khấu đặc quyền</h3>
+                        <p>Hệ thống tự động nâng cấp thứ hạng Thành viên, Cộng tác viên, Nhà phân phối dựa trên số dư và
+                            tổng nạp để nhận giá cực rẻ.</p>
+                    </div>
                 </div>
-            </form>
+            </section>
 
-            <!-- Register Form -->
-            <form id="form-register" class="auth-form">
-                <div class="form-group margin-bottom-sm">
-                    <label for="register-name">Họ và tên</label>
-                    <input type="text" id="register-name" required placeholder="vd. Huy Nguyen">
+            <!-- Services Section -->
+            <section id="services" class="landing-section services-section">
+                <div class="section-title-wrapper text-center">
+                    <span class="section-badge text-neon-pink">Giải pháp</span>
+                    <h2 class="section-title">Nền tảng được hỗ trợ</h2>
+                    <p class="section-subtitle">Dịch vụ đa dạng hỗ trợ đầy đủ các tính năng cho các mạng xã hội phổ biến
+                        nhất.</p>
                 </div>
-                <div class="form-group margin-bottom-sm">
-                    <label for="register-email">Địa chỉ Email</label>
-                    <input type="email" id="register-email" required placeholder="yourname@gmail.com">
+                <div class="services-grid-wrapper">
+                    <div class="service-platform-card glass-card">
+                        <div class="platform-card-header">
+                            <i data-lucide="facebook" class="platform-card-icon text-neon-cyan"></i>
+                            <h3>Dịch vụ Facebook</h3>
+                        </div>
+                        <ul class="platform-service-list">
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Like bài viết, Like trang bài
+                            </li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Theo dõi (Follow) cá nhân &
+                                Page</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Mắt LiveStream tự động</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng bình luận (Comment) seeding
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="service-platform-card glass-card">
+                        <div class="platform-card-header">
+                            <i data-lucide="music" class="platform-card-icon text-neon-pink"></i>
+                            <h3>Dịch vụ TikTok</h3>
+                        </div>
+                        <ul class="platform-service-list">
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Follower tài khoản nhanh</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Tim (Likes) video tự động
+                            </li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Lượt xem (Views) cực rẻ</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Chia sẻ & Comment video</li>
+                        </ul>
+                    </div>
+                    <div class="service-platform-card glass-card">
+                        <div class="platform-card-header">
+                            <i data-lucide="instagram" class="platform-card-icon text-neon-green"></i>
+                            <h3>Dịch vụ Instagram</h3>
+                        </div>
+                        <ul class="platform-service-list">
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Followers tài khoản</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Likes bài đăng, hình ảnh</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Views Reels & Video</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng bình luận chất lượng</li>
+                        </ul>
+                    </div>
+                    <div class="service-platform-card glass-card">
+                        <div class="platform-card-header">
+                            <i data-lucide="youtube" class="platform-card-icon text-neon-yellow"></i>
+                            <h3>Dịch vụ YouTube</h3>
+                        </div>
+                        <ul class="platform-service-list">
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Đăng ký (Subscribers) kênh
+                            </li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Views video chất lượng</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Likes & Bình luận video</li>
+                            <li><i data-lucide="check-circle" class="check-icon"></i> Tăng Giờ xem (Watch time) chuẩn
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="form-grid margin-bottom-md">
-                    <div class="form-group">
-                        <label for="register-password">Mật khẩu</label>
-                        <input type="password" id="register-password" required placeholder="Tối thiểu 6 ký tự">
-                    </div>
-                    <div class="form-group">
-                        <label for="register-confirm">Xác nhận</label>
-                        <input type="password" id="register-confirm" required placeholder="Xác nhận">
-                    </div>
-                </div>
-                <button type="button" id="btn-send-register-otp" class="btn btn-secondary btn-full margin-bottom-sm">
-                    <i data-lucide="mail-warning"></i>
-                    <span>Gửi Mã OTP</span>
-                </button>
-                <div id="register-otp-section" class="register-otp-section" style="display: none;">
-                    <div class="otp-instruction margin-bottom-sm">
-                        <p class="text-center text-dim" style="font-size: 13px;">
-                            Mã OTP đã gửi đến <strong id="register-otp-target-email" class="text-neon-cyan">your email</strong>. Nhập mã bên dưới:
-                        </p>
-                    </div>
-                    <div class="form-group margin-bottom-md">
-                        <label for="register-otp-code">Mã xác minh OTP</label>
-                        <input type="text" id="register-otp-code" maxlength="6" pattern="\d{6}" placeholder="vd. 123456" autocomplete="one-time-code" style="text-align: center; font-size: 24px; letter-spacing: 6px; font-family: monospace;">
-                    </div>
-                </div>
-                <button type="submit" id="btn-create-account" class="btn btn-primary btn-full margin-bottom-md" disabled>
-                    <i data-lucide="user-plus"></i>
-                    <span>Tạo Tài Khoản</span>
-                </button>
-                <div class="auth-agreement-section">
-                    <p class="agreement-text">
-                        Khi đăng ký, bạn đồng ý với 
-                        <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer" class="agreement-link">Chính sách bảo mật</a>
-                        và
-                        <a href="terms-of-service.html" target="_blank" rel="noopener noreferrer" class="agreement-link">Điều khoản dịch vụ</a>
+            </section>
+
+            <!-- FAQ Section -->
+            <section id="faq" class="landing-section faq-section">
+                <div class="section-title-wrapper text-center">
+                    <span class="section-badge text-neon-yellow">Giải đáp</span>
+                    <h2 class="section-title">Câu hỏi thường gặp</h2>
+                    <p class="section-subtitle">Tất cả những gì bạn cần biết để bắt đầu sử dụng dịch vụ của chúng tôi.
                     </p>
                 </div>
-                <div class="auth-footer text-center">
-                    <span class="text-dim">Đã có tài khoản? <a href="#" id="link-goto-login-1" class="auth-link">Đăng nhập</a></span>
-                </div>
-            </form>
-
-            <!-- Forgot Password Form -->
-            <form id="form-forgot" class="auth-form">
-                <div class="form-group margin-bottom-md">
-                    <label for="forgot-email">Email tài khoản</label>
-                    <input type="email" id="forgot-email" required placeholder="yourname@gmail.com">
-                </div>
-                <p class="text-dim text-center margin-bottom-md" style="font-size: 13px; line-height: 1.6;">
-                    Chúng tôi sẽ gửi link đặt lại mật khẩu đến email của bạn. Nhấn vào link trong email để đặt mật khẩu mới.
-                </p>
-                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
-                    <i data-lucide="mail"></i>
-                    <span>Gửi Link Đặt Lại Mật Khẩu</span>
-                </button>
-                <div class="auth-footer text-center">
-                    <span class="text-dim">Nhớ mật khẩu? <a href="#" id="link-goto-login-2" class="auth-link">Đăng nhập</a></span>
-                </div>
-            </form>
-
-            <!-- Reset Password Form (opened via email link) -->
-            <form id="form-reset-password" class="auth-form">
-                <div class="otp-instruction margin-bottom-md">
-                    <p class="text-center text-dim">Đặt lại mật khẩu cho tài khoản <strong id="reset-target-email" class="text-neon-cyan">your email</strong></p>
-                </div>
-                <div class="form-grid margin-bottom-md">
-                    <div class="form-group">
-                        <label for="reset-new-password">Mật khẩu mới</label>
-                        <input type="password" id="reset-new-password" required placeholder="Tối thiểu 6 ký tự" minlength="6">
+                <div class="faq-accordion-container">
+                    <div class="faq-accordion-item glass-card">
+                        <button class="faq-accordion-trigger">
+                            <span>SMM Panel là gì và hoạt động ra sao?</span>
+                            <i data-lucide="chevron-down" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            <p>SMM Panel (Social Media Marketing Panel) là một cổng dịch vụ trực tuyến cung cấp các gói
+                                tăng tương tác trên mạng xã hội một cách tự động. Khi bạn gửi yêu cầu qua form tạo đơn
+                                hàng, hệ thống sẽ đẩy lệnh qua API tới đối tác cung cấp để thực hiện đơn hàng lập tức.
+                            </p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="reset-confirm-password">Xác nhận mật khẩu</label>
-                        <input type="password" id="reset-confirm-password" required placeholder="Xác nhận" minlength="6">
+                    <div class="faq-accordion-item glass-card">
+                        <button class="faq-accordion-trigger">
+                            <span>Tài khoản của tôi có bị khóa khi tăng tương tác không?</span>
+                            <i data-lucide="chevron-down" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            <p>Chúng tôi cam kết các dịch vụ tại Vô Tri đều tuyệt đối an toàn. Chúng tôi không bao
+                                giờ yêu cầu mật khẩu tài khoản của bạn. Mọi tiến trình chạy đều qua URL hoặc ID công
+                                khai của bài đăng/trang cá nhân.</p>
+                        </div>
+                    </div>
+                    <div class="faq-accordion-item glass-card">
+                        <button class="faq-accordion-trigger">
+                            <span>Thời gian hoàn thành đơn hàng kéo dài bao lâu?</span>
+                            <i data-lucide="chevron-down" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            <p>Phần lớn các dịch vụ của chúng tôi có thời gian bắt đầu (start time) cực nhanh, chỉ từ 1
+                                - 10 phút sau khi thanh toán. Thời gian hoàn thành sẽ phụ thuộc vào số lượng và tốc độ
+                                của gói dịch vụ bạn đã chọn.</p>
+                        </div>
+                    </div>
+                    <div class="faq-accordion-item glass-card">
+                        <button class="faq-accordion-trigger">
+                            <span>Tôi nạp tiền vào tài khoản bằng cách nào?</span>
+                            <i data-lucide="chevron-down" class="faq-icon"></i>
+                        </button>
+                        <div class="faq-accordion-content">
+                            <p>Vô Tri hỗ trợ các cổng nạp tiền hoàn toàn tự động bao gồm ví điện tử MoMo, ngân hàng
+                                trực tuyến VietQR qua PayOS. Tiền được cộng tự động vào số dư tài khoản của bạn trong
+                                khoảng 15-30 giây.</p>
+                        </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
-                    <i data-lucide="key-round"></i>
-                    <span>Đặt Lại Mật Khẩu</span>
-                </button>
-                <div class="auth-footer text-center">
-                    <span class="text-dim"><a href="#" id="link-reset-goto-login" class="auth-link">Quay lại đăng nhập</a></span>
+            </section>
+
+            <!-- Footer -->
+            <footer class="landing-footer">
+                <div class="footer-container">
+                    <div class="footer-grid">
+                        <div class="footer-col footer-brand-col">
+                            <div class="logo-group" style="margin-bottom: 15px;">
+                                <div class="logo-icon" style="width: 32px; height: 32px; font-size: 16px;">
+                                    <i data-lucide="shield-check"></i>
+                                </div>
+                                <span class="brand-text" style="font-size: 18px;"><span class="brand-line">VÔ TRI</span><span class="brand-line text-neon-cyan brand-sub"
+                                        style="font-size: 10px;">- SYSTEM</span></span>
+                            </div>
+                            <p class="footer-desc">Mua dịch vụ mạng xã hội tự động với SMM Panel giá rẻ: Tăng like,
+                                follow, view YouTube, TikTok, Instagram, Facebook,... Nạp tiền nhanh, hỗ trợ 24/7, API
+                                cho reseller.</p>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Liên Kết Nhanh</h4>
+                            <ul>
+                                <li><a href="#">Trang chủ</a></li>
+                                <li><a href="#services">Dịch vụ</a></li>
+                                <li><a href="#faq">FAQ</a></li>
+                                <li><a href="#pricing">Bảng Giá</a></li>
+                                <li><a href="#support">Liên hệ</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Dịch vụ</h4>
+                            <ul>
+                                <li><a href="#service-facebook">Facebook</a></li>
+                                <li><a href="#service-tiktok">TikTok</a></li>
+                                <li><a href="#service-instagram">Instagram</a></li>
+                                <li><a href="#service-shopee">Shopee</a></li>
+                                <li><a href="#api-update">API + Update Dịch Vụ</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Liên hệ</h4>
+                            <div class="footer-contact-info">
+                                <div class="footer-contact-item">
+                                    <i data-lucide="map-pin"></i>
+                                    <span>Quận 12, Việt Nam</span>
+                                </div>
+                                <div class="footer-contact-item">
+                                    <i data-lucide="message-square"></i>
+                                    <a href="https://zalo.me/038333027" target="_blank" class="footer-zalo-link">Zalo:
+                                        038333027</a>
+                                </div>
+                                <div class="footer-contact-item">
+                                    <i data-lucide="clock"></i>
+                                    <span>Hỗ trợ 24/7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; 2026 SMM Panel Giá Rẻ - Tăng Like, Follow, View Tự Động Nhanh Chóng. Tất cả quyền được
+                            bảo lưu.</p>
+                        <div class="footer-links">
+                            <a href="#" data-modal="privacy-policy-modal" onclick="event.preventDefault(); openLegalModal('privacy-policy-modal');">Chính sách bảo mật</a>
+                            <span class="footer-link-divider">|</span>
+                            <a href="#" data-modal="terms-modal" onclick="event.preventDefault(); openLegalModal('terms-modal');">Điều khoản dịch vụ</a>
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </footer>
+        </div>
+
+        <!-- Auth Modal Backdrop (Chứa form auth nguyên bản) -->
+        <div class="auth-modal-backdrop hidden" id="auth-modal-backdrop">
+            <div class="auth-modal-dialog">
+                <button type="button" class="auth-modal-close-btn" id="btn-close-auth-modal" aria-label="Đóng">
+                    <i data-lucide="x"></i>
+                </button>
+                <div class="auth-box glass-card">
+                    <div class="auth-header">
+                        <div class="logo-group">
+                            <div class="logo-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <span class="brand-text"><span class="brand-line">VÔ TRI</span><span
+                                    class="brand-line text-neon-cyan brand-sub">- SYSTEM</span></span>
+                        </div>
+                        <p class="auth-subtitle" id="auth-subtitle-text">Đăng nhập để quản lý hệ thống</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="form-login" class="auth-form active">
+                        <div class="form-group margin-bottom-md">
+                            <label for="login-email">Địa chỉ Email</label>
+                            <input type="email" id="login-email" required placeholder="name@votri.club">
+                        </div>
+                        <div class="form-group margin-bottom-md">
+                            <label for="login-password">Mật khẩu</label>
+                            <input type="password" id="login-password" required placeholder="••••••••">
+                        </div>
+                        <!-- Conditional reCAPTCHA for Login -->
+                        <div id="login-recaptcha-container" class="margin-bottom-md" style="display: none; justify-content: center; min-height: 78px;"></div>
+                        <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                            <i data-lucide="log-in"></i>
+                            <span>Đăng nhập</span>
+                        </button>
+                        <div class="auth-footer">
+                            <a href="#" id="link-goto-forgot" class="auth-link">Quên mật khẩu?</a>
+                            <span class="text-dim">Chưa có tài khoản? <a href="#" id="link-goto-register"
+                                    class="auth-link">Đăng ký tại đây</a></span>
+                        </div>
+                    </form>
+
+                    <!-- 2FA bước 2 (sau mật khẩu đúng) -->
+                    <form id="form-login-2fa" class="auth-form">
+                        <p class="text-dim" style="font-size: 13px; margin-bottom: 16px;">Mở app <strong>Google
+                                Authenticator</strong> → chọn tài khoản <strong>Votri Club</strong> → nhập mã 6 số (đổi
+                            mỗi 30 giây).</p>
+                        <div class="form-group margin-bottom-md">
+                            <label for="login-2fa-code">Mã xác thực</label>
+                            <input type="text" id="login-2fa-code" maxlength="6" inputmode="numeric" required
+                                placeholder="000000" autocomplete="one-time-code">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                            <i data-lucide="shield-check"></i>
+                            <span>Xác nhận đăng nhập</span>
+                        </button>
+                        <div class="auth-footer text-center">
+                            <a href="#" id="link-2fa-back-login" class="auth-link">Quay lại đăng nhập</a>
+                        </div>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="form-register" class="auth-form">
+                        <div class="form-group margin-bottom-sm">
+                            <label for="register-name">Họ và tên</label>
+                            <input type="text" id="register-name" required placeholder="vd. Huy Nguyen">
+                        </div>
+                        <div class="form-group margin-bottom-sm">
+                            <label for="register-email">Địa chỉ Email</label>
+                            <input type="email" id="register-email" required placeholder="yourname@gmail.com">
+                        </div>
+                        <div class="form-grid margin-bottom-md">
+                            <div class="form-group">
+                                <label for="register-password">Mật khẩu</label>
+                                <input type="password" id="register-password" required placeholder="Tối thiểu 6 ký tự">
+                            </div>
+                            <div class="form-group">
+                                <label for="register-confirm">Xác nhận</label>
+                                <input type="password" id="register-confirm" required placeholder="Xác nhận">
+                            </div>
+                        </div>
+                        <!-- reCAPTCHA for Register (always required) -->
+                        <div id="register-recaptcha-container" class="margin-bottom-md" style="display: flex; justify-content: center; min-height: 78px;"></div>
+                        <button type="button" id="btn-send-register-otp"
+                            class="btn btn-secondary btn-full margin-bottom-sm">
+                            <i data-lucide="mail-warning"></i>
+                            <span>Gửi Mã OTP</span>
+                        </button>
+                        <div id="register-otp-section" class="register-otp-section" style="display: none;">
+                            <div class="otp-instruction margin-bottom-sm">
+                                <p class="text-center text-dim" style="font-size: 13px;">
+                                    Mã OTP đã gửi đến <strong id="register-otp-target-email" class="text-neon-cyan">your
+                                        email</strong>. Nhập mã bên dưới:
+                                </p>
+                            </div>
+                            <div class="form-group margin-bottom-md">
+                                <label for="register-otp-code">Mã xác minh OTP</label>
+                                <input type="text" id="register-otp-code" maxlength="6" pattern="\d{6}"
+                                    placeholder="vd. 123456" autocomplete="one-time-code"
+                                    style="text-align: center; font-size: 24px; letter-spacing: 6px; font-family: monospace;">
+                            </div>
+                        </div>
+                        <button type="submit" id="btn-create-account" class="btn btn-primary btn-full margin-bottom-md"
+                            disabled>
+                            <i data-lucide="user-plus"></i>
+                            <span>Tạo Tài Khoản</span>
+                        </button>
+                        <div class="auth-agreement-section">
+                            <p class="agreement-text">
+                                Khi đăng ký, bạn đồng ý với
+                                <a href="#" data-modal="privacy-policy-modal" onclick="event.preventDefault(); openLegalModal('privacy-policy-modal');" class="agreement-link">Chính sách bảo
+                                    mật</a>
+                                và
+                                <a href="#" data-modal="terms-modal" onclick="event.preventDefault(); openLegalModal('terms-modal');" class="agreement-link">Điều khoản dịch vụ</a>
+                            </p>
+                        </div>
+                        <div class="auth-footer text-center">
+                            <span class="text-dim">Đã có tài khoản? <a href="#" id="link-goto-login-1"
+                                    class="auth-link">Đăng nhập</a></span>
+                        </div>
+                    </form>
+
+                    <!-- Forgot Password Form -->
+                    <form id="form-forgot" class="auth-form">
+                        <div class="form-group margin-bottom-md">
+                            <label for="forgot-email">Email tài khoản</label>
+                            <input type="email" id="forgot-email" required placeholder="yourname@gmail.com">
+                        </div>
+                        <!-- reCAPTCHA for Forgot Password (always required) -->
+                        <div id="forgot-recaptcha-container" class="margin-bottom-md" style="display: flex; justify-content: center; min-height: 78px;"></div>
+                        <p class="text-dim text-center margin-bottom-md" style="font-size: 13px; line-height: 1.6;">
+                            Chúng tôi sẽ gửi link đặt lại mật khẩu đến email của bạn. Nhấn vào link trong email để đặt
+                            mật khẩu mới.
+                        </p>
+                        <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                            <i data-lucide="mail"></i>
+                            <span>Gửi Link Đặt Lại Mật Khẩu</span>
+                        </button>
+                        <div class="auth-footer text-center">
+                            <span class="text-dim">Nhớ mật khẩu? <a href="#" id="link-goto-login-2"
+                                    class="auth-link">Đăng nhập</a></span>
+                        </div>
+                    </form>
+
+                    <!-- Reset Password Form (opened via email link) -->
+                    <form id="form-reset-password" class="auth-form">
+                        <div class="otp-instruction margin-bottom-md">
+                            <p class="text-center text-dim">Đặt lại mật khẩu cho tài khoản <strong
+                                    id="reset-target-email" class="text-neon-cyan">your email</strong></p>
+                        </div>
+                        <div class="form-grid margin-bottom-md">
+                            <div class="form-group">
+                                <label for="reset-new-password">Mật khẩu mới</label>
+                                <input type="password" id="reset-new-password" required placeholder="Tối thiểu 6 ký tự"
+                                    minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="reset-confirm-password">Xác nhận mật khẩu</label>
+                                <input type="password" id="reset-confirm-password" required placeholder="Xác nhận"
+                                    minlength="6">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full margin-bottom-md">
+                            <i data-lucide="key-round"></i>
+                            <span>Đặt Lại Mật Khẩu</span>
+                        </button>
+                        <div class="auth-footer text-center">
+                            <span class="text-dim"><a href="#" id="link-reset-goto-login" class="auth-link">Quay lại
+                                    đăng nhập</a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -465,13 +859,14 @@
         <div class="modal-window modal-scrollable">
             <div class="modal-header-neon">
                 <h2>🔐 Chính sách bảo mật</h2>
-                <button class="modal-close-btn" onclick="closeLegalModal('privacy-policy-modal')">
+                <button class="modal-close-btn" data-close-modal="privacy-policy-modal" onclick="event.preventDefault(); closeLegalModal('privacy-policy-modal');">
                     <i data-lucide="x"></i>
                 </button>
             </div>
             <div class="modal-body-content">
                 <h3>1. Giới thiệu chung</h3>
-                <p>VÔ TRI CLUB cam kết bảo vệ quyền riêng tư của bạn. Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng, công bố và bảo vệ dữ liệu của bạn.</p>
+                <p>VÔ TRI cam kết bảo vệ quyền riêng tư của bạn. Chính sách bảo mật này giải thích cách chúng tôi
+                    thu thập, sử dụng, công bố và bảo vệ dữ liệu của bạn.</p>
 
                 <h3>2. Thông tin chúng tôi thu thập</h3>
                 <ul>
@@ -514,7 +909,8 @@
 
                 <h3>6. Liên hệ với chúng tôi</h3>
                 <p>Nếu bạn có câu hỏi về chính sách bảo mật này, vui lòng liên hệ với chúng tôi tại:</p>
-                <p><strong>Email:</strong> <a href="mailto:support@votri.club" class="link-neon">support@votri.club</a></p>
+                <p><strong>Email:</strong> <a href="mailto:support@votri.club" class="link-neon">support@votri.club</a>
+                </p>
 
                 <p style="margin-top: 40px; text-align: center; font-size: 12px; color: #888;">
                     <em>Cập nhật lần cuối: 24/05/2026</em>
@@ -528,13 +924,13 @@
         <div class="modal-window modal-scrollable">
             <div class="modal-header-neon modal-header-cyan">
                 <h2>📋 Điều khoản dịch vụ</h2>
-                <button class="modal-close-btn" onclick="closeLegalModal('terms-modal')">
+                <button class="modal-close-btn" data-close-modal="terms-modal" onclick="event.preventDefault(); closeLegalModal('terms-modal');">
                     <i data-lucide="x"></i>
                 </button>
             </div>
             <div class="modal-body-content">
                 <h3>1. Chấp nhận điều khoản</h3>
-                <p>Bằng cách đăng ký tài khoản trên VÔ TRI CLUB, bạn đồng ý với tất cả các điều khoản dịch vụ này.</p>
+                <p>Bằng cách đăng ký tài khoản trên VÔ TRI, bạn đồng ý với tất cả các điều khoản dịch vụ này.</p>
 
                 <h3>2. Yêu cầu tài khoản</h3>
                 <p>Để sử dụng dịch vụ, bạn phải:</p>
@@ -546,7 +942,8 @@
                 </ul>
 
                 <div class="modal-warning">
-                    <strong>⚠️ NGUY HIỂM:</strong> KHÔNG bao giờ chia sẻ mật khẩu hoặc mã OTP. Chúng tôi KHÔNG bao giờ yêu cầu những thông tin này.
+                    <strong>⚠️ NGUY HIỂM:</strong> KHÔNG bao giờ chia sẻ mật khẩu hoặc mã OTP. Chúng tôi KHÔNG bao giờ
+                    yêu cầu những thông tin này.
                 </div>
 
                 <h3>3. Hành vi cấm</h3>
@@ -563,16 +960,19 @@
                 <p>Người dùng chịu trách nhiệm hoàn toàn về nội dung mà bạn tải lên hoặc chia sẻ.</p>
 
                 <h3>5. Từ chối trách nhiệm</h3>
-                <p>Dịch vụ của chúng tôi được cung cấp "như là". Chúng tôi KHÔNG đảm bảo dịch vụ sẽ không bị gián đoạn hoặc hoàn toàn không có lỗi.</p>
+                <p>Dịch vụ của chúng tôi được cung cấp "như là". Chúng tôi KHÔNG đảm bảo dịch vụ sẽ không bị gián đoạn
+                    hoặc hoàn toàn không có lỗi.</p>
 
                 <h3>6. Chấm dứt tài khoản</h3>
-                <p>Chúng tôi có quyền chấm dứt hoặc tạm ngừng tài khoản nếu bạn vi phạm các điều khoản này hoặc gây hại cho dịch vụ.</p>
+                <p>Chúng tôi có quyền chấm dứt hoặc tạm ngừng tài khoản nếu bạn vi phạm các điều khoản này hoặc gây hại
+                    cho dịch vụ.</p>
 
                 <h3>7. Luật áp dụng</h3>
                 <p>Các điều khoản này được điều chỉnh bởi luật pháp của <strong>Việt Nam</strong>.</p>
 
                 <h3>8. Liên hệ</h3>
-                <p><strong>Email:</strong> <a href="mailto:support@votri.club" class="link-neon">support@votri.club</a></p>
+                <p><strong>Email:</strong> <a href="mailto:support@votri.club" class="link-neon">support@votri.club</a>
+                </p>
 
                 <p style="margin-top: 40px; text-align: center; font-size: 12px; color: #888;">
                     <em>Cập nhật lần cuối: 24/05/2026</em>
@@ -581,24 +981,26 @@
         </div>
     </div>
 
+    <!-- Anti-Debug Shield — MUST load FIRST -->
+    <script src="js/anti-debug.js?v=2.0.0"></script>
     <!-- App Script (thứ tự: core → api → feature → app) -->
     <script src="js/votri-core.js?v=1.0.5"></script>
     <script>
-    /* Production (Vercel): API cùng origin — chạy trước app.js nếu votri-core cache cũ */
-    (function () {
-        var loc = window.location;
-        if (loc.protocol === 'file:') return;
-        if (/^(localhost|127\.0\.0\.1)$/i.test(loc.hostname)) return;
-        if (!loc.port || loc.port === '443' || loc.port === '80') {
-            var origin = loc.origin;
-            if (window.VotriApp) {
-                Object.defineProperty(window.VotriApp, 'API_BASE', {
-                    get: function () { return origin; },
-                    configurable: true,
-                });
+        /* Production (Vercel): API cùng origin — chạy trước app.js nếu votri-core cache cũ */
+        (function () {
+            var loc = window.location;
+            if (loc.protocol === 'file:') return;
+            if (/^(localhost|127\.0\.0\.1)$/i.test(loc.hostname)) return;
+            if (!loc.port || loc.port === '443' || loc.port === '80') {
+                var origin = loc.origin;
+                if (window.VotriApp) {
+                    Object.defineProperty(window.VotriApp, 'API_BASE', {
+                        get: function () { return origin; },
+                        configurable: true,
+                    });
+                }
             }
-        }
-    })();
+        })();
     </script>
     <script src="js/user-roles.js?v=1.0.0"></script>
     <script src="js/rank-progress.js?v=1.0.0"></script>
@@ -613,7 +1015,21 @@
     <script src="js/votri-nav.js?v=1.0.1"></script>
     <script src="js/votri-smm.js?v=1.0.2"></script>
     <script src="js/votri-accounts-admin.js?v=1.0.1"></script>
+    <script src="js/votri-service-api-update.js?v=1.0.0"></script>
     <script src="js/votri-profile.js?v=1.0.2"></script>
-    <script src="app.js?v=3.6.4"></script>
+                <script src="js/votri-create-post-ai.js?v=1.0.3"></script>
+    <script>
+        window._recaptchaApiReady = false;
+        window.onloadRecaptchaCallback = function () {
+            window._recaptchaApiReady = true;
+            if (typeof window.bootstrapRecaptcha === 'function') window.bootstrapRecaptcha();
+        };
+    </script>
+    <!-- Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadRecaptchaCallback&render=explicit" async defer></script>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js"></script>
+    <script src="app.js?v=3.6.5"></script>
 </body>
+
 </html>

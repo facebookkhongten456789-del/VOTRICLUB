@@ -1,11 +1,618 @@
 <div class="view-container hidden" id="view-service-api-update">
-                <div class="view-header-flex">
-                    <h2 class="view-title text-neon-cyan">Cập nhật API Dịch vụ</h2>
-                    <p class="view-subtitle">Kết nối nguồn cung cấp API cho SMM Panel</p>
+    <style>
+        .smm-nav-tabs .btn {
+            border: 1px solid var(--border-glass);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .smm-nav-tabs .btn:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: var(--border-glass-hover);
+            color: var(--text-primary);
+        }
+        .smm-nav-tabs .btn.active-tab-btn {
+            background: var(--theme-color-glow);
+            border-color: var(--theme-color);
+            color: var(--theme-color);
+            box-shadow: 0 0 10px var(--theme-color-glow);
+        }
+        .api-status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .api-status-active {
+            background: rgba(57, 255, 20, 0.1);
+            color: #39ff14;
+            border: 1px solid rgba(57, 255, 20, 0.3);
+        }
+        .api-status-inactive {
+            background: rgba(255, 49, 49, 0.1);
+            color: #ff3131;
+            border: 1px solid rgba(255, 49, 49, 0.3);
+        }
+        .api-method-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+        .method-post {
+            background: rgba(0, 191, 255, 0.15);
+            color: #00bfff;
+        }
+        .method-get {
+            background: rgba(57, 255, 20, 0.15);
+            color: #39ff14;
+        }
+        .smm-log-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 0;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .smm-log-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 4px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #fff;
+            font-family: inherit;
+            transition: var(--transition-smooth);
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--theme-color);
+            box-shadow: 0 0 8px var(--theme-color-glow);
+            outline: none;
+        }
+
+        /* Pricing range slider styling */
+        .pricing-markup-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            outline: none;
+            margin: 12px 0;
+            transition: var(--transition-smooth);
+        }
+        .pricing-markup-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--slider-color, var(--theme-color));
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--slider-glow, var(--theme-color-glow));
+            transition: var(--transition-smooth);
+        }
+        .pricing-markup-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px var(--slider-glow, var(--theme-color-glow));
+        }
+        
+        .pricing-card {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 24px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(15, 15, 28, 0.7) 0%, rgba(5, 5, 10, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition-smooth);
+        }
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--role-color), transparent);
+            opacity: 0.7;
+        }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px var(--role-glow);
+        }
+        
+        /* Pricing Calculator preview panel styling */
+        .calculator-preview-container {
+            background: linear-gradient(135deg, rgba(10, 10, 18, 0.8) 0%, rgba(3, 3, 5, 0.95) 100%);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            transition: var(--transition-smooth);
+        }
+        .calculator-preview-container:hover {
+            border-color: rgba(0, 240, 255, 0.25);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+        }
+        .pricing-service-picker {
+            position: relative;
+            min-width: 300px;
+            flex: 1;
+        }
+        .pricing-service-trigger {
+            width: 100%;
+            height: 34px;
+            border: 1px solid rgba(0, 240, 255, 0.35);
+            border-radius: 8px;
+            background: rgba(3, 10, 20, 0.75);
+            color: #eefbff;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+        .pricing-service-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #08111d;
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 10px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+            z-index: 80;
+            max-height: 300px;
+            overflow: hidden;
+        }
+        .pricing-service-menu.hidden {
+            display: none;
+        }
+        .pricing-service-search {
+            width: calc(100% - 16px);
+            margin: 8px;
+            height: 32px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            color: #e9fbff;
+            padding: 0 10px;
+            font-size: 12px;
+        }
+        .pricing-service-list {
+            max-height: 240px;
+            overflow-y: auto;
+            padding: 0 6px 6px;
+        }
+        .pricing-service-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #d7f8ff;
+            text-align: left;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .pricing-service-item:hover,
+        .pricing-service-item.active {
+            background: rgba(0, 240, 255, 0.14);
+            color: #ffffff;
+        }
+    </style>
+
+    <div class="view-header-flex" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 class="view-title text-neon-cyan" style="font-family: var(--font-mono); letter-spacing: 1px;">SMM API Gateway & Control Panel</h2>
+            <p class="view-subtitle text-dim">Hệ thống API Gateway động quản lý cấu hình các nhà cung cấp API SMM.</p>
+        </div>
+        <!-- Main Nav Tabs -->
+        <div class="smm-nav-tabs" style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary active-tab-btn" data-tab="list">
+                <i data-lucide="layers" style="width: 16px; height: 16px;"></i>
+                Danh sách API
+            </button>
+            <button class="btn btn-secondary" data-tab="test">
+                <i data-lucide="terminal" style="width: 16px; height: 16px;"></i>
+                Test API Gateway
+            </button>
+            <button class="btn btn-secondary" data-tab="legacy">
+                <i data-lucide="activity" style="width: 16px; height: 16px;"></i>
+                Thao tác nhanh
+            </button>
+            <button class="btn btn-secondary" data-tab="pricing">
+                <i data-lucide="tag" style="width: 16px; height: 16px;"></i>
+                Quản lý giá
+            </button>
+        </div>
+    </div>
+
+    <!-- TAB 1: LIST SMM APIS -->
+    <div class="smm-tab-content" id="smm-tab-list">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div class="text-dim" style="font-size: 13px;">
+                Cấu hình API đang hoạt động sẽ tự động map và ghi log cuộc gọi request/response.
+            </div>
+        </div>
+
+        <div class="dashboard-card glass-card" style="padding: 16px; overflow-x: auto;">
+            <table class="dashboard-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-glass); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--text-muted);">
+                        <th style="padding: 12px 8px;">Tên API / Nhà Cung Cấp</th>
+                        <th style="padding: 12px 8px;">Loại Action</th>
+                        <th style="padding: 12px 8px;">Endpoint</th>
+                        <th style="padding: 12px 8px;">Method</th>
+                        <th style="padding: 12px 8px;">Trạng Thái</th>
+                        <th style="padding: 12px 8px; text-align: right;">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="smm-api-list-tbody" style="font-size: 13px;">
+                    <!-- Sẽ render động qua Javascript -->
+                    <tr>
+                        <td colspan="6" style="padding: 24px; text-align: center; color: var(--text-muted);">
+                            <i data-lucide="loader" style="width: 24px; height: 24px; animation: spin 1.5s linear infinite; margin: 0 auto 8px;"></i>
+                            Đang tải danh sách API SMM...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 2: TEST GATEWAY & LOGS -->
+    <div class="smm-tab-content hidden" id="smm-tab-test">
+        <div class="smm-admin-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+            <!-- Cấu hình test -->
+            <div class="dashboard-card glass-card" style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+                <div style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+                    <h3 style="font-family: var(--font-mono); font-size: 16px; color: var(--theme-color); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="flask-conical" style="width: 18px; height: 18px;"></i>
+                        Gửi Request Mẫu (Test Console)
+                    </h3>
                 </div>
-                <div class="dashboard-card glass-card text-center" style="padding: 50px;">
-                    <i data-lucide="server" style="width: 64px; height: 64px; color: var(--neon-cyan); margin-bottom: 20px; opacity: 0.5;"></i>
-                    <h3 class="text-neon-cyan">Khu vực cấu hình Server API gốc</h3>
-                    <p class="text-dim">Vui lòng điền các endpoint nguồn vào hệ thống cơ sở dữ liệu để đồng bộ bảng giá.</p>
+
+                <div class="form-group">
+                    <label for="test-api-select">Chọn cấu hình API muốn test *</label>
+                    <select id="test-api-select">
+                        <!-- Render động qua JS -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="test-api-params">Request Params (JSON hoặc Query string) *</label>
+                    <textarea id="test-api-params" rows="6" style="font-family: var(--font-mono); font-size: 13px;" placeholder='{\n  "key": "BYTEMART_API_KEY",\n  "action": "balance"\n}'></textarea>
+                    <span style="color: var(--text-muted); font-size: 11px; margin-top: 4px; display: block;">
+                        Hệ thống sẽ gửi yêu cầu trực tiếp qua API Gateway backend để bảo mật API key.
+                    </span>
+                </div>
+
+                <button class="btn btn-primary" id="btn-smm-run-test" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px;">
+                    <i data-lucide="play" style="width: 18px; height: 18px;"></i>
+                    Gửi Request Test
+                </button>
+
+                <!-- Lịch sử Logs cuộc gọi -->
+                <div style="margin-top: 10px;">
+                    <div style="border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-family: var(--font-mono); font-size: 13px; color: var(--text-primary); text-transform: uppercase;">
+                            Nhật ký 50 cuộc gọi gần nhất
+                        </h4>
+                        <button class="btn btn-secondary" id="btn-refresh-smm-logs" style="padding: 4px 8px; font-size: 10px; height: 24px;">
+                            Tải lại
+                        </button>
+                    </div>
+                    <div id="smm-logs-container" style="max-height: 200px; overflow-y: auto; padding-right: 4px;">
+                        <!-- Render logs cuộc gọi động -->
+                    </div>
                 </div>
             </div>
+
+            <!-- Terminal phản hồi -->
+            <div class="dashboard-card glass-card" style="padding: 24px; display: flex; flex-direction: column;">
+                <div style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-family: var(--font-mono); font-size: 16px; color: var(--neon-cyan); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="code" style="width: 18px; height: 18px;"></i>
+                        Raw Response Terminal
+                    </h3>
+                    <button class="btn btn-secondary" id="btn-smm-copy-test-res" style="padding: 6px 12px; font-size: 11px; height: 28px;">
+                        Sao chép
+                    </button>
+                </div>
+
+                <div class="smm-terminal-window" style="flex: 1; background: #020204; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; overflow: hidden; min-height: 320px;">
+                    <div style="flex: 1; overflow-y: auto; font-family: monospace; font-size: 13px; line-height: 1.6; color: #39ff14; white-space: pre-wrap;" id="smm-test-terminal-pre">SMM API Gateway CLI v2.0.0
+Chờ yêu cầu test...</div>
+                </div>
+                
+                <div class="terminal-footer-info" id="smm-test-info" style="margin-top: 12px; font-size: 12px; color: var(--text-muted); min-height: 18px;">
+                    Chưa có request test nào thực hiện.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: LEGACY RAPID ACTIONS -->
+    <div class="smm-tab-content hidden" id="smm-tab-legacy">
+        <div class="smm-admin-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+            <div class="dashboard-card glass-card" style="padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+                <div style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; margin-bottom: 8px;">
+                    <h3 style="font-family: var(--font-mono); font-size: 16px; color: var(--theme-color); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
+                        Thao Tác Nhanh (Bytemart / Gateway)
+                    </h3>
+                </div>
+
+                <div class="smm-admin-tabs" style="display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--border-glass); padding-bottom: 16px;">
+                    <button class="btn btn-secondary active-tab-btn" data-action="services" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        services
+                    </button>
+                    <button class="btn btn-secondary" data-action="order_status" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        order_status
+                    </button>
+                    <button class="btn btn-secondary" data-action="multiple_orders_status" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        multiple_orders_status
+                    </button>
+                    <button class="btn btn-secondary" data-action="create_cancel" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        create_cancel
+                    </button>
+                    <button class="btn btn-secondary" data-action="balance" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        balance
+                    </button>
+                    <button class="btn btn-secondary" data-action="create_refill" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        create_refill
+                    </button>
+                    <button class="btn btn-secondary" data-action="create_multiple_refill" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        create_multiple_refill
+                    </button>
+                    <button class="btn btn-secondary" data-action="refill_status" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        refill_status
+                    </button>
+                    <button class="btn btn-secondary" data-action="multiple_refill_status" style="padding: 8px 12px; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                        multiple_refill_status
+                    </button>
+                </div>
+
+                <div class="smm-admin-forms-container">
+                    <div class="smm-admin-form-panel" id="smm-form-services">
+                        <p style="margin-bottom: 20px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Gửi yêu cầu lấy toàn bộ danh sách dịch vụ SMM hiện có từ tài khoản đại lý API Bytemart.
+                        </p>
+                        <button class="btn btn-primary" id="btn-smm-admin-services" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px;">
+                            <i data-lucide="list" style="width: 18px; height: 18px;"></i>
+                            Lấy Danh Sách Dịch Vụ API
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-order_status">
+                        <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Tra cứu chi tiết trạng thái của 1 đơn hàng cụ thể từ API.
+                        </p>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="smm-status-order-id">Mã Đơn Hàng (Order ID) *</label>
+                            <input type="text" id="smm-status-order-id" placeholder="Ví dụ: 12345" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid var(--border-glass); background: rgba(255,255,255,0.05); color: #fff; padding: 0 12px;">
+                        </div>
+                        <button class="btn btn-primary" id="btn-smm-admin-order-status" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px;">
+                            <i data-lucide="info" style="width: 18px; height: 18px;"></i>
+                            Kiểm Trạng Thái Đơn
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-multiple_orders_status">
+                        <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Tra cứu trạng thái của nhiều đơn hàng cùng lúc từ API (cách nhau bởi dấu phẩy).
+                        </p>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="smm-status-multiple-order-ids">Danh Sách Mã Đơn Hàng (Order IDs) *</label>
+                            <textarea id="smm-status-multiple-order-ids" rows="5" placeholder="Nhập danh sách mã đơn cách nhau bằng dấu phẩy. Ví dụ:&#10;12345, 12346, 12347"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="btn-smm-admin-multiple-orders-status" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px;">
+                            <i data-lucide="grid" style="width: 18px; height: 18px;"></i>
+                            Tra Cứu Hàng Loạt
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-create_cancel">
+                        <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Gửi yêu cầu hủy đơn hàng loạt trên API gốc SMM.
+                        </p>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="smm-cancel-orders">Danh sách mã đơn hàng gốc (External ID) *</label>
+                            <textarea id="smm-cancel-orders" rows="5" placeholder="Nhập danh sách mã đơn hàng gốc cách nhau bằng dấu phẩy. Ví dụ:&#10;12345, 12346, 12347"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="btn-smm-admin-cancel" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px; background: linear-gradient(135deg, var(--neon-red) 0%, #800000 100%); border-color: var(--neon-red);">
+                            <i data-lucide="x-circle" style="width: 18px; height: 18px;"></i>
+                            Gửi Yêu Cầu Hủy Đơn
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-balance">
+                        <p style="margin-bottom: 20px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Gửi yêu cầu kiểm tra số dư hiện tại trên tài khoản đại lý API của hệ thống Gateway/Bytemart SMM.
+                        </p>
+                        <button class="btn btn-primary" id="btn-smm-admin-balance" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px;">
+                            <i data-lucide="wallet" style="width: 18px; height: 18px;"></i>
+                            Kiểm Tra Số Dư API
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-create_refill">
+                        <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Yêu cầu bảo hành (refill) cho đơn hàng. Sau khi yêu cầu thành công, trạng thái sẽ tự động đổi thành <span style="color: var(--neon-yellow);">Refilling</span>.
+                        </p>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="smm-refill-orders">Danh sách mã đơn hàng gốc (External ID) *</label>
+                            <textarea id="smm-refill-orders" rows="5" placeholder="Nhập danh sách mã đơn hàng gốc cách nhau bằng dấu phẩy. Ví dụ:&#10;12345, 12346, 12347"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="btn-smm-admin-refill" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px; background: linear-gradient(135deg, var(--neon-purple) 0%, #4b0082 100%); border-color: var(--neon-purple);">
+                            <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
+                            Gửi Yêu Cầu Bảo Hành
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-create_multiple_refill">
+                        <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Yêu cầu bảo hành hàng loạt (Refill) cho danh sách nhiều đơn hàng cách nhau bởi dấu phẩy.
+                        </p>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="smm-multiple-refill-orders">Danh Sách Mã Đơn Hàng (Order IDs) *</label>
+                            <textarea id="smm-multiple-refill-orders" rows="5" placeholder="Nhập danh sách mã đơn hàng gốc cách nhau bằng dấu phẩy. Ví dụ:&#10;12345, 12346, 12347"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="btn-smm-admin-create-multiple-refill" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px; background: linear-gradient(135deg, var(--neon-purple) 0%, #4b0082 100%); border-color: var(--neon-purple);">
+                            <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
+                            Yêu Cầu Bảo Hành Hàng Loạt
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-refill_status">
+                        <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Kiểm tra tiến trình và kết quả xử lý bảo hành từ API gốc bằng 1 mã Refill ID duy nhất.
+                        </p>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="smm-refill-status-ids-legacy">Mã Bảo Hành (Refill ID) *</label>
+                            <input type="text" id="smm-refill-status-ids-legacy" placeholder="Ví dụ: 901" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid var(--border-glass); background: rgba(255,255,255,0.05); color: #fff; padding: 0 12px;">
+                        </div>
+                        <button class="btn btn-primary" id="btn-smm-admin-refill-status" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px;">
+                            <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+                            Kiểm Trạng Thái Bảo Hành
+                        </button>
+                    </div>
+
+                    <div class="smm-admin-form-panel hidden" id="smm-form-multiple_refill_status">
+                        <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                            Kiểm tra tiến trình bảo hành hàng loạt cho nhiều mã Refill ID cách nhau bởi dấu phẩy.
+                        </p>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="smm-multiple-refill-status-ids">Danh Sách Mã Bảo Hành (Refill IDs) *</label>
+                            <textarea id="smm-multiple-refill-status-ids" rows="5" placeholder="Nhập danh sách mã bảo hành cách nhau bằng dấu phẩy. Ví dụ:&#10;901, 902, 903"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="btn-smm-admin-multiple-refill-status" style="width: 100%; justify-content: center; gap: 8px; font-weight: 700; height: 45px;">
+                            <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+                            Tra Cứu Hàng Loạt
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal kết quả -->
+            <div class="dashboard-card glass-card" style="padding: 24px; display: flex; flex-direction: column;">
+                <div style="border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-family: var(--font-mono); font-size: 16px; color: var(--neon-cyan); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="code" style="width: 18px; height: 18px;"></i>
+                        Kết Quả Phản Hồi (JSON)
+                    </h3>
+                    <button class="btn btn-secondary" id="btn-smm-admin-copy-response" style="padding: 6px 12px; font-size: 11px; height: 28px;">
+                        Sao chép
+                    </button>
+                </div>
+
+                <div class="smm-terminal-window" style="flex: 1; background: #020204; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; overflow: hidden; min-height: 320px;">
+                    <div style="flex: 1; overflow-y: auto; font-family: monospace; font-size: 13px; line-height: 1.6; color: #39ff14; white-space: pre-wrap;" id="smm-admin-response-pre">Vô Tri API CLI v2.0.0
+Chờ yêu cầu từ hệ thống...</div>
+                </div>
+                
+                <div class="terminal-footer-info" id="smm-admin-log-info" style="margin-top: 12px; font-size: 12px; color: var(--text-muted); min-height: 18px;">
+                    Chưa có thao tác nào được thực thi.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: PRICING MANAGEMENT -->
+    <div class="smm-tab-content hidden" id="smm-tab-pricing">
+        <!-- Dashboard Subheader -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 16px 20px; background: linear-gradient(90deg, rgba(0, 240, 255, 0.04) 0%, transparent 100%); border-left: 3px solid var(--theme-color); border-radius: 4px 12px 12px 4px;">
+            <div>
+                <h3 style="font-family: var(--font-mono); font-size: 16px; color: var(--theme-color); display: flex; align-items: center; gap: 8px; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <i data-lucide="tag" style="width: 18px; height: 18px; filter: drop-shadow(0 0 5px var(--theme-color-glow));"></i>
+                    Cấu hình Tỉ lệ Lợi nhuận (Markup) theo cấp bậc
+                </h3>
+                <p class="text-dim" style="margin: 4px 0 0; font-size: 13px;">
+                    Điều chỉnh phần trăm (%) cộng thêm vào giá gốc API cho từng cấp bậc tài khoản của thành viên.
+                </p>
+            </div>
+            <button class="btn btn-primary" id="btn-save-pricing-config" style="padding: 10px 24px; font-weight: 700; gap: 8px; height: 42px; border-radius: 10px;">
+                <i data-lucide="save" style="width: 16px; height: 16px;"></i>
+                Lưu cấu hình
+            </button>
+        </div>
+
+        <!-- Pricing Cards Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); gap: 20px; margin-bottom: 28px;" id="pricing-config-cards">
+            <!-- Loading state -->
+            <div class="pricing-card" style="padding: 60px 40px; text-align: center; grid-column: 1 / -1; justify-content: center; align-items: center; min-height: 200px; --role-color: var(--theme-color); --role-glow: var(--theme-color-glow);">
+                <i data-lucide="loader-2" class="lucide-spin" style="width: 32px; height: 32px; color: var(--theme-color); margin-bottom: 12px;"></i>
+                <div class="text-dim" style="font-family: var(--font-mono); letter-spacing: 0.5px;">ĐANG TẢI CẤU HÌNH GIÁ MARKUP...</div>
+            </div>
+        </div>
+
+        <!-- Live Price Preview (Interactive Cost Calculator) -->
+        <div class="calculator-preview-container">
+            <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h4 style="font-family: var(--font-mono); font-size: 14px; color: var(--text-primary); display: flex; align-items: center; gap: 8px; margin: 0; text-transform: uppercase;">
+                        <i data-lucide="calculator" style="width: 18px; height: 18px; color: var(--neon-cyan); filter: drop-shadow(0 0 5px var(--neon-cyan-glow));"></i>
+                        Công cụ Tính toán &amp; Xem trước giá bán lẻ
+                    </h4>
+                    <p class="text-dim" style="font-size: 12px; margin: 4px 0 0;">Chọn dịch vụ API để lấy giá gốc tự động. Bạn chỉ cần chỉnh tỉ lệ (%) để xem giá cập nhật.</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                    <div class="form-group" style="margin: 0; min-width: 430px; display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(0,240,255,0.08) 0%, rgba(8,8,14,0.9) 100%); padding: 6px 10px; border: 1px solid rgba(0,240,255,0.25); border-radius: 12px; box-shadow: 0 0 18px rgba(0,240,255,0.08);">
+                        <i data-lucide="layers-3" style="width: 15px; height: 15px; color: var(--neon-cyan);"></i>
+                        <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); white-space: nowrap;">DỊCH VỤ API:</span>
+                        <div class="pricing-service-picker">
+                            <button type="button" id="pricing-preview-service-trigger" class="pricing-service-trigger">Đang tải dịch vụ...</button>
+                            <div id="pricing-preview-service-menu" class="pricing-service-menu hidden">
+                                <input id="pricing-preview-service-search" class="pricing-service-search" type="text" placeholder="Tìm theo ID hoặc tên dịch vụ...">
+                                <div id="pricing-preview-service-list" class="pricing-service-list"></div>
+                            </div>
+                            <select id="pricing-preview-service" class="hidden" aria-hidden="true"></select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin: 0; min-width: 260px; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3); padding: 4px 8px; border: 1px solid var(--border-glass); border-radius: 10px;">
+                        <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); white-space: nowrap; padding-left: 6px;">GIÁ GỐC API / 1K:</span>
+                        <input type="number" id="pricing-preview-rate" value="0" min="1" step="1" readonly style="height: 32px; width: 110px; font-weight: 700; text-align: right; background: transparent; border: none; padding: 0 4px; box-shadow: none !important; color: var(--text-primary); cursor: not-allowed;">
+                        <span style="font-size: 11px; color: var(--neon-cyan); font-weight: 600; font-family: var(--font-mono);">đ</span>
+                    </div>
+                </div>
+            </div>
+            <div id="pricing-preview-source" class="text-dim" style="font-size: 11px; margin: -4px 0 12px;">
+                Nguồn dữ liệu: chờ tải từ API dịch vụ...
+            </div>
+            
+            <div id="pricing-preview-results" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <!-- Will be rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+</div>

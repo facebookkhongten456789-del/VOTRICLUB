@@ -416,6 +416,166 @@ async function runPageCheck(id, btnElement) {
 
 
 
+async function runAllPageChecks(buttonEl) {
+
+    const app = window.VotriApp;
+
+    const fbToken = localStorage.getItem('votri_sys_api_token');
+
+    if (!fbToken) {
+
+        app.showToast('Thiếu Facebook Access Token. Vào Cài đặt → lưu token Graph API.', 'error');
+
+        return;
+
+    }
+
+    if (!pages || pages.length === 0) {
+
+        app.showToast('Không có Fanpage nào để kiểm tra.', 'info');
+
+        return;
+
+    }
+
+
+
+    let originalHtml = '';
+
+    if (buttonEl) {
+
+        originalHtml = buttonEl.innerHTML;
+
+        buttonEl.disabled = true;
+
+        buttonEl.innerHTML = `<i data-lucide="loader-2" class="spinning"></i> <span>Đang kiểm tra...</span>`;
+
+        if (window.lucide) window.lucide.createIcons();
+
+    }
+
+
+
+    app.showToast(`Bắt đầu kiểm tra sức khỏe hàng loạt cho ${pages.length} trang...`, 'info');
+
+
+
+    let successCount = 0;
+
+    let failCount = 0;
+
+
+
+    for (let i = 0; i < pages.length; i++) {
+
+        const page = pages[i];
+
+        if (buttonEl) {
+
+            buttonEl.innerHTML = `<i data-lucide="loader-2" class="spinning"></i> <span>Kiểm tra (${i + 1}/${pages.length})...</span>`;
+
+            if (window.lucide) window.lucide.createIcons();
+
+        }
+
+
+
+        const spinners = document.querySelectorAll(`.btn-check[data-id="${page.id}"] i, [data-id="${page.id}"] .btn-check i`);
+
+        spinners.forEach(s => s.classList.add('spinning'));
+
+
+
+        try {
+
+            const targetPageId = page.url ? app.resolveFacebookPageKey(page) : page.fbPageId || null;
+
+            const res = await fetch(`${app.API_BASE}/api/check-page`, {
+
+                method: 'POST',
+
+                headers: app.authHeaders(),
+
+                body: JSON.stringify({
+
+                    accessToken: fbToken,
+
+                    pageId: targetPageId || undefined,
+
+                    url: page.url || undefined,
+
+                    pageName: page.name || undefined,
+
+                    pageRecordId: page.id
+
+                })
+
+            });
+
+            const data = await app.parseJsonResponse(res);
+
+            if (!res.ok || !data.success) {
+
+                throw new Error((data.message || 'Không kiểm tra được').split('·')[0].trim());
+
+            }
+
+            const checkPayload = {
+
+                name: data.page?.name || page.name,
+
+                status: data.page?.status || page.status,
+
+                followers: data.page?.followers ?? page.followers,
+
+                fbPageId: data.page?.fbPageId || page.fbPageId || null
+
+            };
+
+            await window.PagesApi.syncCheckResult(page.id, checkPayload);
+
+            successCount++;
+
+        } catch (err) {
+
+            console.error(`[BULK CHECK ERROR] ${page.name}:`, err);
+
+            failCount++;
+
+        } finally {
+
+            spinners.forEach(s => s.classList.remove('spinning'));
+
+        }
+
+    }
+
+
+
+    await loadPagesFromServer();
+
+    if (typeof renderAllViews === 'function') renderAllViews();
+
+
+
+    if (buttonEl) {
+
+        buttonEl.disabled = false;
+
+        buttonEl.innerHTML = originalHtml;
+
+        if (window.lucide) window.lucide.createIcons();
+
+    }
+
+
+
+    app.showToast(`Hoàn tất kiểm tra: ${successCount} thành công, ${failCount} thất bại.`, 'success');
+
+}
+
+
+
 window.VotriFanpages = {
 
     initDatabase,
@@ -434,7 +594,9 @@ window.VotriFanpages = {
 
     deletePage,
 
-    runPageCheck
+    runPageCheck,
+
+    runAllPageChecks
 
 };
 

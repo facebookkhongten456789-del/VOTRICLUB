@@ -1,0 +1,347 @@
+/* ==========================================================================
+   Deposit & Rank Progress View Styles (deposit.css)
+   ========================================================================== */
+
+/* Rank Progression */
+.rank-progress-card {
+    padding: 20px 22px;
+    border-left: 3px solid var(--neon-cyan, #00f0ff);
+}
+
+.rank-progress-card--compact {
+    border-left-width: 2px;
+}
+
+.rank-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.rank-progress-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+}
+
+.rank-progress-title-wrap i {
+    width: 20px;
+    height: 20px;
+    color: var(--neon-cyan, #00f0ff);
+}
+
+.rank-progress-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.rank-progress-current-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(0, 240, 255, 0.12);
+    color: var(--neon-cyan, #00f0ff);
+    border: 1px solid rgba(0, 240, 255, 0.28);
+    white-space: nowrap;
+}
+
+.rank-progress-meta {
+    margin: 0 0 12px;
+    font-size: 0.85rem;
+}
+
+.rank-progress-next-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.rank-progress-next-row strong {
+    color: #c4b5fd;
+}
+
+.rank-progress-bar-track {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.rank-progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(0, 240, 255, 0.5), var(--neon-cyan, #00f0ff));
+    transition: width 0.4s ease;
+    min-width: 0;
+}
+
+.rank-progress-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin-top: 10px;
+    font-size: 0.82rem;
+}
+
+.rank-progress-percent {
+    font-weight: 700;
+    color: var(--neon-cyan, #00f0ff);
+}
+
+.rank-progress-message {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* --- Contact Zalo Floating Icon --- */
+.zalo-float {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        0 0 16px rgba(0, 104, 255, 0.2);
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.zalo-float:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow:
+        0 10px 28px rgba(0, 104, 255, 0.4),
+        0 0 24px rgba(0, 104, 255, 0.3);
+}
+
+.zalo-float:focus-visible {
+    outline: 2px solid var(--neon-cyan, #00f0ff);
+    outline-offset: 3px;
+}
+
+.zalo-float-img {
+    width: 52px;
+    height: 52px;
+    display: block;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .zalo-float {
+        right: 14px;
+        bottom: 14px;
+        width: 48px;
+        height: 48px;
+    }
+
+    .zalo-float-img {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* ==========================================================================
+   Deposit History Styles
+   ========================================================================== */
+
+/* Status Pills */
+.deposit-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.deposit-status-pending {
+    background: rgba(250, 204, 21, 0.06);
+    border: 1px solid rgba(250, 204, 21, 0.25);
+    color: #facc15;
+    text-shadow: 0 0 6px rgba(250, 204, 21, 0.3);
+    animation: depositPulse 2s ease-in-out infinite alternate;
+}
+
+.deposit-status-completed {
+    background: rgba(57, 255, 20, 0.06);
+    border: 1px solid rgba(57, 255, 20, 0.25);
+    color: #39FF14;
+    text-shadow: 0 0 6px rgba(57, 255, 20, 0.3);
+}
+
+.deposit-status-failed {
+    background: rgba(255, 75, 75, 0.06);
+    border: 1px solid rgba(255, 75, 75, 0.25);
+    color: #ff4b4b;
+    text-shadow: 0 0 6px rgba(255, 75, 75, 0.3);
+}
+
+.deposit-status-cancelled {
+    background: rgba(156, 163, 175, 0.06);
+    border: 1px solid rgba(156, 163, 175, 0.2);
+    color: #9ca3af;
+}
+
+@keyframes depositPulse {
+    0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+    100% { box-shadow: 0 0 8px 0 rgba(250, 204, 21, 0.15); }
+}
+
+/* Action buttons in table */
+.deposit-action-btn {
+    background: none;
+    border: 1px solid var(--border-glass, rgba(255,255,255,0.06));
+    color: var(--text-secondary, rgba(255,255,255,0.7));
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin: 0 2px;
+}
+
+.deposit-retry-btn:hover {
+    color: #facc15;
+    border-color: rgba(250, 204, 21, 0.4);
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.15);
+    background: rgba(250, 204, 21, 0.06);
+}
+
+.deposit-detail-btn:hover {
+    color: var(--neon-cyan, #00f0ff);
+    border-color: rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+    background: rgba(0, 240, 255, 0.06);
+}
+
+/* Detail modal rows */
+.dep-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.dep-detail-label {
+    font-size: 0.82rem;
+    color: var(--text-dim, rgba(255,255,255,0.35));
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+.dep-detail-value {
+    font-size: 0.9rem;
+    color: var(--text-primary, #fff);
+    text-align: right;
+    word-break: break-all;
+}
+
+/* Pagination buttons */
+.dep-page-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-secondary, rgba(255,255,255,0.7));
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.dep-page-btn:hover:not(.disabled):not(.active) {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+}
+
+.dep-page-btn.active {
+    background: var(--neon-cyan, #00f0ff);
+    color: #000;
+    border-color: transparent;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.dep-page-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.dep-page-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--text-dim, rgba(255,255,255,0.35));
+    font-size: 0.8rem;
+}
+
+/* Row fade-in animation */
+@keyframes fadeInRow {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Quick amount buttons (deposit form) */
+.dep-quick-amt {
+    flex: 1;
+    min-width: 56px;
+    padding: 8px 4px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--text-secondary, rgba(255,255,255,0.7));
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.dep-quick-amt:hover {
+    background: rgba(0, 102, 255, 0.1);
+    border-color: rgba(0, 102, 255, 0.3);
+    color: #3385ff;
+}
+
+.dep-quick-amt:active {
+    transform: scale(0.96);
+}

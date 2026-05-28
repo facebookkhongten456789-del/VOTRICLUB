@@ -27,6 +27,7 @@
         if (tabId === 'create-order' && window.VotriSmm) window.VotriSmm.ensureLoaded();
         if (tabId === 'history' && window.OrdersPage) window.OrdersPage.loadAndRender();
         if (tabId === 'accounts' && window.VotriAccountsAdmin) window.VotriAccountsAdmin.onTabVisible();
+        if (tabId === 'service-api-update' && window.VotriServiceApiUpdate) window.VotriServiceApiUpdate.onTabVisible();
         window.VotriApp?.updateSidebarUserProfile?.();
 
         if (window.VotriFanpages) {

@@ -7,7 +7,6 @@
  */
 
 const express = require('express');
-const { isAdminRole } = require('../lib/user-roles');
 
 async function ensureFanpagesTable(dbQuery) {
     await dbQuery(`
@@ -51,14 +50,7 @@ function mapRow(r) {
     };
 }
 
-async function fetchPagesForUser(dbQuery, userId, isAdmin) {
-    if (isAdmin) {
-        const rows = await dbQuery(
-            `SELECT f.*, u.email AS user_email FROM fanpages f
-             JOIN users u ON f.user_id = u.id ORDER BY f.updated_at DESC`
-        );
-        return rows.map(mapRow);
-    }
+async function fetchPagesForUser(dbQuery, userId) {
     const rows = await dbQuery(
         'SELECT * FROM fanpages WHERE user_id = ? ORDER BY updated_at DESC',
         [userId]
@@ -80,8 +72,7 @@ function createPagesRouter({ dbQuery, requireAuth, pagesListLimiter, pagesWriteL
     router.get('/list', requireAuth, pagesListLimiter, async (req, res) => {
         try {
             await ready();
-            const isAdmin = isAdminRole(req.user.role);
-            const pages = await fetchPagesForUser(dbQuery, req.user.id, isAdmin);
+            const pages = await fetchPagesForUser(dbQuery, req.user.id);
             return res.json({ success: true, pages });
         } catch (err) {
             console.error('[PAGES LIST]', err);
@@ -128,7 +119,7 @@ function createPagesRouter({ dbQuery, requireAuth, pagesListLimiter, pagesWriteL
             if (!existing.length) {
                 return res.status(404).json({ success: false, message: 'Không tìm thấy Fanpage.' });
             }
-            if (req.user.role !== 'admin' && existing[0].user_id !== req.user.id) {
+            if (existing[0].user_id !== req.user.id) {
                 return res.status(403).json({ success: false, message: 'Không có quyền cập nhật Fanpage này.' });
             }
 
@@ -176,7 +167,7 @@ function createPagesRouter({ dbQuery, requireAuth, pagesListLimiter, pagesWriteL
 
             const existing = await dbQuery('SELECT * FROM fanpages WHERE id = ?', [pid]);
             if (!existing.length) return res.status(404).json({ success: false, message: 'Không tìm thấy Fanpage.' });
-            if (req.user.role !== 'admin' && existing[0].user_id !== req.user.id) {
+            if (existing[0].user_id !== req.user.id) {
                 return res.status(403).json({ success: false, message: 'Không có quyền sửa.' });
             }
 
@@ -209,7 +200,7 @@ function createPagesRouter({ dbQuery, requireAuth, pagesListLimiter, pagesWriteL
             const pid = parsePageId(req.params.id);
             const existing = await dbQuery('SELECT user_id FROM fanpages WHERE id = ?', [pid]);
             if (!existing.length) return res.status(404).json({ success: false, message: 'Không tìm thấy Fanpage.' });
-            if (req.user.role !== 'admin' && existing[0].user_id !== req.user.id) {
+            if (existing[0].user_id !== req.user.id) {
                 return res.status(403).json({ success: false, message: 'Không có quyền xóa.' });
             }
             await dbQuery('DELETE FROM fanpages WHERE id = ?', [pid]);

@@ -35,20 +35,32 @@
 
                         <div class="form-group" style="margin-bottom: 20px;">
                             <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; display: block;">Dịch vụ</label>
-                            <select id="smm-service" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; cursor: pointer;">
+                            <select id="smm-service" style="display:none;">
                                 <option value="" disabled selected>Vui lòng chọn Phân loại trước</option>
                             </select>
+                            <div id="smm-service-picker" style="position: relative;">
+                                <button type="button" id="smm-service-trigger" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none; cursor: pointer; text-align: left;">Vui lòng chọn Phân loại trước</button>
+                                <div id="smm-service-menu" class="hidden" style="position:absolute;left:0;right:0;top:100%;margin-top:6px;background:#0b1020;border:1px solid rgba(0,240,255,0.2);border-radius:10px;z-index:70;box-shadow:0 10px 24px rgba(0,0,0,0.45);">
+                                    <input id="smm-service-search" type="text" placeholder="Tìm dịch vụ theo ID hoặc tên..." style="width:calc(100% - 16px);margin:8px;padding:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#fff;outline:none;">
+                                    <div id="smm-service-list" style="max-height:260px;overflow-y:auto;padding:0 8px 8px;"></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group" style="margin-bottom: 20px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                 <label style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Liên kết cần tăng</label>
-                                <a href="#" style="color: var(--neon-cyan); font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 4px;"><i data-lucide="layers" style="width: 14px;"></i> Bạn muốn mua 1 lần nhiều link?</a>
+                                <a href="#" id="btn-open-bulk-modal" style="color: var(--neon-cyan); font-size: 0.85rem; text-decoration: none; display: flex; align-items: center; gap: 4px;"><i data-lucide="layers" style="width: 14px;"></i> Bạn muốn mua 1 lần nhiều link?</a>
                             </div>
                             <div style="display: flex; gap: 8px;">
                                 <input type="text" id="smm-link" placeholder="Nhập liên kết cần tăng tương tác..." style="flex: 1; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit;">
                                 <button style="padding: 0 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'"><i data-lucide="clipboard" style="width: 16px;"></i> Dán</button>
                             </div>
+                        </div>
+
+                        <div class="form-group hidden" id="smm-comments-group" style="margin-bottom: 20px;">
+                            <label style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; display: block;">Bình luận (Mỗi dòng 1 bình luận)</label>
+                            <textarea id="smm-comments" rows="5" placeholder="Nội dung bình luận..." style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; outline: none; resize: vertical;"></textarea>
                         </div>
 
                         <div class="form-group" style="margin-bottom: 24px;">
@@ -81,6 +93,10 @@
                             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
                                 <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">Loại dịch vụ:</span>
                                 <span id="smm-detail-type" style="background: rgba(24, 119, 242, 0.2); border: 1px solid rgba(24, 119, 242, 0.4); color: #1877F2; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: inline-block;">-</span>
+                            </div>
+                            <div id="smm-detail-features-row" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; display: none;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">Tính năng:</span>
+                                <span id="smm-detail-features" style="flex: 2; display: flex; justify-content: flex-end; gap: 4px; flex-wrap: wrap;"></span>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">
                                 <span style="color: var(--text-secondary); font-size: 0.9rem; flex: 1;">Giới hạn lượng:</span>

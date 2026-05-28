@@ -14,6 +14,7 @@
         'pages',
         'analytics',
         'settings',
+        'create-post-ai',
         'service-facebook',
         'service-tiktok',
         'service-instagram',
@@ -38,6 +39,7 @@
         dashboard: ['pages_list'],
         profile: ['profile_load'],
         accounts: ['accounts_sync'],
+        'service-api-update': ['smm_api_update_init'],
     };
 
     const SERVICE_TAB_PLATFORM = {
@@ -114,6 +116,7 @@
             if (feat === 'support_ui' && window.VotriSupport) window.VotriSupport.renderTicketsTable();
             if (feat === 'profile_load' && window.VotriProfile) window.VotriProfile.onTabVisible();
             if (feat === 'accounts_sync' && window.VotriAccountsAdmin) window.VotriAccountsAdmin.onTabVisible();
+            if (feat === 'smm_api_update_init' && window.VotriServiceApiUpdate) window.VotriServiceApiUpdate.onTabVisible();
         });
     }
 
